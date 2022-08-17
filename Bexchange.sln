@@ -5,6 +5,10 @@ VisualStudioVersion = 17.2.32630.192
 MinimumVisualStudioVersion = 10.0.40219.1
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Bexchange", "Bexchange\Bexchange.csproj", "{621E783A-2185-411E-AAB4-E72A637B2BE9}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Bexchange.Domain", "Bexchange.Domain\Bexchange.Domain.csproj", "{626EA112-9B0A-408D-A889-1FB7F2EDFF0E}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Bexchange.Infrastructure", "Bexchange.Infrastructure\Bexchange.Infrastructure.csproj", "{6444FF27-201E-436B-8A3B-E47B566FEE27}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -15,6 +19,14 @@ Global
 		{621E783A-2185-411E-AAB4-E72A637B2BE9}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{621E783A-2185-411E-AAB4-E72A637B2BE9}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{621E783A-2185-411E-AAB4-E72A637B2BE9}.Release|Any CPU.Build.0 = Release|Any CPU
+		{626EA112-9B0A-408D-A889-1FB7F2EDFF0E}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{626EA112-9B0A-408D-A889-1FB7F2EDFF0E}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{626EA112-9B0A-408D-A889-1FB7F2EDFF0E}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{626EA112-9B0A-408D-A889-1FB7F2EDFF0E}.Release|Any CPU.Build.0 = Release|Any CPU
+		{6444FF27-201E-436B-8A3B-E47B566FEE27}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{6444FF27-201E-436B-8A3B-E47B566FEE27}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{6444FF27-201E-436B-8A3B-E47B566FEE27}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{6444FF27-201E-436B-8A3B-E47B566FEE27}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
