@@ -1,3 +1,10 @@
+using Bexchange.Infrastructure;
+using Bexchange.Infrastructure.DtbContext;
+using Bexchange.Infrastructure.Repositories;
+using Bexchange.Infrastructure.Repositories.Interfaces;
+using Microsoft.EntityFrameworkCore;
+using AutoMapper;
+
 var builder = WebApplication.CreateBuilder(args);
 
 // Add services to the container.
@@ -6,6 +13,12 @@ builder.Services.AddControllers();
 // Learn more about configuring Swagger/OpenAPI at https://aka.ms/aspnetcore/swashbuckle
 builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen();
+builder.Services.AddAutoMapper(AppDomain.CurrentDomain.GetAssemblies());
+// Add SQL Server
+builder.Services.AddDbContextsCustom(builder.Configuration);
+//Depency Injection
+builder.Services.AddTransient<IBooksRepository, BooksRepository>();
+builder.Services.AddTransient<IOrdersRepository, OrdersRepository>();
 
 var app = builder.Build();
 

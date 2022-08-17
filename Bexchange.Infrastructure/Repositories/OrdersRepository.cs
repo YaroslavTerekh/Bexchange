@@ -1,5 +1,6 @@
 ﻿using Bexchange.Domain.Models;
 using Bexchange.Infrastructure.DtbContext;
+using Bexchange.Infrastructure.Repositories.Interfaces;
 using Microsoft.EntityFrameworkCore;
 using System;
 using System.Collections.Generic;
@@ -9,7 +10,7 @@ using System.Threading.Tasks;
 
 namespace Bexchange.Infrastructure.Repositories
 {
-    public class OrdersRepository
+    public class OrdersRepository : IOrdersRepository
     {
         private readonly ContentDbContext _context;
         public OrdersRepository(ContentDbContext context)
