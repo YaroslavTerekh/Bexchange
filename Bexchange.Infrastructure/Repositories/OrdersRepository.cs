@@ -22,9 +22,7 @@ namespace Bexchange.Infrastructure.Repositories
         {
             return await _context.Orders
                 .Include(o => o.FirstBook).ThenInclude(b => b.Image)
-                .Include(o => o.FirstBook).ThenInclude(b => b.User.Address)
                 .Include(o => o.SecondBook).ThenInclude(b => b.Image)
-                .Include(o => o.SecondBook).ThenInclude(b => b.User.Address)
                 .ToListAsync();
         }
 
@@ -39,9 +37,8 @@ namespace Bexchange.Infrastructure.Repositories
             return await _context.Orders
                 .Where(o => o.Id == id)
                 .Include(o => o.FirstBook).ThenInclude(b => b.Image)
-                .Include(o => o.FirstBook).ThenInclude(b => b.User.Address)
                 .Include(o => o.SecondBook).ThenInclude(b => b.Image)
-                .Include(o => o.SecondBook).ThenInclude(b => b.User.Address).FirstOrDefaultAsync();
+                .FirstOrDefaultAsync();
         }
 
         public async Task DeleteOrder(int id)

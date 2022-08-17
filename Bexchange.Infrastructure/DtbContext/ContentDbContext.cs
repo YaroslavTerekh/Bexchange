@@ -14,7 +14,8 @@ namespace Bexchange.Infrastructure.DtbContext
 
         public DbSet<Book> Books { get; set; }
         public DbSet<ExchangeOrder> Orders { get; set; }
-        public DbSet<User> Users { get; set; }
+        public DbSet<Image> Images { get; set; }
+        public DbSet<AddressInfo> Addresses { get; set; }
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {

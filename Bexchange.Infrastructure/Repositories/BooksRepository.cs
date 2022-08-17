@@ -22,8 +22,6 @@ namespace Bexchange.Infrastructure.Repositories
         {
             return await _context.Books
                 .Include(b => b.Image)
-                .Include(b => b.User)
-                .ThenInclude(o => o.Address)
                 .ToListAsync();
         }
 
@@ -37,8 +35,6 @@ namespace Bexchange.Infrastructure.Repositories
         {
             return await _context.Books.Where(b => b.Id == id)
                 .Include(b => b.Image)
-                .Include(b => b.User)
-                .ThenInclude(o => o.Address)
                 .FirstOrDefaultAsync();
         }
 
