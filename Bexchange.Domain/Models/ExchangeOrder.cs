@@ -7,7 +7,7 @@ using Bexchange.Domain.Enum;
 
 namespace Bexchange.Domain.Models
 {
-    public class ExchageOrder
+    public class ExchangeOrder
     {
         public int Id { get; set; }
         public Book FirstBook { get; set; }
