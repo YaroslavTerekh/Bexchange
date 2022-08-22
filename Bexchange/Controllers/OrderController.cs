@@ -11,11 +11,11 @@ namespace Bexchange.Controllers
     [ApiController]
     public class OrderController : ControllerBase
     {
-        private readonly IOrdersRepository _orderRepo;
-        private readonly IBooksRepository _bookRepo;
+        private readonly IContentRepository<ExchangeOrder> _orderRepo;
+        private readonly IContentRepository<Book> _bookRepo;
         private readonly IMapper _mapper;
 
-        public OrderController(IOrdersRepository contentRepo, IMapper mapper, IBooksRepository bookRepo)
+        public OrderController(IContentRepository<ExchangeOrder> contentRepo, IMapper mapper, IContentRepository<Book> bookRepo)
         {
             _orderRepo = contentRepo;
             _mapper = mapper;
@@ -27,7 +27,7 @@ namespace Bexchange.Controllers
         {
             try
             {
-                var orders = await _orderRepo.GetAllOrders();
+                var orders = await _orderRepo.GetAllComponents();
 
                 return Ok(_mapper.Map<IEnumerable<ExchangeOrderDto>>(orders));
             }
@@ -42,7 +42,7 @@ namespace Bexchange.Controllers
         {
             try
             {
-                return Ok(_mapper.Map<ExchangeOrderDto>(await _orderRepo.GetOrder(id)));
+                return Ok(_mapper.Map<ExchangeOrderDto>(await _orderRepo.GetComponent(id)));
             }
             catch (Exception exc)
             {
@@ -57,12 +57,12 @@ namespace Bexchange.Controllers
             {
                 var newOrder = _mapper.Map<ExchangeOrder>(order);
 
-                newOrder.FirstBook = await _bookRepo.GetBook(order.FirstBookId);
-                newOrder.SecondBook = await _bookRepo.GetBook(order.SecondBookId);
+                newOrder.FirstBook = await _bookRepo.GetComponent(order.FirstBookId);
+                newOrder.SecondBook = await _bookRepo.GetComponent(order.SecondBookId);
 
-                await _orderRepo.AddOrder(newOrder);
+                await _orderRepo.AddComponent(newOrder);
 
-                return CreatedAtAction(nameof(_orderRepo.AddOrder), new { id = newOrder.Id }, newOrder);
+                return CreatedAtAction(nameof(_orderRepo.AddComponent), new { id = newOrder.Id }, newOrder);
             }
             catch (Exception exc)
             {
@@ -75,7 +75,7 @@ namespace Bexchange.Controllers
         {
             try
             {
-                await _orderRepo.ModifyOrder(order);
+                await _orderRepo.ModifyComponent(order);
 
                 return Ok();
             }
@@ -90,7 +90,7 @@ namespace Bexchange.Controllers
         {
             try
             {
-                await _orderRepo.DeleteOrder(id);
+                await _orderRepo.DeleteComponent(id);
 
                 return Ok($"Orded with id {id} was deleted");
             }

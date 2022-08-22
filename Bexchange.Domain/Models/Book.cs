@@ -21,6 +21,7 @@ namespace Bexchange.Domain.Models
         [Required(ErrorMessage = "Upload a photo of book!")]
         public Image Image { get; set; }
         public int UserId { get; set; }
+        public User User { get; set; }
 
         public State State { get; set; }
     }

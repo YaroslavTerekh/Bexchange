@@ -4,6 +4,7 @@ using Bexchange.Infrastructure.Repositories;
 using Bexchange.Infrastructure.Repositories.Interfaces;
 using Microsoft.EntityFrameworkCore;
 using AutoMapper;
+using Bexchange.Domain.Models;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -17,8 +18,8 @@ builder.Services.AddAutoMapper(AppDomain.CurrentDomain.GetAssemblies());
 // Add SQL Server
 builder.Services.AddDbContextsCustom(builder.Configuration);
 //Depency Injection
-builder.Services.AddTransient<IBooksRepository, BooksRepository>();
-builder.Services.AddTransient<IOrdersRepository, OrdersRepository>();
+builder.Services.AddTransient<IContentRepository<Book>, BooksRepository>();
+builder.Services.AddTransient<IContentRepository<ExchangeOrder>, OrdersRepository>();
 
 var app = builder.Build();
 
