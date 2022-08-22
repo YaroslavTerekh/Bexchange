@@ -10,7 +10,7 @@ using System.Threading.Tasks;
 
 namespace Bexchange.Infrastructure.Repositories
 {
-    public class OrdersRepository : IOrdersRepository
+    public class OrdersRepository : IContentRepository<ExchangeOrder>
     {
         private readonly ContentDbContext _context;
         public OrdersRepository(ContentDbContext context)
@@ -18,7 +18,7 @@ namespace Bexchange.Infrastructure.Repositories
             _context = context;
         }
 
-        public async Task<IEnumerable<ExchangeOrder>> GetAllOrders()
+        public async Task<IEnumerable<ExchangeOrder>> GetAllComponents()
         {
             return await _context.Orders
                 .Include(o => o.FirstBook).ThenInclude(b => b.Image)
@@ -26,13 +26,13 @@ namespace Bexchange.Infrastructure.Repositories
                 .ToListAsync();
         }
 
-        public async Task AddOrder(ExchangeOrder order)
+        public async Task AddComponent(ExchangeOrder order)
         {
             await _context.Orders.AddAsync(order);
             await _context.SaveChangesAsync();
         }
 
-        public async Task<ExchangeOrder?> GetOrder(int id)
+        public async Task<ExchangeOrder?> GetComponent(int id)
         {
             return await _context.Orders
                 .Where(o => o.Id == id)
@@ -41,15 +41,15 @@ namespace Bexchange.Infrastructure.Repositories
                 .FirstOrDefaultAsync();
         }
 
-        public async Task DeleteOrder(int id)
+        public async Task DeleteComponent(int id)
         {
-            _context.Orders.Remove(await GetOrder(id));
+            _context.Orders.Remove(await GetComponent(id));
             await _context.SaveChangesAsync();
         }
 
-        public async Task ModifyOrder(ExchangeOrder order)
+        public async Task ModifyComponent(ExchangeOrder order)
         {
-            ExchangeOrder originalOrder = await GetOrder(order.Id);
+            ExchangeOrder originalOrder = await GetComponent(order.Id);
 
             originalOrder.FirstBook = order.FirstBook;
             originalOrder.SecondBook = order.SecondBook;

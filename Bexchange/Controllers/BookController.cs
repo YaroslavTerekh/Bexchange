@@ -11,10 +11,10 @@ namespace Bexchange.Controllers
     [ApiController]
     public class BookController : ControllerBase
     {
-        private readonly IBooksRepository _contentRepo;
+        private readonly IContentRepository<Book> _contentRepo;
         private readonly IMapper _mapper;
 
-        public BookController(IBooksRepository contentRepo, IMapper mapper)
+        public BookController(IContentRepository<Book> contentRepo, IMapper mapper)
         {
             _mapper = mapper;
             _contentRepo = contentRepo;
@@ -25,7 +25,7 @@ namespace Bexchange.Controllers
         {
             try
             {
-                var books = await _contentRepo.GetAllBooks();
+                var books = await _contentRepo.GetAllComponents();
 
                 return Ok(_mapper.Map<IEnumerable<BookDto>>(books));
             }
@@ -40,7 +40,7 @@ namespace Bexchange.Controllers
         {
             try
             {
-                return Ok(_mapper.Map<BookDto>(await _contentRepo.GetBook(id)));
+                return Ok(_mapper.Map<BookDto>(await _contentRepo.GetComponent(id)));
             }
             catch (Exception exc)
             {
@@ -55,9 +55,10 @@ namespace Bexchange.Controllers
             {
                 var newBook = _mapper.Map<Book>(book);
 
-                await _contentRepo.AddBook(newBook);
+                await _contentRepo.AddComponent(newBook);
 
-                return CreatedAtAction(nameof(_contentRepo.AddBook), new { id = newBook.Id }, book);
+                return Ok(newBook);
+                //return CreatedAtAction(nameof(_contentRepo.AddComponent), new { id = newBook.Id }, book);
             }
             catch (Exception exc)
             {
@@ -70,7 +71,7 @@ namespace Bexchange.Controllers
         {
             try
             {
-                await _contentRepo.ModifyBook(book);
+                await _contentRepo.ModifyComponent(book);
 
                 return Ok();
             }
@@ -85,7 +86,7 @@ namespace Bexchange.Controllers
         {
             try
             {
-                await _contentRepo.DeleteBook(id);
+                await _contentRepo.DeleteComponent(id);
 
                 return Ok($"Book with id {id} was deleted");
             }
