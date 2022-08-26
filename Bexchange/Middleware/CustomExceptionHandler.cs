@@ -1,4 +1,5 @@
-﻿using System.ComponentModel.DataAnnotations;
+﻿using Bexchange.Domain.CustomExceptions;
+using System.ComponentModel.DataAnnotations;
 using System.Net;
 using System.Text.Json;
 
@@ -27,25 +28,47 @@ namespace Bexchange.Middleware
 
         private Task HandleException(Exception exception, HttpContext context)
         {
-            var code = HttpStatusCode.InternalServerError;
-            var responce = String.Empty;
+            var response = String.Empty;
+            var error = new {code = 500, response = "Bad request"};
 
             switch (exception)
             {
                 case ValidationException validationException:
-                    responce = JsonSerializer.Serialize(validationException);
-                    code = HttpStatusCode.BadRequest;
+                    error = new
+                    {
+                        code = (int)HttpStatusCode.BadRequest,
+                        response = validationException.Message
+                    };
+                    break;  
+                case NotFoundException fileNotFoundException:                   
+                    error = new 
+                    {
+                        code = fileNotFoundException.Code,
+                        response = fileNotFoundException.Description
+                    };
                     break;
-                case FileNotFoundException fileNotFoundException:
-                    responce = JsonSerializer.Serialize(fileNotFoundException);
-                    code = HttpStatusCode.NotFound;
+                case ArgumentException argumentException:
+                    error = new
+                    {
+                        code = (int)HttpStatusCode.BadRequest,
+                        response = argumentException.Message
+                    };
+                    break;
+                case BadHttpRequestException badHttpRequestException:
+                    error = new
+                    {
+                        code = (int)HttpStatusCode.BadRequest,
+                        response = badHttpRequestException.Message
+                    };
                     break;
             }
 
             context.Response.ContentType = "application/json";
-            context.Response.StatusCode = (int)code;
+            context.Response.StatusCode = error.code;
 
-            return context.Response.WriteAsync(responce);
+            response = JsonSerializer.Serialize(error);
+
+            return context.Response.WriteAsync(response);
         }
     }
 }

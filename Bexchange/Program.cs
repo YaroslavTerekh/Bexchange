@@ -5,6 +5,7 @@ using Bexchange.Infrastructure.Repositories.Interfaces;
 using Microsoft.EntityFrameworkCore;
 using AutoMapper;
 using Bexchange.Domain.Models;
+using Bexchange.Middleware;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -30,6 +31,7 @@ if (app.Environment.IsDevelopment())
     app.UseSwaggerUI();
 }
 
+app.UseCustomExceptionHandler();
 app.UseHttpsRedirection();
 
 app.UseAuthorization();

@@ -1,9 +1,11 @@
 ﻿using AutoMapper;
+using Bexchange.Domain.CustomExceptions;
 using Bexchange.Domain.Models;
 using Bexchange.DTOs;
 using Bexchange.Infrastructure.Repositories.Interfaces;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
+using System.Net;
 
 namespace Bexchange.Controllers
 {
@@ -25,79 +27,64 @@ namespace Bexchange.Controllers
         [HttpGet]
         public async Task<IActionResult> Orders()
         {
-            try
-            {
-                var orders = await _orderRepo.GetAllComponents();
+            var orders = await _orderRepo.GetAllComponents();
 
-                return Ok(_mapper.Map<IEnumerable<ExchangeOrderDto>>(orders));
-            }
-            catch (Exception exc)
-            {
-                return StatusCode(500, exc.Message);
-            }
+            if (orders == null) 
+                throw new NotFoundException("Orders not found", 404);
+
+            return Ok(_mapper.Map<IEnumerable<ExchangeOrderDto>>(orders));
         }
 
         [HttpGet("{id}")]
         public async Task<IActionResult> GetOrder(int id)
         {
-            try
-            {
-                return Ok(_mapper.Map<ExchangeOrderDto>(await _orderRepo.GetComponent(id)));
-            }
-            catch (Exception exc)
-            {
-                return StatusCode(500, exc.Message);
-            }
+            var order = await _orderRepo.GetComponent(id);
+
+            if (order == null) 
+                throw new NotFoundException("Orders not found", 404);
+
+            return Ok(_mapper.Map<ExchangeOrderDto>(order));
         }
 
         [HttpPost]
         public async Task<IActionResult> AddOrder(ExchangeOrderDto order)
         {
-            try
-            {
-                var newOrder = _mapper.Map<ExchangeOrder>(order);
+            var newOrder = _mapper.Map<ExchangeOrder>(order);
 
-                newOrder.FirstBook = await _bookRepo.GetComponent(order.FirstBookId);
-                newOrder.SecondBook = await _bookRepo.GetComponent(order.SecondBookId);
+            var firstBook = await _bookRepo.GetComponent(order.FirstBookId);
+            var secondBook = await _bookRepo.GetComponent(order.SecondBookId);
 
-                await _orderRepo.AddComponent(newOrder);
+            if(firstBook == null || secondBook == null) 
+                throw new NotFoundException("Books not found", (int)HttpStatusCode.NotFound);
 
-                return CreatedAtAction(nameof(_orderRepo.AddComponent), new { id = newOrder.Id }, newOrder);
-            }
-            catch (Exception exc)
-            {
-                return StatusCode(500, exc.Message);
-            }
+            newOrder.FirstBook = firstBook;
+            newOrder.SecondBook = secondBook;
+
+            await _orderRepo.AddComponent(newOrder);
+
+            return CreatedAtAction(nameof(_orderRepo.AddComponent), new { id = newOrder.Id }, newOrder);
         }
 
         [HttpPut]
         public async Task<IActionResult> ModifyOrder(ExchangeOrder order)
         {
-            try
-            {
-                await _orderRepo.ModifyComponent(order);
+            if(await _orderRepo.GetComponent(order.Id) == null) 
+                throw new NotFoundException("Order not found", 404);
 
-                return Ok();
-            }
-            catch (Exception exc)
-            {
-                return StatusCode(500, exc.Message);
-            }
+            await _orderRepo.ModifyComponent(order);
+
+            return Ok();
         }
 
         [HttpDelete("{id}")]
         public async Task<IActionResult> DeleteOrder(int id)
         {
-            try
-            {
-                await _orderRepo.DeleteComponent(id);
+            if (await _orderRepo.GetComponent(id) == null) 
+                throw new NotFoundException("Order not found", 404);
 
-                return Ok($"Orded with id {id} was deleted");
-            }
-            catch (Exception exc)
-            {
-                return StatusCode(500, "Internal Server Error");
-            }
+            await _orderRepo.DeleteComponent(id);
+
+            return Ok($"Orded with id {id} was deleted");
         }
     }
 }
