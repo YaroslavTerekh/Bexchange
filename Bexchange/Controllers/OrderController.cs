@@ -62,16 +62,21 @@ namespace Bexchange.Controllers
 
             await _orderRepo.AddComponent(newOrder);
 
-            return CreatedAtAction(nameof(_orderRepo.AddComponent), new { id = newOrder.Id }, newOrder);
+            return Created(Request.Path, new { newOrder.Id });
         }
 
         [HttpPut]
-        public async Task<IActionResult> ModifyOrder(ExchangeOrder order)
+        public async Task<IActionResult> ModifyOrder(ExchangeOrderDto order)
         {
             if(await _orderRepo.GetComponent(order.Id) == null) 
                 throw new NotFoundException("Order not found", 404);
 
-            await _orderRepo.ModifyComponent(order);
+            var mappedOrder = _mapper.Map<ExchangeOrder>(order);
+
+            mappedOrder.FirstBook = await _bookRepo.GetComponent(order.FirstBookId);
+            mappedOrder.SecondBook = await _bookRepo.GetComponent(order.SecondBookId);
+
+            await _orderRepo.ModifyComponent(mappedOrder);
 
             return Ok();
         }

@@ -4,6 +4,7 @@ using Bexchange.Infrastructure.DtbContext;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 
 #nullable disable
@@ -11,9 +12,10 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace Bexchange.Migrations
 {
     [DbContext(typeof(ContentDbContext))]
-    partial class ContentDbContextModelSnapshot : ModelSnapshot
+    [Migration("20220826202630_ChangedModels")]
+    partial class ChangedModels
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -74,11 +76,21 @@ namespace Bexchange.Migrations
                     b.Property<int>("UserId")
                         .HasColumnType("int");
 
+                    b.Property<int>("UserId1")
+                        .HasColumnType("int");
+
+                    b.Property<int>("UserId2")
+                        .HasColumnType("int");
+
                     b.HasKey("Id");
 
-                    b.HasIndex("ImageId");
+                    b.HasIndex("ImageId")
+                        .IsUnique();
 
-                    b.HasIndex("UserId");
+                    b.HasIndex("UserId")
+                        .IsUnique();
+
+                    b.HasIndex("UserId1");
 
                     b.ToTable("Books");
                 });
@@ -169,23 +181,30 @@ namespace Bexchange.Migrations
 
                     b.HasKey("Id");
 
-                    b.HasIndex("AddressId");
+                    b.HasIndex("AddressId")
+                        .IsUnique();
 
-                    b.ToTable("Users");
+                    b.ToTable("User");
                 });
 
             modelBuilder.Entity("Bexchange.Domain.Models.Book", b =>
                 {
                     b.HasOne("Bexchange.Domain.Models.Image", "Image")
-                        .WithMany()
-                        .HasForeignKey("ImageId")
+                        .WithOne()
+                        .HasForeignKey("Bexchange.Domain.Models.Book", "ImageId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
                     b.HasOne("Bexchange.Domain.Models.User", "User")
-                        .WithMany("Books")
-                        .HasForeignKey("UserId")
+                        .WithOne()
+                        .HasForeignKey("Bexchange.Domain.Models.Book", "UserId")
                         .OnDelete(DeleteBehavior.Restrict)
+                        .IsRequired();
+
+                    b.HasOne("Bexchange.Domain.Models.User", null)
+                        .WithMany("Books")
+                        .HasForeignKey("UserId1")
+                        .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
                     b.Navigation("Image");
@@ -215,8 +234,8 @@ namespace Bexchange.Migrations
             modelBuilder.Entity("Bexchange.Domain.Models.User", b =>
                 {
                     b.HasOne("Bexchange.Domain.Models.AddressInfo", "Address")
-                        .WithMany()
-                        .HasForeignKey("AddressId")
+                        .WithOne()
+                        .HasForeignKey("Bexchange.Domain.Models.User", "AddressId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 

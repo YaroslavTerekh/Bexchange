@@ -9,12 +9,14 @@ namespace Bexchange.Domain.Models
 {
     public class AddressInfo
     {
+        [Key]
+        [Required]
         public int Id { get; set; }
-        [Required(ErrorMessage = "Enter your country!")]
+        [Required(ErrorMessage = "'Country' field is empty")]
         public string Country { get; set; }
-        [Required(ErrorMessage = "Enter your city!")]
+        [Required(ErrorMessage = "'City' field is empty")]
         public string City { get; set; }
-        [Required(ErrorMessage = "Enter your post index!")]
+        [Required(ErrorMessage = "'Post index' field is empty")]
         public string PostIndex { get; set; }
     }
 }
