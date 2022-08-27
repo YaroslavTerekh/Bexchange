@@ -54,12 +54,12 @@ namespace Bexchange.Controllers
         }
 
         [HttpPut]
-        public async Task<IActionResult> ModifyBook(Book book)
+        public async Task<IActionResult> ModifyBook(BookDto book)
         {
             if (await _contentRepo.GetComponent(book.Id) == null) 
                 throw new NotFoundException("Book not found", (int)HttpStatusCode.NotFound);
 
-            await _contentRepo.ModifyComponent(book);
+            await _contentRepo.ModifyComponent(_mapper.Map<Book>(book));
 
             return Ok();
         }

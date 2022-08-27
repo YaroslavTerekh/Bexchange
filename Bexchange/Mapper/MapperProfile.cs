@@ -17,7 +17,7 @@ namespace Bexchange.Mapper
             //REVERSE
 
             CreateMap<BookDto, Book>()
-                .ForMember(dest => dest.Id, opt => opt.Ignore())
+                .ForMember(dest => dest.Id, opt => opt.MapFrom(b => b.Id))
                 .ForMember(dest => dest.Image, opt => opt.MapFrom(b => b.Image))
                 .ForMember(dest => dest.Title, opt => opt.MapFrom(b => b.Title))
                 .ForMember(dest => dest.Description, opt => opt.MapFrom(b => b.Description))
@@ -27,7 +27,7 @@ namespace Bexchange.Mapper
                     .ForMember(dest => dest.FirstBookId, opt => opt.MapFrom(o => o.FirstBookId))
                     .ForMember(dest => dest.SecondBookId, opt => opt.MapFrom(o => o.SecondBookId))
                     .ForMember(dest => dest.State, opt => opt.Ignore())
-                    .ForMember(dest => dest.Id, opt => opt.Ignore());
+                    .ForMember(dest => dest.Id, opt => opt.MapFrom(e => e.Id));
         }
     }
 }

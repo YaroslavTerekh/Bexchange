@@ -22,11 +22,21 @@ namespace Bexchange.Infrastructure.Repositories
         {
             return await _context.Books
                 .Include(b => b.Image)
+                .Include(b => b.User)
+                    .ThenInclude(u => u.Address)
+                .Include(b => b.User)
+                    .ThenInclude(u => u.Books)
                 .ToListAsync();
         }
 
         public async Task AddComponent(Book book)
         {
+            book.User = await _context.Users.Where(b => b.Id == book.UserId)
+                .Include(u => u.Address)
+                .Include(u => u.Books)
+                    .IgnoreAutoIncludes()
+                .FirstOrDefaultAsync();
+
             await _context.Books.AddAsync(book);
             await _context.SaveChangesAsync();
         }
@@ -35,6 +45,10 @@ namespace Bexchange.Infrastructure.Repositories
         {
             return await _context.Books.Where(b => b.Id == id)
                 .Include(b => b.Image)
+                .Include(b => b.User)
+                    .ThenInclude(u => u.Address)
+                .Include(b => b.User)
+                    .ThenInclude(u => u.Books)
                 .FirstOrDefaultAsync();
         }
 
@@ -50,7 +64,8 @@ namespace Bexchange.Infrastructure.Repositories
 
             originalBook.Title = book.Title;
             originalBook.Description = book.Description;
-            originalBook.Image = book.Image;
+            originalBook.Image.Path = book.Image.Path;
+            originalBook.Image.Date = book.Image.Date; 
 
             await _context.SaveChangesAsync();
         }

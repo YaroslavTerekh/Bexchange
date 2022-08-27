@@ -1,5 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.ComponentModel.DataAnnotations;
+using System.ComponentModel.DataAnnotations.Schema;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
@@ -9,10 +11,14 @@ namespace Bexchange.Domain.Models
 {
     public class ExchangeOrder
     {
+        [Key]
+        [Required]
         public int Id { get; set; }
-        public Book FirstBook { get; set; }
-        public Book SecondBook { get; set; }
+        public new Book FirstBook { get; set; }
+        public new Book SecondBook { get; set; }
+        [ForeignKey(nameof(FirstBook))]
         public int FirstBookId { get; set; }
+        [ForeignKey(nameof(SecondBook))]
         public int SecondBookId { get; set; }
 
         public State State { get; set; }
