@@ -49,36 +49,46 @@ namespace Bexchange.Controllers
         [HttpPost]
         public async Task<IActionResult> AddOrder(ExchangeOrderDto order)
         {
-            var newOrder = _mapper.Map<ExchangeOrder>(order);
+            if (ModelState.IsValid)
+            {
+                var newOrder = _mapper.Map<ExchangeOrder>(order);
 
-            var firstBook = await _bookRepo.GetComponent(order.FirstBookId);
-            var secondBook = await _bookRepo.GetComponent(order.SecondBookId);
+                var firstBook = await _bookRepo.GetComponent(order.FirstBookId);
+                var secondBook = await _bookRepo.GetComponent(order.SecondBookId);
 
-            if(firstBook == null || secondBook == null) 
-                throw new NotFoundException("Books not found", (int)HttpStatusCode.NotFound);
+                if(firstBook == null || secondBook == null) 
+                    throw new NotFoundException("Books not found", (int)HttpStatusCode.NotFound);
 
-            newOrder.FirstBook = firstBook;
-            newOrder.SecondBook = secondBook;
+                newOrder.FirstBook = firstBook;
+                newOrder.SecondBook = secondBook;
 
-            await _orderRepo.AddComponent(newOrder);
+                await _orderRepo.AddComponent(newOrder);
 
-            return Created(Request.Path, new { newOrder.Id });
+                return Created(Request.Path, new { newOrder.Id });
+            }
+
+            return BadRequest(ModelState.Values.First().Errors.First().ErrorMessage);
         }
 
         [HttpPut]
         public async Task<IActionResult> ModifyOrder(ExchangeOrderDto order)
         {
-            if(await _orderRepo.GetComponent(order.Id) == null) 
-                throw new NotFoundException("Order not found", 404);
+            if (ModelState.IsValid)
+            {
+                if (await _orderRepo.GetComponent(order.Id) == null) 
+                    throw new NotFoundException("Order not found", 404);
 
-            var mappedOrder = _mapper.Map<ExchangeOrder>(order);
+                var mappedOrder = _mapper.Map<ExchangeOrder>(order);
 
-            mappedOrder.FirstBook = await _bookRepo.GetComponent(order.FirstBookId);
-            mappedOrder.SecondBook = await _bookRepo.GetComponent(order.SecondBookId);
+                mappedOrder.FirstBook = await _bookRepo.GetComponent(order.FirstBookId);
+                mappedOrder.SecondBook = await _bookRepo.GetComponent(order.SecondBookId);
 
-            await _orderRepo.ModifyComponent(mappedOrder);
+                await _orderRepo.ModifyComponent(mappedOrder);
 
-            return Ok();
+                return Ok();
+            }
+
+            return BadRequest(ModelState.Values.First().Errors.First().ErrorMessage);
         }
 
         [HttpDelete("{id}")]

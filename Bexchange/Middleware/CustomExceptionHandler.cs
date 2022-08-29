@@ -33,13 +33,13 @@ namespace Bexchange.Middleware
 
             switch (exception)
             {
-                case ValidationException validationException:
-                    error = new
-                    {
-                        code = (int)HttpStatusCode.BadRequest,
-                        response = validationException.Message
-                    };
-                    break;  
+                //case ValidationException validationException:
+                //    error = new
+                //    {
+                //        code = (int)HttpStatusCode.BadRequest,
+                //        response = validationException.Message
+                //    };
+                //    break;  
                 case NotFoundException fileNotFoundException:                   
                     error = new 
                     {

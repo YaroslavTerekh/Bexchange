@@ -27,10 +27,11 @@ namespace Bexchange.Controllers
         {
             var books = await _contentRepo.GetAllComponents();
 
-            if (books == null) 
+            if (books == null)
                 throw new NotFoundException("No books here", 404);
 
             return Ok(_mapper.Map<IEnumerable<BookDto>>(books));
+
         }
 
         [HttpGet("{id}")]
@@ -38,7 +39,7 @@ namespace Bexchange.Controllers
         {
             var book = await _contentRepo.GetComponent(id);
 
-            if (book == null) 
+            if (book == null)
                 throw new NotFoundException("Book not found", (int)HttpStatusCode.NotFound);
 
             return Ok(_mapper.Map<BookDto>(book));
@@ -47,32 +48,43 @@ namespace Bexchange.Controllers
         [HttpPost]
         public async Task<IActionResult> AddBook(BookDto book)
         {
-            var newBook = _mapper.Map<Book>(book);
-            await _contentRepo.AddComponent(newBook);
+            if (ModelState.IsValid)
+            {
+                var newBook = _mapper.Map<Book>(book);
+                await _contentRepo.AddComponent(newBook);
 
-            return Created(Request.Path, new { newBook.Id });
+                return Created(Request.Path, new { newBook.Id });
+            }
+
+            return BadRequest(ModelState.Values.First().Errors.First().ErrorMessage);
         }
 
         [HttpPut]
         public async Task<IActionResult> ModifyBook(BookDto book)
         {
-            if (await _contentRepo.GetComponent(book.Id) == null) 
-                throw new NotFoundException("Book not found", (int)HttpStatusCode.NotFound);
+            if (ModelState.IsValid)
+            {
+                if (await _contentRepo.GetComponent(book.Id) == null)
+                    throw new NotFoundException("Book not found", (int)HttpStatusCode.NotFound);
 
-            await _contentRepo.ModifyComponent(_mapper.Map<Book>(book));
+                await _contentRepo.ModifyComponent(_mapper.Map<Book>(book));
 
-            return Ok();
+                return Ok();
+            }
+
+            return BadRequest(ModelState.Values.First().Errors.First().ErrorMessage);
         }
 
         [HttpDelete("{id}")]
         public async Task<IActionResult> DeleteBook(int id)
         {
-            if (await _contentRepo.GetComponent(id) == null) 
+            if (await _contentRepo.GetComponent(id) == null)
                 throw new NotFoundException("Book not found", (int)HttpStatusCode.NotFound);
 
             await _contentRepo.DeleteComponent(id);
 
             return Ok($"Book with id {id} was deleted");
+
         }
     }
 }
