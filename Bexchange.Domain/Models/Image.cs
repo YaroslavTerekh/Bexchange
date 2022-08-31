@@ -10,7 +10,6 @@ namespace Bexchange.Domain.Models
     public class Image
     {
         [Key]
-        [Required]
         public int Id { get; set; }
         public string Path { get; set; }
         public DateTime Date { get; set; } = DateTime.Now;

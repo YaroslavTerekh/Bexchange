@@ -1,4 +1,5 @@
 ﻿using Bexchange.Domain.Models;
+using Bexchange.Infrastructure.Configurations;
 using Microsoft.EntityFrameworkCore;
 using System;
 using System.Collections.Generic;
@@ -21,30 +22,33 @@ namespace Bexchange.Infrastructure.DtbContext
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
-            modelBuilder.Entity<ExchangeOrder>()
-                .HasOne(e => e.FirstBook)
-                .WithMany()
-                .HasForeignKey(e => e.FirstBookId)
-                .OnDelete(DeleteBehavior.Restrict);
+            { //modelBuilder.Entity<ExchangeOrder>()
+              //    .HasOne(e => e.FirstBook)
+              //    .WithMany()
+              //    .HasForeignKey(e => e.FirstBookId)
+              //    .OnDelete(DeleteBehavior.Restrict);
 
-            modelBuilder.Entity<ExchangeOrder>()
-                .HasOne(e => e.SecondBook)
-                .WithMany()
-                .HasForeignKey(e => e.SecondBookId)
-                .OnDelete(DeleteBehavior.Restrict);
+                //modelBuilder.Entity<ExchangeOrder>()
+                //    .HasOne(e => e.SecondBook)
+                //    .WithMany()
+                //    .HasForeignKey(e => e.SecondBookId)
+                //    .OnDelete(DeleteBehavior.Restrict);
 
-            //modelBuilder.Entity<User>()
-            //    .HasMany(u => u.Books)
-            //    .WithOne()
-            //    .HasForeignKey(b => b.UserId)
-            //    .OnDelete(DeleteBehavior.Cascade);
+                //modelBuilder.Entity<User>()
+                //    .HasMany(u => u.Books)
+                //    .WithOne()
+                //    .HasForeignKey(b => b.UserId)
+                //    .OnDelete(DeleteBehavior.Cascade);
 
-            modelBuilder.Entity<Book>()
-                .HasOne(b => b.User)
-                .WithMany(u => u.Books)
-                .HasForeignKey(b => b.UserId)
-                .OnDelete(DeleteBehavior.Restrict);
+                //modelBuilder.Entity<Book>()
+                //    .HasOne(b => b.User)
+                //    .WithMany(u => u.Books)
+                //    .HasForeignKey(b => b.UserId)
+                //    .OnDelete(DeleteBehavior.Restrict);
+            }
 
+            modelBuilder.ApplyConfiguration(new BookConfiguration());
+            modelBuilder.ApplyConfiguration(new ExchangeOrderConfiguration());
         }
     }
 }
