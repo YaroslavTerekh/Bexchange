@@ -29,39 +29,40 @@ namespace Bexchange.Middleware
         private Task HandleException(Exception exception, HttpContext context)
         {
             var response = String.Empty;
-            var error = new {code = 500, response = "Bad request"};
+            var error = new { code = 500, response = "Bad request" };
 
-            switch (exception)
+            error = exception switch
             {
-                //case ValidationException validationException:
-                //    error = new
-                //    {
-                //        code = (int)HttpStatusCode.BadRequest,
-                //        response = validationException.Message
-                //    };
-                //    break;  
-                case NotFoundException fileNotFoundException:                   
-                    error = new 
-                    {
-                        code = fileNotFoundException.Code,
-                        response = fileNotFoundException.Description
-                    };
-                    break;
-                case ArgumentException argumentException:
+                ValidationException validationException =>
                     error = new
                     {
                         code = (int)HttpStatusCode.BadRequest,
-                        response = argumentException.Message
-                    };
-                    break;
-                case BadHttpRequestException badHttpRequestException:
-                    error = new
-                    {
-                        code = (int)HttpStatusCode.BadRequest,
-                        response = badHttpRequestException.Message
-                    };
-                    break;
-            }
+                        response = validationException.Message
+                    },
+
+                NotFoundException fileNotFoundException =>
+                   error = new
+                   {
+                       code = fileNotFoundException.Code,
+                       response = fileNotFoundException.Description
+                   },
+
+                ArgumentException argumentException =>
+                   error = new
+                   {
+                       code = (int)HttpStatusCode.BadRequest,
+                       response = argumentException.Message
+                   },
+
+                BadHttpRequestException badHttpRequestException =>
+                   error = new
+                   {
+                       code = (int)HttpStatusCode.BadRequest,
+                       response = badHttpRequestException.Message
+                   },
+
+                _ => throw new NotImplementedException(),
+            };
 
             context.Response.ContentType = "application/json";
             context.Response.StatusCode = error.code;
