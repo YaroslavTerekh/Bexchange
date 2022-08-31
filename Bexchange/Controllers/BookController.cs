@@ -26,7 +26,7 @@ namespace Bexchange.Controllers
         public async Task<IActionResult> Books()
         {
             var books = await _contentRepo.GetAllComponents();
-
+            
             if (books == null)
                 throw new NotFoundException("No books here", 404);
 
