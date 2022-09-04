@@ -9,6 +9,7 @@ namespace BexchangeAPI.Domain.Enum
     public enum Roles
     {
         User,
-        Admin
+        Admin,
+        SuperAdmin
     }
 }
