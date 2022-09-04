@@ -15,7 +15,7 @@ namespace BexchangeAPI.Infrastructure
         public static IServiceCollection AddDbContextsCustom(this IServiceCollection services, IConfiguration builder)
         {
             services.AddDbContext<ContentDbContext>(
-                o => o.UseSqlServer(builder.GetConnectionString("DefaultConnection"), b => b.MigrationsAssembly("Bexchange")));
+                o => o.UseSqlServer(builder.GetConnectionString("DefaultConnection"), b => b.MigrationsAssembly("Bexchange.API")));
             return services;
         }
     }

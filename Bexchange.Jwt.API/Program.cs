@@ -1,4 +1,5 @@
 using BexchangeAPI.Domain.Models;
+using BexchangeAPI.Infrastructure;
 using BexchangeAPI.Infrastructure.Repositories;
 using BexchangeAPI.Infrastructure.Repositories.Interfaces;
 
@@ -10,6 +11,7 @@ builder.Services.AddControllers();
 // Learn more about configuring Swagger/OpenAPI at https://aka.ms/aspnetcore/swashbuckle
 builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen();
+builder.Services.AddDbContextsCustom(builder.Configuration);
 builder.Services.AddTransient<IContentRepository<User>, UsersRepository>();
 
 var app = builder.Build();

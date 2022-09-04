@@ -18,6 +18,8 @@ namespace Bexchange.Jwt.API.Controllers
         {
             _usersRepository = usersRepository;
         }
+
+        [HttpPost]
         public async Task<IActionResult> Register(UserDTO user)
         {
             byte[] passHash = null;
@@ -26,7 +28,7 @@ namespace Bexchange.Jwt.API.Controllers
             CreatePasswordHash(user.Password, out passHash, out passSalt);
 
             User mappedUser = new User {
-                UserName = user.UserName,
+                NickName = user.NickName,
                 Email = user.Email,
                 FirstName = user.FirstName,
                 LastName = user.LastName,
@@ -43,9 +45,15 @@ namespace Bexchange.Jwt.API.Controllers
 
             await _usersRepository.AddComponent(mappedUser);
 
-            return Ok();
+            return Ok(mappedUser);
         }
 
+        [HttpGet]
+        public async Task<IActionResult> User(int id)
+        {
+            return Ok(await _usersRepository.GetComponent(id));
+        }
+        
         private void CreatePasswordHash(string password, out byte[] passHash, out byte[] passSalt)
         {
             using(var hmac = new HMACSHA256())

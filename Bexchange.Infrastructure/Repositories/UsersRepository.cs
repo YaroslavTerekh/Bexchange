@@ -1,6 +1,7 @@
 ﻿using BexchangeAPI.Domain.Models;
 using BexchangeAPI.Infrastructure.DtbContext;
 using BexchangeAPI.Infrastructure.Repositories.Interfaces;
+using Microsoft.EntityFrameworkCore;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -20,6 +21,8 @@ namespace BexchangeAPI.Infrastructure.Repositories
         public async Task AddComponent(User order)
         {
             await _context.Users.AddAsync(order);
+
+            await _context.SaveChangesAsync();
         }
 
         public Task DeleteComponent(int id)
@@ -32,9 +35,9 @@ namespace BexchangeAPI.Infrastructure.Repositories
             throw new NotImplementedException();
         }
 
-        public Task<User> GetComponent(int id)
+        public async Task<User> GetComponent(int id)
         {
-            throw new NotImplementedException();
+            return await _context.Users.Where(u => u.Id == id).FirstOrDefaultAsync();
         }
 
         public Task ModifyComponent(User order)
