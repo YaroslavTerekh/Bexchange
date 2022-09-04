@@ -1,6 +1,6 @@
 using Microsoft.AspNetCore.Mvc;
 
-namespace Bexchange.Controllers
+namespace BexchangeAPI.Controllers
 {
     [ApiController]
     [Route("[controller]")]

@@ -4,7 +4,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace Bexchange.Infrastructure.Repositories.Interfaces
+namespace BexchangeAPI.Infrastructure.Repositories.Interfaces
 {
     public interface IContentRepository<T>
     {

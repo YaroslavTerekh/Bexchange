@@ -1,8 +1,8 @@
-﻿using Bexchange.Domain.Annotations;
-using Bexchange.Domain.Models;
+﻿using BexchangeAPI.Domain.Annotations;
+using BexchangeAPI.Domain.Models;
 using System.ComponentModel.DataAnnotations;
 
-namespace Bexchange.DTOs
+namespace BexchangeAPI.DTOs
 {
     public class BookDto
     {

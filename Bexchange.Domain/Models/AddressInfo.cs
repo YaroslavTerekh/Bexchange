@@ -5,7 +5,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace Bexchange.Domain.Models
+namespace BexchangeAPI.Domain.Models
 {
     public class AddressInfo
     {

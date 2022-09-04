@@ -1,9 +1,9 @@
-﻿using Bexchange.Domain.CustomExceptions;
+﻿using BexchangeAPI.Domain.CustomExceptions;
 using System.ComponentModel.DataAnnotations;
 using System.Net;
 using System.Text.Json;
 
-namespace Bexchange.Middleware
+namespace BexchangeAPI.Middleware
 {
     public class CustomExceptionHandler
     {

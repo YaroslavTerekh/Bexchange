@@ -1,5 +1,5 @@
-﻿using Bexchange.Domain.Models;
-using Bexchange.Infrastructure.Configurations;
+﻿using BexchangeAPI.Domain.Models;
+using BexchangeAPI.Infrastructure.Configurations;
 using Microsoft.EntityFrameworkCore;
 using System;
 using System.Collections.Generic;
@@ -7,7 +7,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace Bexchange.Infrastructure.DtbContext
+namespace BexchangeAPI.Infrastructure.DtbContext
 {
     public class ContentDbContext : DbContext
     {

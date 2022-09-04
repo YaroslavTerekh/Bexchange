@@ -1,24 +1,42 @@
 ﻿using AutoMapper;
-using Bexchange.Domain.Models;
-using Bexchange.Infrastructure.Repositories.Interfaces;
+using BexchangeAPI.Domain.DtoModels;
+using BexchangeAPI.Domain.Models;
+using BexchangeAPI.Infrastructure.Repositories.Interfaces;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 
-namespace Bexchange.Controllers
+namespace BexchangeAPI.Controllers
 {
     [Route("api/[controller]")]
     [ApiController]
     public class UserController : ControllerBase
     {
-        private readonly IContentRepository<ExchangeOrder> _orderRepo;
-        private readonly IContentRepository<Book> _bookRepo;
-        private readonly IMapper _mapper;
+        private readonly IHttpClientFactory _httpClientFactory;
 
-        public UserController(IContentRepository<ExchangeOrder> contentRepo, IMapper mapper, IContentRepository<Book> bookRepo)
+        public UserController(IHttpClientFactory httpClientFactory)
         {
-            _orderRepo = contentRepo;
-            _mapper = mapper;
-            _bookRepo = bookRepo;
+            _httpClientFactory = httpClientFactory;
+        }
+
+        [HttpPost("register")]
+        public async Task<IActionResult> Register(UserDTO user)
+        {
+            var jwtApiClient = _httpClientFactory.CreateClient();
+
+            var responce = await jwtApiClient.PostAsJsonAsync("https://localhost:9266/api/user/register", user);
+
+            return Ok(responce);
+        }
+
+        [HttpPost("login")]
+        public async Task<IActionResult> Login(LoginUserDTO user)
+        {
+            var jwtApiClient = _httpClientFactory.CreateClient();
+
+            var responce = await jwtApiClient.PostAsJsonAsync("https://localhost:9266/api/user/login", user);
+            var token = await responce.Content.ReadAsStringAsync();
+
+            return Ok(token);
         }
     }
 }

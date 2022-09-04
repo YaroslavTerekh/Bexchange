@@ -1,4 +1,4 @@
-﻿using Bexchange.Domain.Models;
+﻿using BexchangeAPI.Domain.Models;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Metadata.Builders;
 using System;
@@ -7,7 +7,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace Bexchange.Infrastructure.Configurations
+namespace BexchangeAPI.Infrastructure.Configurations
 {
     internal class BookConfiguration : IEntityTypeConfiguration<Book>
     {

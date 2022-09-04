@@ -1,4 +1,4 @@
-namespace Bexchange
+namespace BexchangeAPI
 {
     public class WeatherForecast
     {

@@ -4,24 +4,26 @@ using System.Linq;
 using System.ComponentModel.DataAnnotations;
 using System.Text;
 using System.Threading.Tasks;
-using Bexchange.Domain.Enum;
+using BexchangeAPI.Domain.Enum;
 using System.ComponentModel.DataAnnotations.Schema;
 
-namespace Bexchange.Domain.Models
+namespace BexchangeAPI.Domain.Models
 {
     public class User
     {
         [Key]
         public int Id { get; set; }
-        public string Nickname { get; set; }        
-        public string FullName { get; set; }
+        public string NickName { get; set; }
+        public string FirstName { get; set; }
+        public string LastName { get; set; }
         public string Email { get; set; }
         [ForeignKey(nameof(AddressInfo))]
         public int AddressId { get; set; }
         public AddressInfo Address { get; set; }
         public ICollection<Book>? Books { get; set; }
-        public DateTime RegisteredDate { get; set; } = DateTime.Now;
-        public string Password { get; set; }
+        public DateTime RegisteredDate { get; set; } = DateTime.UtcNow;
+        public byte[] PasswordHash { get; set; }
+        public byte[] PasswordSalt { get; set; }
         public Roles Role { get; set; }
 
         public bool IsBanned { get; set; } = false;

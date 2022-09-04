@@ -1,4 +1,4 @@
-﻿namespace Bexchange.DTOs
+﻿namespace BexchangeAPI.DTOs
 {
     public class ExchangeOrderDto
     {

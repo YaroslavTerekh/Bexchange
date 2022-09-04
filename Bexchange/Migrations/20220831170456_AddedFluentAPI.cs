@@ -2,14 +2,14 @@
 
 #nullable disable
 
-namespace Bexchange.Migrations
+namespace BexchangeAPI.Migrations
 {
     public partial class AddedFluentAPI : Migration
     {
         protected override void Up(MigrationBuilder migrationBuilder)
         {
             migrationBuilder.AlterColumn<string>(
-                name: "Nickname",
+                name: "UserName",
                 table: "Users",
                 type: "nvarchar(max)",
                 nullable: false,
@@ -48,7 +48,7 @@ namespace Bexchange.Migrations
         protected override void Down(MigrationBuilder migrationBuilder)
         {
             migrationBuilder.AlterColumn<string>(
-                name: "Nickname",
+                name: "UserName",
                 table: "Users",
                 type: "nvarchar(15)",
                 maxLength: 15,

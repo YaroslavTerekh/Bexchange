@@ -4,7 +4,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace Bexchange.Domain.Enum
+namespace BexchangeAPI.Domain.Enum
 {
     public enum State
     {
