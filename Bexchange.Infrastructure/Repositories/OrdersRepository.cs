@@ -18,7 +18,7 @@ namespace BexchangeAPI.Infrastructure.Repositories
             _context = context;
         }
 
-        public async Task<IEnumerable<ExchangeOrder>> GetAllComponents()
+        public async Task<IEnumerable<ExchangeOrder>> GetAllComponentsAsync()
         {
             return await _context.Orders
                 .Include(o => o.FirstBook).ThenInclude(b => b.Image)
@@ -26,13 +26,13 @@ namespace BexchangeAPI.Infrastructure.Repositories
                 .ToListAsync();
         }
 
-        public async Task AddComponent(ExchangeOrder order)
+        public async Task AddComponentAsync(ExchangeOrder order)
         {
             await _context.Orders.AddAsync(order);
             await _context.SaveChangesAsync();
         }
 
-        public async Task<ExchangeOrder?> GetComponent(int id)
+        public async Task<ExchangeOrder?> GetComponentAsync(int id)
         {
             return await _context.Orders
                 .Where(o => o.Id == id)
@@ -41,15 +41,15 @@ namespace BexchangeAPI.Infrastructure.Repositories
                 .FirstOrDefaultAsync();
         }
 
-        public async Task DeleteComponent(int id)
+        public async Task DeleteComponentAsync(int id)
         {
-            _context.Orders.Remove(await GetComponent(id));
+            _context.Orders.Remove(await GetComponentAsync(id));
             await _context.SaveChangesAsync();
         }
 
-        public async Task ModifyComponent(ExchangeOrder order)
+        public async Task ModifyComponentAsync(ExchangeOrder order)
         {
-            ExchangeOrder originalOrder = await GetComponent(order.Id);
+            ExchangeOrder originalOrder = await GetComponentAsync(order.Id);
 
             originalOrder.FirstBook = order.FirstBook;
             originalOrder.SecondBook = order.SecondBook;

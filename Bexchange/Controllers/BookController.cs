@@ -7,6 +7,7 @@ using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using System.Net;
+using System.Security.Claims;
 
 namespace BexchangeAPI.Controllers
 {
@@ -24,12 +25,11 @@ namespace BexchangeAPI.Controllers
             _contentRepo = contentRepo;
         }
 
-        [AllowAnonymous]
-        [HttpGet]
+        [HttpGet, AllowAnonymous]
         public async Task<IActionResult> Books()
         {
-            var books = await _contentRepo.GetAllComponents();
-            
+            var books = await _contentRepo.GetAllComponentsAsync();
+
             if (books == null)
                 throw new NotFoundException("No books here", 404);
 
@@ -40,7 +40,7 @@ namespace BexchangeAPI.Controllers
         [HttpGet("{id}")]
         public async Task<IActionResult> GetBook(int id)
         {
-            var book = await _contentRepo.GetComponent(id);
+            var book = await _contentRepo.GetComponentAsync(id);
 
             if (book == null)
                 throw new NotFoundException("Book not found", (int)HttpStatusCode.NotFound);
@@ -51,43 +51,56 @@ namespace BexchangeAPI.Controllers
         [HttpPost]
         public async Task<IActionResult> AddBook(BookDto book)
         {
-            if (ModelState.IsValid)
-            {
-                var newBook = _mapper.Map<Book>(book);
-                await _contentRepo.AddComponent(newBook);
+            var newBook = _mapper.Map<Book>(book);
 
-                return Created(Request.Path, new { newBook.Id });
-            }
+            newBook.UserId = GetUserId();
+            await _contentRepo.AddComponentAsync(newBook);
 
-            return BadRequest(ModelState.Values.First().Errors.First().ErrorMessage);
+            return Created(Request.Path, new { newBook.Id });
+
+            //return BadRequest(ModelState.Values.First().Errors.First().ErrorMessage);
         }
 
         [HttpPut]
         public async Task<IActionResult> ModifyBook(BookDto book)
         {
-            if (ModelState.IsValid)
+            if (GetUserId() == book.UserId)
             {
-                if (await _contentRepo.GetComponent(book.Id) == null)
+                if (await _contentRepo.GetComponentAsync(book.Id) == null)
                     throw new NotFoundException("Book not found", (int)HttpStatusCode.NotFound);
 
-                await _contentRepo.ModifyComponent(_mapper.Map<Book>(book));
+                await _contentRepo.ModifyComponentAsync(_mapper.Map<Book>(book));
 
                 return Ok();
             }
 
-            return BadRequest(ModelState.Values.First().Errors.First().ErrorMessage);
+            return BadRequest("You can modify only your own books");
+
+            //return BadRequest(ModelState.Values.First().Errors.First().ErrorMessage);
         }
 
         [HttpDelete("{id}")]
         public async Task<IActionResult> DeleteBook(int id)
         {
-            if (await _contentRepo.GetComponent(id) == null)
+            if (await _contentRepo.GetComponentAsync(id) == null)
                 throw new NotFoundException("Book not found", (int)HttpStatusCode.NotFound);
+            
+            Book book = await _contentRepo.GetComponentAsync(id);
 
-            await _contentRepo.DeleteComponent(id);
+            if (GetUserId() == book.UserId)
+            {
+                await _contentRepo.DeleteComponentAsync(id);
+                return Ok($"Book with id {id} was deleted");
+            }
 
-            return Ok($"Book with id {id} was deleted");
+            return BadRequest("You can delete only your own book");
+        }
 
+        private int GetUserId()
+        {
+            var identity = HttpContext.User.Identity as ClaimsIdentity;
+            var id = identity.FindFirst("id").Value;
+            return Int32.Parse(id);
         }
     }
 }

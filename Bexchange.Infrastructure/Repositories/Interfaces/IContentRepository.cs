@@ -8,10 +8,10 @@ namespace BexchangeAPI.Infrastructure.Repositories.Interfaces
 {
     public interface IContentRepository<T>
     {
-        public Task<IEnumerable<T>> GetAllComponents();
-        public Task AddComponent(T order);
-        public Task<T> GetComponent(int id);
-        public Task DeleteComponent(int id);
-        public Task ModifyComponent(T order);
+        public Task<IEnumerable<T>> GetAllComponentsAsync();
+        public Task AddComponentAsync(T order);
+        public Task<T> GetComponentAsync(int id);
+        public Task DeleteComponentAsync(int id);
+        public Task ModifyComponentAsync(T order);
     }
 }

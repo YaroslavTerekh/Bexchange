@@ -33,7 +33,12 @@ namespace BexchangeAPI.Infrastructure.Repositories
 
         public async Task<User> GetUserAsync(int id)
         {
-            return await _context.Users.FirstOrDefaultAsync(u => u.Id == id);
+            return await _context.Users
+                .Where(u => u.Id == id)
+                .Include(u => u.Address)
+                .Include(u => u.Books)
+                    .ThenInclude(b => b.Image)
+                .FirstOrDefaultAsync();
         }
 
         public async Task<User> GetUserByEmailAsync(string email)
