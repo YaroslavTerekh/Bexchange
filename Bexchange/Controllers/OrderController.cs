@@ -3,12 +3,14 @@ using BexchangeAPI.Domain.CustomExceptions;
 using BexchangeAPI.Domain.Models;
 using BexchangeAPI.DTOs;
 using BexchangeAPI.Infrastructure.Repositories.Interfaces;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using System.Net;
 
 namespace BexchangeAPI.Controllers
 {
+    [Authorize]
     [Route("api/[controller]")]
     [ApiController]
     public class OrderController : ControllerBase
