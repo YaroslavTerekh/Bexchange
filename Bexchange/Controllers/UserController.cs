@@ -2,11 +2,13 @@
 using BexchangeAPI.Domain.DtoModels;
 using BexchangeAPI.Domain.Models;
 using BexchangeAPI.Infrastructure.Repositories.Interfaces;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 
 namespace BexchangeAPI.Controllers
 {
+    [Authorize]
     [Route("api/[controller]")]
     [ApiController]
     public class UserController : ControllerBase
@@ -18,6 +20,7 @@ namespace BexchangeAPI.Controllers
             _httpClientFactory = httpClientFactory;
         }
 
+        [AllowAnonymous]
         [HttpPost("register")]
         public async Task<IActionResult> Register(UserDTO user)
         {
@@ -28,6 +31,7 @@ namespace BexchangeAPI.Controllers
             return Ok(responce);
         }
 
+        [AllowAnonymous]
         [HttpPost("login")]
         public async Task<IActionResult> Login(LoginUserDTO user)
         {
