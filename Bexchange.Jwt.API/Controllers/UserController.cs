@@ -6,6 +6,9 @@ using BexchangeAPI.Infrastructure.DtbContext;
 using Microsoft.AspNetCore.Mvc;
 using System.Security.Cryptography;
 using Bexchange.Infrastructure.Repositories.Interfaces;
+using System.Security.Claims;
+using Microsoft.IdentityModel.Tokens;
+using System.IdentityModel.Tokens.Jwt;
 
 namespace Bexchange.Jwt.API.Controllers
 {
@@ -14,10 +17,12 @@ namespace Bexchange.Jwt.API.Controllers
     public class UserController : ControllerBase
     {
         private readonly IUsersRepository<User> _usersRepository;
+        private readonly IConfiguration _configuration;
 
-        public UserController(IUsersRepository<User> usersRepository)
+        public UserController(IUsersRepository<User> usersRepository, IConfiguration configuration)
         {
             _usersRepository = usersRepository;
+            _configuration = configuration;
         }
 
         [HttpPost("register")]
@@ -71,10 +76,12 @@ namespace Bexchange.Jwt.API.Controllers
             if (user == null)
                 return BadRequest("Wrong username or e-mail");
 
-            if (VerifyPasswordHash(loginUser.Password, user.PasswordHash, user.PasswordSalt))
+            if (!VerifyPasswordHash(loginUser.Password, user.PasswordHash, user.PasswordSalt))
                 return BadRequest("Wrong password");
 
-            return Ok("MY TOKEN");
+            var token = await CreateTokenAsync(user);
+
+            return Ok(token);
         }
 
         [HttpGet]
@@ -110,6 +117,30 @@ namespace Bexchange.Jwt.API.Controllers
                 var computedHash = hmac.ComputeHash(System.Text.Encoding.UTF8.GetBytes(password));
                 return computedHash.SequenceEqual(passHash);
             }
+        }
+        private async Task<string> CreateTokenAsync(User user)
+        {
+            List<Claim> claims = new List<Claim>
+            {
+                new Claim(type: "Id", value: user.Id.ToString()),
+                new Claim(type: "AddressId", value: user.AddressId.ToString()),
+                new Claim(ClaimTypes.Name, user.FirstName),
+                new Claim(ClaimTypes.Surname, user.LastName),
+                new Claim(ClaimTypes.Email, user.Email),
+            };
+
+            var key = new SymmetricSecurityKey(System.Text.Encoding.UTF8.GetBytes(_configuration.GetSection("AppSettings:Token").Value));
+
+            var creds = new SigningCredentials(key, SecurityAlgorithms.HmacSha256);
+
+            var token = new JwtSecurityToken(
+                claims: claims,
+                expires: DateTime.Now.AddMinutes(15),
+                signingCredentials: creds);
+
+            var jwt = new JwtSecurityTokenHandler().WriteToken(token);
+
+            return jwt.ToString();
         }
     }
 }
