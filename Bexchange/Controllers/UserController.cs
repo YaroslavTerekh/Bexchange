@@ -1,10 +1,10 @@
 ﻿using AutoMapper;
-using Bexchange.Domain.Models;
-using Bexchange.Infrastructure.Repositories.Interfaces;
+using BexchangeAPI.Domain.Models;
+using BexchangeAPI.Infrastructure.Repositories.Interfaces;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 
-namespace Bexchange.Controllers
+namespace BexchangeAPI.Controllers
 {
     [Route("api/[controller]")]
     [ApiController]

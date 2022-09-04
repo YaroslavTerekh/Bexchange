@@ -3,7 +3,7 @@ using Microsoft.EntityFrameworkCore.Migrations;
 
 #nullable disable
 
-namespace Bexchange.Migrations
+namespace BexchangeAPI.Migrations
 {
     public partial class ChangedModels : Migration
     {

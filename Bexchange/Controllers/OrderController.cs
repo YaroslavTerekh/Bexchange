@@ -1,13 +1,13 @@
 ﻿using AutoMapper;
-using Bexchange.Domain.CustomExceptions;
-using Bexchange.Domain.Models;
-using Bexchange.DTOs;
-using Bexchange.Infrastructure.Repositories.Interfaces;
+using BexchangeAPI.Domain.CustomExceptions;
+using BexchangeAPI.Domain.Models;
+using BexchangeAPI.DTOs;
+using BexchangeAPI.Infrastructure.Repositories.Interfaces;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using System.Net;
 
-namespace Bexchange.Controllers
+namespace BexchangeAPI.Controllers
 {
     [Route("api/[controller]")]
     [ApiController]

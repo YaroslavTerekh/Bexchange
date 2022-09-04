@@ -1,4 +1,4 @@
-﻿namespace Bexchange.Middleware
+﻿namespace BexchangeAPI.Middleware
 {
     public static class CustomExceptionHandlerExpressions
     {

@@ -1,4 +1,4 @@
-﻿using Bexchange.Infrastructure.DtbContext;
+﻿using BexchangeAPI.Infrastructure.DtbContext;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
@@ -8,7 +8,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace Bexchange.Infrastructure
+namespace BexchangeAPI.Infrastructure
 {
     public static class DbContextExtensions
     {

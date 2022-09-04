@@ -1,6 +1,6 @@
-﻿using Bexchange.Domain.Models;
-using Bexchange.Infrastructure.DtbContext;
-using Bexchange.Infrastructure.Repositories.Interfaces;
+﻿using BexchangeAPI.Domain.Models;
+using BexchangeAPI.Infrastructure.DtbContext;
+using BexchangeAPI.Infrastructure.Repositories.Interfaces;
 using Microsoft.EntityFrameworkCore;
 using System;
 using System.Collections.Generic;
@@ -8,7 +8,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace Bexchange.Infrastructure.Repositories
+namespace BexchangeAPI.Infrastructure.Repositories
 {
     public class OrdersRepository : IContentRepository<ExchangeOrder>
     {

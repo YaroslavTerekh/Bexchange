@@ -4,10 +4,10 @@ using System.Linq;
 using System.ComponentModel.DataAnnotations;
 using System.Text;
 using System.Threading.Tasks;
-using Bexchange.Domain.Enum;
+using BexchangeAPI.Domain.Enum;
 using System.ComponentModel.DataAnnotations.Schema;
 
-namespace Bexchange.Domain.Models
+namespace BexchangeAPI.Domain.Models
 {
     public class User
     {

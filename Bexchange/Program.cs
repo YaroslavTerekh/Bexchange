@@ -1,11 +1,11 @@
-using Bexchange.Infrastructure;
-using Bexchange.Infrastructure.DtbContext;
-using Bexchange.Infrastructure.Repositories;
-using Bexchange.Infrastructure.Repositories.Interfaces;
+using BexchangeAPI.Infrastructure;
+using BexchangeAPI.Infrastructure.DtbContext;
+using BexchangeAPI.Infrastructure.Repositories;
+using BexchangeAPI.Infrastructure.Repositories.Interfaces;
 using Microsoft.EntityFrameworkCore;
 using AutoMapper;
-using Bexchange.Domain.Models;
-using Bexchange.Middleware;
+using BexchangeAPI.Domain.Models;
+using BexchangeAPI.Middleware;
 using System.Text.Json.Serialization;
 
 var builder = WebApplication.CreateBuilder(args);

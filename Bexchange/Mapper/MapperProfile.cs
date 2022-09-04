@@ -1,8 +1,8 @@
 ﻿using AutoMapper;
-using Bexchange.Domain.Models;
-using Bexchange.DTOs;
+using BexchangeAPI.Domain.Models;
+using BexchangeAPI.DTOs;
 
-namespace Bexchange.Mapper
+namespace BexchangeAPI.Mapper
 {
     public class MapperProfile : Profile
     {
