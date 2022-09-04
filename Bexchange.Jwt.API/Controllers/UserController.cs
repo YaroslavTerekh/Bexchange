@@ -48,6 +48,13 @@ namespace Bexchange.Jwt.API.Controllers
             return Ok(mappedUser);
         }
 
+        //public async Task<IActionResult> Login(LoginUserDTO loginUser)
+        //{
+        //    var user = 
+
+        //    if()
+        //}
+
         [HttpGet]
         public async Task<IActionResult> User(int id)
         {

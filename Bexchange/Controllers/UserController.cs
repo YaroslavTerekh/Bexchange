@@ -10,15 +10,15 @@ namespace BexchangeAPI.Controllers
     [ApiController]
     public class UserController : ControllerBase
     {
-        private readonly IContentRepository<ExchangeOrder> _orderRepo;
-        private readonly IContentRepository<Book> _bookRepo;
-        private readonly IMapper _mapper;
+        //private readonly IContentRepository<ExchangeOrder> _orderRepo;
+        //private readonly IContentRepository<Book> _bookRepo;
+        //private readonly IMapper _mapper;
 
-        public UserController(IContentRepository<ExchangeOrder> contentRepo, IMapper mapper, IContentRepository<Book> bookRepo)
-        {
-            _orderRepo = contentRepo;
-            _mapper = mapper;
-            _bookRepo = bookRepo;
-        }
+        //public UserController(IContentRepository<ExchangeOrder> contentRepo, IMapper mapper, IContentRepository<Book> bookRepo)
+        //{
+        //    _orderRepo = contentRepo;
+        //    _mapper = mapper;
+        //    _bookRepo = bookRepo;
+        //}
     }
 }
