@@ -1,6 +1,6 @@
-﻿namespace Bexchange.Jwt.API.Infrastructure.Repository
-{
-    public class UsersRepository
-    {
-    }
-}
+﻿//namespace Bexchange.Jwt.API.Infrastructure.Repository
+//{
+//    public class UsersRepository
+//    {
+//    }
+//}

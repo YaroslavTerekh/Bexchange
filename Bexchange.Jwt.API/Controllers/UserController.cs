@@ -1,4 +1,4 @@
-﻿using Bexchange.Jwt.API.Models.DtoModels;
+﻿using BexchangeAPI.Domain.DtoModels;
 using BexchangeAPI.Domain.Enum;
 using BexchangeAPI.Domain.Models;
 using BexchangeAPI.Infrastructure.Repositories.Interfaces;
@@ -26,7 +26,7 @@ namespace Bexchange.Jwt.API.Controllers
         }
 
         [HttpPost("register")]
-        public async Task<IActionResult> Register(UserDTO user)
+        public async Task<ActionResult<User>> Register(UserDTO user)
         {
             if(await TestUserSearchAsync(user))
             {
@@ -56,7 +56,7 @@ namespace Bexchange.Jwt.API.Controllers
 
             await _usersRepository.RegisterUserAsync(mappedUser);
 
-            return Ok(mappedUser);
+            return mappedUser;
         }
 
         [HttpPost("login")]

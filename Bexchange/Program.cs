@@ -24,6 +24,8 @@ builder.Services.AddDbContextsCustom(builder.Configuration);
 builder.Services.AddTransient<IContentRepository<Book>, BooksRepository>();
 builder.Services.AddTransient<IContentRepository<ExchangeOrder>, OrdersRepository>();
 
+builder.Services.AddHttpClient();
+
 var app = builder.Build();
 
 // Configure the HTTP request pipeline.
