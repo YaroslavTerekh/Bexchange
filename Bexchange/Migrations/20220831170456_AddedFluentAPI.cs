@@ -9,7 +9,7 @@ namespace BexchangeAPI.Migrations
         protected override void Up(MigrationBuilder migrationBuilder)
         {
             migrationBuilder.AlterColumn<string>(
-                name: "Nickname",
+                name: "UserName",
                 table: "Users",
                 type: "nvarchar(max)",
                 nullable: false,
@@ -48,7 +48,7 @@ namespace BexchangeAPI.Migrations
         protected override void Down(MigrationBuilder migrationBuilder)
         {
             migrationBuilder.AlterColumn<string>(
-                name: "Nickname",
+                name: "UserName",
                 table: "Users",
                 type: "nvarchar(15)",
                 maxLength: 15,

@@ -17,9 +17,9 @@ namespace BexchangeAPI.Infrastructure.Repositories
             _context = context;
         }
 
-        public Task AddComponent(User order)
+        public async Task AddComponent(User order)
         {
-            throw new NotImplementedException();
+            await _context.Users.AddAsync(order);
         }
 
         public Task DeleteComponent(int id)
