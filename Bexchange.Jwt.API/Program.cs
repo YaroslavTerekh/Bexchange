@@ -1,7 +1,7 @@
+using Bexchange.Infrastructure.Repositories.Interfaces;
 using BexchangeAPI.Domain.Models;
 using BexchangeAPI.Infrastructure;
 using BexchangeAPI.Infrastructure.Repositories;
-using BexchangeAPI.Infrastructure.Repositories.Interfaces;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -12,7 +12,7 @@ builder.Services.AddControllers();
 builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen();
 builder.Services.AddDbContextsCustom(builder.Configuration);
-builder.Services.AddTransient<IContentRepository<User>, UsersRepository>();
+builder.Services.AddTransient<IUsersRepository<User>, UsersRepository>();
 
 var app = builder.Build();
 

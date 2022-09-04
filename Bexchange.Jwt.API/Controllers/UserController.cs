@@ -5,6 +5,7 @@ using BexchangeAPI.Infrastructure.Repositories.Interfaces;
 using BexchangeAPI.Infrastructure.DtbContext;
 using Microsoft.AspNetCore.Mvc;
 using System.Security.Cryptography;
+using Bexchange.Infrastructure.Repositories.Interfaces;
 
 namespace Bexchange.Jwt.API.Controllers
 {
@@ -12,16 +13,21 @@ namespace Bexchange.Jwt.API.Controllers
     [ApiController]
     public class UserController : ControllerBase
     {
-        private readonly IContentRepository<User> _usersRepository;
+        private readonly IUsersRepository<User> _usersRepository;
 
-        public UserController(IContentRepository<User> usersRepository)
+        public UserController(IUsersRepository<User> usersRepository)
         {
             _usersRepository = usersRepository;
         }
 
-        [HttpPost]
+        [HttpPost("register")]
         public async Task<IActionResult> Register(UserDTO user)
         {
+            if(await TestUserSearchAsync(user))
+            {
+                return BadRequest("User already exists");
+            }
+
             byte[] passHash = null;
             byte[] passSalt = null;
 
@@ -43,22 +49,38 @@ namespace Bexchange.Jwt.API.Controllers
                 Role = Roles.User
             };
 
-            await _usersRepository.AddComponent(mappedUser);
+            await _usersRepository.RegisterUserAsync(mappedUser);
 
             return Ok(mappedUser);
         }
 
-        //public async Task<IActionResult> Login(LoginUserDTO loginUser)
-        //{
-        //    var user = 
+        [HttpPost("login")]
+        public async Task<ActionResult<string>> Login(LoginUserDTO loginUser)
+        {
+            User user;
 
-        //    if()
-        //}
+            if (loginUser.UserName.Contains("@"))
+            {
+                user = await _usersRepository.GetUserByEmailAsync(loginUser.UserName);
+            }
+            else
+            {
+                user = await _usersRepository.GetUserByNameAsync(loginUser.UserName);
+            }
+
+            if (user == null)
+                return BadRequest("Wrong username or e-mail");
+
+            if (VerifyPasswordHash(loginUser.Password, user.PasswordHash, user.PasswordSalt))
+                return BadRequest("Wrong password");
+
+            return Ok("MY TOKEN");
+        }
 
         [HttpGet]
-        public async Task<IActionResult> User(int id)
+        public async Task<IActionResult> GetUser(int id)
         {
-            return Ok(await _usersRepository.GetComponent(id));
+            return Ok(await _usersRepository.GetUserAsync(id));
         }
         
         private void CreatePasswordHash(string password, out byte[] passHash, out byte[] passSalt)
@@ -67,6 +89,26 @@ namespace Bexchange.Jwt.API.Controllers
             {
                 passSalt = hmac.Key;
                 passHash = hmac.ComputeHash(System.Text.Encoding.UTF8.GetBytes(password));                 
+            }
+        }
+        private async Task<bool> TestUserSearchAsync(UserDTO user)
+        {
+            var testSearchUser = await _usersRepository.GetUserByNameAsync(user.NickName);
+            if (testSearchUser != null)
+                return true;
+
+            testSearchUser = await _usersRepository.GetUserByEmailAsync(user.Email);
+            if (testSearchUser != null)
+                return true;
+
+            return false;
+        }
+        private bool VerifyPasswordHash(string password, byte[] passHash, byte[] passSalt)
+        {
+            using(var hmac = new HMACSHA256(passSalt))
+            {
+                var computedHash = hmac.ComputeHash(System.Text.Encoding.UTF8.GetBytes(password));
+                return computedHash.SequenceEqual(passHash);
             }
         }
     }
