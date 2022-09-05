@@ -1,4 +1,5 @@
 ﻿using AutoMapper;
+using Bexchange.Infrastructure.Repositories.Interfaces;
 using BexchangeAPI.Domain.DtoModels;
 using BexchangeAPI.Domain.Models;
 using BexchangeAPI.Infrastructure.Repositories.Interfaces;
@@ -8,16 +9,18 @@ using Microsoft.AspNetCore.Mvc;
 
 namespace BexchangeAPI.Controllers
 {
-    [Authorize]
+    [Authorize(Policy = "Admins")]
     [Route("api/[controller]")]
     [ApiController]
     public class UserController : ControllerBase
     {
         private readonly IHttpClientFactory _httpClientFactory;
+        private readonly IUsersRepository<User> _usersRepository;
 
-        public UserController(IHttpClientFactory httpClientFactory)
+        public UserController(IHttpClientFactory httpClientFactory, IUsersRepository<User> usersRepository)
         {
             _httpClientFactory = httpClientFactory;
+            _usersRepository = usersRepository;
         }
 
         [AllowAnonymous]
@@ -41,6 +44,6 @@ namespace BexchangeAPI.Controllers
             var token = await responce.Content.ReadAsStringAsync();
 
             return Ok(token);
-        }
+        }  
     }
 }

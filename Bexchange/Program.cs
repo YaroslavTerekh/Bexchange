@@ -12,6 +12,8 @@ using Microsoft.IdentityModel.Tokens;
 using System.Text;
 using Microsoft.OpenApi.Models;
 using Swashbuckle.AspNetCore.Filters;
+using BexchangeAPI.Domain.Enum;
+using Bexchange.Infrastructure.Repositories.Interfaces;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -50,11 +52,25 @@ builder.Services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme)
         };
     });
 
+builder.Services.AddAuthorization(options =>
+{
+    options.AddPolicy("Admins", policy =>
+    {
+        policy.RequireRole(Roles.Admin.ToString(), Roles.SuperAdmin.ToString());
+    });
+
+    options.AddPolicy("SuperAdmin", policy =>
+    {
+        policy.RequireRole(Roles.SuperAdmin.ToString());
+    });
+});
+
 // Add SQL Server
 builder.Services.AddDbContextsCustom(builder.Configuration);
 //Depency Injection
 builder.Services.AddTransient<IContentRepository<Book>, BooksRepository>();
 builder.Services.AddTransient<IContentRepository<ExchangeOrder>, OrdersRepository>();
+builder.Services.AddTransient<IUsersRepository<User>, UsersRepository>();
 
 builder.Services.AddHttpClient();
 
