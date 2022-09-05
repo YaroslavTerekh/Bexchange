@@ -31,12 +31,6 @@ namespace BexchangeAPI.Infrastructure.Repositories
 
         public async Task AddComponentAsync(Book book)
         {
-            book.User = await _context.Users.Where(b => b.Id == book.UserId)
-                .Include(u => u.Address)
-                .Include(u => u.Books)
-                    .IgnoreAutoIncludes()
-                .FirstOrDefaultAsync();
-
             await _context.Books.AddAsync(book);
             await _context.SaveChangesAsync();
         }

@@ -1,4 +1,5 @@
 ﻿using AutoMapper;
+using Bexchange.Infrastructure.Repositories.Interfaces;
 using BexchangeAPI.Domain.CustomExceptions;
 using BexchangeAPI.Domain.Models;
 using BexchangeAPI.DTOs;
@@ -17,12 +18,14 @@ namespace BexchangeAPI.Controllers
     public class BookController : ControllerBase
     {
         private readonly IContentRepository<Book> _contentRepo;
+        public readonly IUsersRepository<User> _usersRepository;
         private readonly IMapper _mapper;
 
-        public BookController(IContentRepository<Book> contentRepo, IMapper mapper)
+        public BookController(IContentRepository<Book> contentRepo, IUsersRepository<User> usersRepository, IMapper mapper)
         {
             _mapper = mapper;
             _contentRepo = contentRepo;
+            _usersRepository = usersRepository;
         }
 
         [HttpGet, AllowAnonymous]
@@ -31,7 +34,7 @@ namespace BexchangeAPI.Controllers
             var books = await _contentRepo.GetAllComponentsAsync();
 
             if (books == null)
-                throw new NotFoundException("No books here", 404);
+                throw new NotFoundException("No books here", (int)HttpStatusCode.NotFound);
 
             return Ok(_mapper.Map<IEnumerable<BookDto>>(books));
 
@@ -54,6 +57,7 @@ namespace BexchangeAPI.Controllers
             var newBook = _mapper.Map<Book>(book);
 
             newBook.UserId = GetUserId();
+            newBook.User = await _usersRepository.GetUserAsync(newBook.UserId);
             await _contentRepo.AddComponentAsync(newBook);
 
             return Created(Request.Path, new { newBook.Id });

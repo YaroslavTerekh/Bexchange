@@ -9,7 +9,7 @@ using Microsoft.AspNetCore.Mvc;
 
 namespace BexchangeAPI.Controllers
 {
-    [Authorize]
+    [Authorize(Policy = "Admins")]
     [Route("api/[controller]")]
     [ApiController]
     public class UserController : ControllerBase
