@@ -1,4 +1,5 @@
-﻿using BexchangeAPI.Domain.Models;
+﻿using BexchangeAPI.Domain.Enum;
+using BexchangeAPI.Domain.Models;
 using BexchangeAPI.Infrastructure.DtbContext;
 using BexchangeAPI.Infrastructure.Repositories.Interfaces;
 using Microsoft.EntityFrameworkCore;
@@ -55,6 +56,19 @@ namespace BexchangeAPI.Infrastructure.Repositories
             originalOrder.SecondBook = order.SecondBook;
 
             await _context.SaveChangesAsync();
+        }
+
+        public async Task ModifyComponentStateAsync(int id, State state)
+        {
+            ExchangeOrder order = await GetComponentAsync(id);
+            order.State = state;
+            await _context.SaveChangesAsync();
+        }
+
+        public async Task<IEnumerable<ExchangeOrder>> GetUserComponentsAsync(int userId)
+        {
+            return await _context.Orders
+                .Where(o => o.FirstBook.UserId == userId || o.SecondBook.UserId == userId).ToListAsync();
         }
     }
 }

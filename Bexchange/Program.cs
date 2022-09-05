@@ -92,3 +92,6 @@ app.UseAuthorization();
 app.MapControllers();
 
 app.Run();
+
+
+//ADD CORS, REFRESH TOKEN (READ ABOUT ACCESS TOKEN)!

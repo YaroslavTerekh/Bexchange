@@ -43,13 +43,24 @@ namespace BexchangeAPI.Controllers
         {
             var order = await _orderRepo.GetComponentAsync(id);
 
-            if (order == null) 
+            if (order == null)
                 throw new NotFoundException("Orders not found", (int)HttpStatusCode.NotFound);
 
             return Ok(_mapper.Map<ExchangeOrderDto>(order));
         }
 
-        [HttpPost]
+        [HttpGet("user/{id}")]
+        public async Task<IActionResult> GetUserOrders(int id)
+        {
+            var order = await _orderRepo.GetUserComponentsAsync(id);
+
+            if (order == null)
+                throw new NotFoundException("Orders not found", (int)HttpStatusCode.NotFound);
+
+            return Ok(_mapper.Map<IEnumerable<ExchangeOrderDto>>(order));
+        }
+
+        [HttpPost("add")]
         public async Task<IActionResult> AddOrder(ExchangeOrderDto order)
         {
             if (ModelState.IsValid)
@@ -73,7 +84,7 @@ namespace BexchangeAPI.Controllers
             return BadRequest(ModelState.Values.First().Errors.First().ErrorMessage);
         }
 
-        [HttpPut]
+        [HttpPut("modify")]
         public async Task<IActionResult> ModifyOrder(ExchangeOrderDto order)
         {
             if (ModelState.IsValid)
@@ -94,7 +105,7 @@ namespace BexchangeAPI.Controllers
             return BadRequest(ModelState.Values.First().Errors.First().ErrorMessage);
         }
 
-        [HttpDelete("{id}")]
+        [HttpDelete("delete/{id}")]
         public async Task<IActionResult> DeleteOrder(int id)
         {
             if (await _orderRepo.GetComponentAsync(id) == null) 
