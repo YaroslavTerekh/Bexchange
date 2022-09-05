@@ -44,14 +44,6 @@ namespace BexchangeAPI.Controllers
             var token = await responce.Content.ReadAsStringAsync();
 
             return Ok(token);
-        }
-
-        //TEST
-        [HttpGet]
-        public async Task<IActionResult> GetUser(int id)
-        {
-            var user = await _usersRepository.GetUserAsync(id);
-            return Ok(user);
-        }
+        }  
     }
 }

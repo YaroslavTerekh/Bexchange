@@ -1,4 +1,6 @@
 ﻿using Bexchange.Infrastructure.Repositories.Interfaces;
+using BexchangeAPI.Domain.CustomExceptions;
+using BexchangeAPI.Domain.Enum;
 using BexchangeAPI.Domain.Models;
 using BexchangeAPI.Infrastructure.DtbContext;
 using BexchangeAPI.Infrastructure.Repositories.Interfaces;
@@ -19,16 +21,39 @@ namespace BexchangeAPI.Infrastructure.Repositories
             _context = context;
         }
 
+        public async Task ChangeRoleAsync(Roles role, int id)
+        {
+            var user = await _context.Users.FirstOrDefaultAsync(x => x.Id == id);
+
+            user.Role = role;
+            _context.SaveChanges();
+        }
+
         public async Task BanUserAsync(int id)
         {
             var user = await _context.Users.FirstOrDefaultAsync(x => x.Id == id);
-            user.IsBanned = true;
-            _context.SaveChanges();
+            if(user.Role == Roles.User)
+            {
+                user.IsBanned = true;
+                _context.SaveChanges();
+            } else
+            {
+                throw new Exception("This user is an admin");
+            }
+        }
+
+        public async Task<IEnumerable<User>> GetAdminsOnlyAsync()
+        {
+            return await _context.Users.Where(u => u.Role == Roles.Admin).ToListAsync();
         }
 
         public async Task<IEnumerable<User>> GetAllUsersAsync()
         {
-            return await _context.Users.ToListAsync();
+            return await _context.Users
+                .Include(u => u.Address)
+                .Include(u => u.Books)
+                    .ThenInclude(b => b.Image)
+                .ToListAsync();
         }
 
         public async Task<User> GetUserAsync(int id)
@@ -43,12 +68,20 @@ namespace BexchangeAPI.Infrastructure.Repositories
 
         public async Task<User> GetUserByEmailAsync(string email)
         {
-            return await _context.Users.FirstOrDefaultAsync(u => u.Email == email);
+            return await _context.Users.Where(u => u.Email == email)
+                .Include(u => u.Address)
+                .Include(u => u.Books)
+                    .ThenInclude(b => b.Image)
+                .FirstOrDefaultAsync();
         }
 
         public async Task<User> GetUserByNameAsync(string name)
         {
-            return await _context.Users.FirstOrDefaultAsync(u => u.NickName == name);
+            return await _context.Users.Where(u => u.NickName == name)
+                .Include(u => u.Address)
+                .Include(u => u.Books)
+                    .ThenInclude(b => b.Image)
+                .FirstOrDefaultAsync(); ;
         }
 
         public async Task ModifyUserAsync(User user)
