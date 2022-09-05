@@ -1,9 +1,11 @@
 ﻿using Bexchange.Infrastructure.Repositories.Interfaces;
 using BexchangeAPI.Domain.Enum;
 using BexchangeAPI.Domain.Models;
+using BexchangeAPI.Infrastructure.Repositories.Interfaces;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
+using System.Security.Claims;
 
 namespace Bexchange.API.Controllers
 {
@@ -13,10 +15,12 @@ namespace Bexchange.API.Controllers
     public class AdminController : ControllerBase
     {
         private readonly IUsersRepository<User> _usersRepository;
+        private readonly IContentRepository<Book> _contentRepository;
 
-        public AdminController(IUsersRepository<User> usersRepository)
+        public AdminController(IUsersRepository<User> usersRepository, IContentRepository<Book> contentRepository)
         {
             _usersRepository = usersRepository;
+            _contentRepository = contentRepository;
         }
 
         [HttpGet("users")]
@@ -25,14 +29,14 @@ namespace Bexchange.API.Controllers
             return Ok(await _usersRepository.GetAllUsersAsync());
         }
 
-        [HttpGet("users/{id}")]
+        [HttpGet("id/{id}")]
         public async Task<IActionResult> GetUser(int id)
         {
             var user = await _usersRepository.GetUserAsync(id);
             return Ok(user);
         }
 
-        [HttpGet("users/get/{nameOrEmail}")]
+        [HttpGet("uore/{nameOrEmail}")]
         public async Task<IActionResult> GetUserByNameOrEmail(string nameOrEmail)
         {
             if (nameOrEmail.Contains("@"))
@@ -50,9 +54,21 @@ namespace Bexchange.API.Controllers
         [HttpPut("ban/{id}")]
         public async Task<IActionResult> BanUser(int id)
         {
-            await _usersRepository.BanUserAsync(id);
+            if (id != GetUserId()) {
+                await _usersRepository.BanUserAsync(id);
 
-            return Ok($"User with id {id} has been banned");
+                return Ok($"User with id {id} has been banned");
+            }
+
+            return BadRequest("You can't ban yourself");
+        }
+
+        [HttpPut("book/state/{id}/{state}")]
+        public async Task<IActionResult> AcceptBook(int id, State state)
+        {
+            await _contentRepository.ModifyComponentStateAsync(id, state);
+
+            return Ok("Successfully modified state");
         }
 
         //SuperAdmin part
@@ -71,11 +87,18 @@ namespace Bexchange.API.Controllers
             return Ok("Successfully changed the role");
         }
 
-        [HttpPut("users/modify/{id}"), Authorize(Policy = "SuperAdmin")]
+        [HttpPut("modify/{id}"), Authorize(Policy = "SuperAdmin")]
         public async Task<IActionResult> ModifyUser(User user)
         {
             await _usersRepository.ModifyUserAsync(user);
             return Ok("Modified successfully");
+        }
+
+        private int GetUserId()
+        {
+            var identity = HttpContext.User.Identity as ClaimsIdentity;
+            var id = identity.FindFirst("id").Value;
+            return Int32.Parse(id);
         }
     }
 }

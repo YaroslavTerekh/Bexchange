@@ -1,6 +1,7 @@
 ﻿using AutoMapper;
 using Bexchange.Infrastructure.Repositories.Interfaces;
 using BexchangeAPI.Domain.CustomExceptions;
+using BexchangeAPI.Domain.Enum;
 using BexchangeAPI.Domain.Models;
 using BexchangeAPI.DTOs;
 using BexchangeAPI.Infrastructure.Repositories.Interfaces;
@@ -51,7 +52,18 @@ namespace BexchangeAPI.Controllers
             return Ok(_mapper.Map<BookDto>(book));
         }
 
-        [HttpPost]
+        [HttpGet("user/{userId}")]
+        public async Task<IActionResult> GetUserBooks(int userId)
+        {
+            var books = await _contentRepo.GetUserComponentsAsync(userId);
+
+            if (books == null)
+                throw new NotFoundException("Books not found", (int)HttpStatusCode.NotFound);
+
+            return Ok(_mapper.Map<IEnumerable<BookDto>>(books));
+        }
+
+        [HttpPost("add")]
         public async Task<IActionResult> AddBook(BookDto book)
         {
             var newBook = _mapper.Map<Book>(book);
@@ -65,10 +77,10 @@ namespace BexchangeAPI.Controllers
             //return BadRequest(ModelState.Values.First().Errors.First().ErrorMessage);
         }
 
-        [HttpPut]
+        [HttpPut("modify")]
         public async Task<IActionResult> ModifyBook(BookDto book)
         {
-            if (GetUserId() == book.UserId)
+            if (GetUserId() == book.UserId || IsAdmin())
             {
                 if (await _contentRepo.GetComponentAsync(book.Id) == null)
                     throw new NotFoundException("Book not found", (int)HttpStatusCode.NotFound);
@@ -83,7 +95,7 @@ namespace BexchangeAPI.Controllers
             //return BadRequest(ModelState.Values.First().Errors.First().ErrorMessage);
         }
 
-        [HttpDelete("{id}")]
+        [HttpDelete("delete/{id}")]
         public async Task<IActionResult> DeleteBook(int id)
         {
             if (await _contentRepo.GetComponentAsync(id) == null)
@@ -91,7 +103,7 @@ namespace BexchangeAPI.Controllers
             
             Book book = await _contentRepo.GetComponentAsync(id);
 
-            if (GetUserId() == book.UserId)
+            if (GetUserId() == book.UserId || IsAdmin())
             {
                 await _contentRepo.DeleteComponentAsync(id);
                 return Ok($"Book with id {id} was deleted");
@@ -105,6 +117,14 @@ namespace BexchangeAPI.Controllers
             var identity = HttpContext.User.Identity as ClaimsIdentity;
             var id = identity.FindFirst("id").Value;
             return Int32.Parse(id);
+        }
+
+        private bool IsAdmin()
+        {
+            var identity = HttpContext.User.Identity as ClaimsIdentity;
+            var role = identity.FindFirst(ClaimTypes.Role).Value;
+
+            return role == Roles.Admin.ToString() | role == Roles.SuperAdmin.ToString() ? true : false;
         }
     }
 }

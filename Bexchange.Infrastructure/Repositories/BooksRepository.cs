@@ -1,4 +1,5 @@
-﻿using BexchangeAPI.Domain.Models;
+﻿using BexchangeAPI.Domain.Enum;
+using BexchangeAPI.Domain.Models;
 using BexchangeAPI.Infrastructure.DtbContext;
 using BexchangeAPI.Infrastructure.Repositories.Interfaces;
 using Microsoft.EntityFrameworkCore;
@@ -62,6 +63,22 @@ namespace BexchangeAPI.Infrastructure.Repositories
             originalBook.Image.Date = book.Image.Date; 
 
             await _context.SaveChangesAsync();
+        }
+
+        public async Task ModifyComponentStateAsync(int id, State state)
+        {
+            Book book = await GetComponentAsync(id);
+            book.State = state;
+            await _context.SaveChangesAsync();
+        }
+
+        public async Task<IEnumerable<Book>> GetUserComponentsAsync(int userId)
+        {
+            return await _context.Books
+                .Where(b => b.UserId == userId)
+                .Include(b => b.Image)
+                .Include(b => b.User)
+                .ToListAsync();
         }
     }
 }
