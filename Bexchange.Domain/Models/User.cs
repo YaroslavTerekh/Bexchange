@@ -13,7 +13,7 @@ namespace BexchangeAPI.Domain.Models
     {
         [Key]
         public int Id { get; set; }
-        public string NickName { get; set; }
+        public string UserName { get; set; }
         public string FirstName { get; set; }
         public string LastName { get; set; }
         public string Email { get; set; }
@@ -23,8 +23,12 @@ namespace BexchangeAPI.Domain.Models
         public ICollection<Book>? Books { get; set; }
         public DateTime RegisteredDate { get; set; } = DateTime.UtcNow;
         public byte[] PasswordHash { get; set; }
-        public byte[] PasswordSalt { get; set; }
+        public byte[] PasswordSalt { get; set; }        
         public Roles Role { get; set; }
+
+        public string RefreshToken { get; set; } = string.Empty;
+        public DateTime TokenCreated { get; set; } 
+        public DateTime TokenExpires { get; set; }
 
         public bool IsBanned { get; set; } = false;
     }

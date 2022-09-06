@@ -14,6 +14,14 @@ builder.Services.AddSwaggerGen();
 builder.Services.AddDbContextsCustom(builder.Configuration);
 builder.Services.AddTransient<IUsersRepository<User>, UsersRepository>();
 
+
+//Add Cookie
+builder.Services.Configure<CookiePolicyOptions>(options =>
+{
+    options.CheckConsentNeeded = context => true;
+    options.MinimumSameSitePolicy = SameSiteMode.None;
+});
+
 var app = builder.Build();
 
 // Configure the HTTP request pipeline.

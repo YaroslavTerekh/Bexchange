@@ -65,6 +65,13 @@ builder.Services.AddAuthorization(options =>
     });
 });
 
+//Add Cookie
+builder.Services.Configure<CookiePolicyOptions>(options =>
+{
+    options.CheckConsentNeeded = context => true;
+    options.MinimumSameSitePolicy = SameSiteMode.None;
+});
+
 // Add SQL Server
 builder.Services.AddDbContextsCustom(builder.Configuration);
 //Depency Injection
@@ -92,6 +99,3 @@ app.UseAuthorization();
 app.MapControllers();
 
 app.Run();
-
-
-//ADD CORS, REFRESH TOKEN (READ ABOUT ACCESS TOKEN)!

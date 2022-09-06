@@ -77,7 +77,7 @@ namespace BexchangeAPI.Infrastructure.Repositories
 
         public async Task<User> GetUserByNameAsync(string name)
         {
-            return await _context.Users.Where(u => u.NickName == name)
+            return await _context.Users.Where(u => u.UserName == name)
                 .Include(u => u.Address)
                 .Include(u => u.Books)
                     .ThenInclude(b => b.Image)
@@ -88,7 +88,7 @@ namespace BexchangeAPI.Infrastructure.Repositories
         {
             var _user = await GetUserAsync(user.Id);
 
-            _user.NickName = user.NickName;
+            _user.UserName = user.UserName;
             _user.FirstName = user.FirstName;
             _user.LastName = user.LastName;
             _user.Email = user.Email;
@@ -107,6 +107,11 @@ namespace BexchangeAPI.Infrastructure.Repositories
         {
             await _context.Users.AddAsync(user);
 
+            await _context.SaveChangesAsync();
+        }
+
+        public async Task SaveUser()
+        {
             await _context.SaveChangesAsync();
         }
     }

@@ -4,6 +4,7 @@ using BexchangeAPI.Infrastructure.DtbContext;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 
 #nullable disable
@@ -11,9 +12,10 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace BexchangeAPI.Migrations
 {
     [DbContext(typeof(ContentDbContext))]
-    partial class ContentDbContextModelSnapshot : ModelSnapshot
+    [Migration("20220906163040_RefreshToken")]
+    partial class RefreshToken
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -44,7 +46,7 @@ namespace BexchangeAPI.Migrations
 
                     b.HasKey("Id");
 
-                    b.ToTable("Addresses", (string)null);
+                    b.ToTable("Addresses");
                 });
 
             modelBuilder.Entity("BexchangeAPI.Domain.Models.Book", b =>
@@ -78,7 +80,7 @@ namespace BexchangeAPI.Migrations
 
                     b.HasIndex("UserId");
 
-                    b.ToTable("Books", (string)null);
+                    b.ToTable("Books");
                 });
 
             modelBuilder.Entity("BexchangeAPI.Domain.Models.ExchangeOrder", b =>
@@ -104,7 +106,7 @@ namespace BexchangeAPI.Migrations
 
                     b.HasIndex("SecondBookId");
 
-                    b.ToTable("Orders", (string)null);
+                    b.ToTable("Orders");
                 });
 
             modelBuilder.Entity("BexchangeAPI.Domain.Models.Image", b =>
@@ -124,7 +126,7 @@ namespace BexchangeAPI.Migrations
 
                     b.HasKey("Id");
 
-                    b.ToTable("Images", (string)null);
+                    b.ToTable("Images");
                 });
 
             modelBuilder.Entity("BexchangeAPI.Domain.Models.User", b =>
@@ -185,7 +187,7 @@ namespace BexchangeAPI.Migrations
 
                     b.HasIndex("AddressId");
 
-                    b.ToTable("Users", (string)null);
+                    b.ToTable("Users");
                 });
 
             modelBuilder.Entity("BexchangeAPI.Domain.Models.Book", b =>
