@@ -18,5 +18,6 @@ namespace Bexchange.Infrastructure.Repositories.Interfaces
         public Task BanUserAsync(int id);
         public Task ModifyUserAsync(T user);
         public Task ChangeRoleAsync(Roles role, int id);
+        public Task SaveUser();
     }
 }

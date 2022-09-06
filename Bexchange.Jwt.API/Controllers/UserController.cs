@@ -10,6 +10,7 @@ using System.Security.Claims;
 using Microsoft.IdentityModel.Tokens;
 using System.IdentityModel.Tokens.Jwt;
 using System.Text;
+using Bexchange.Domain.DtoModels;
 
 namespace Bexchange.Jwt.API.Controllers
 {
@@ -40,7 +41,7 @@ namespace Bexchange.Jwt.API.Controllers
             CreatePasswordHash(user.Password, out passHash, out passSalt);
 
             User mappedUser = new User {
-                NickName = user.NickName,
+                UserName = user.UserName,
                 Email = user.Email,
                 FirstName = user.FirstName,
                 LastName = user.LastName,
@@ -82,6 +83,32 @@ namespace Bexchange.Jwt.API.Controllers
 
             var token = await CreateTokenAsync(user);
 
+            var refreshToken = GenerateRefreshToken();
+            SetRefreshToken(refreshToken, user);
+
+            return Ok(token);
+        }
+
+        [HttpPost("refresh-token")]
+        public async Task<ActionResult<string>> RefreshToken(IdDTO id)
+        {
+            var user = await _usersRepository.GetUserAsync(id.id);
+
+            var refreshToken = Request.Cookies["refreshToken"];
+
+            if (!user.RefreshToken.Equals(refreshToken))
+            {
+                return Unauthorized("Invalid Refresh Token.");
+            }
+            else if (user.TokenExpires < DateTime.Now)
+            {
+                return Unauthorized("Token expired.");
+            }
+
+            string token = CreateToken(user);
+            var newRefreshToken = GenerateRefreshToken();
+            SetRefreshToken(newRefreshToken, user);
+
             return Ok(token);
         }
 
@@ -90,7 +117,60 @@ namespace Bexchange.Jwt.API.Controllers
         {
             return Ok(await _usersRepository.GetUserAsync(id));
         }
-        
+        private RefreshToken GenerateRefreshToken()
+        {
+            var refreshToken = new RefreshToken {
+                Token = Convert.ToBase64String(RandomNumberGenerator.GetBytes(64)),
+                Expires = DateTime.Now.AddDays(7),
+                CreateTime = DateTime.Now
+            };
+
+            return refreshToken;
+        }
+
+        private void SetRefreshToken(RefreshToken token, User user)
+        {
+            var cookieOpts = new Microsoft.AspNetCore.Http.CookieOptions
+            {
+                HttpOnly = true,
+                Expires = token.Expires,
+                IsEssential = true,
+                Secure = true,
+            };
+
+            Response.Cookies.Append("refreshToken", token.Token, cookieOpts);
+
+            Response.Headers.Add("token", token.Token);
+            Response.Headers.Add("tokenExp", token.Expires.ToString());
+
+            user.RefreshToken = token.Token;
+            user.TokenCreated = token.CreateTime;
+            user.TokenExpires = token.Expires;
+
+            _usersRepository.SaveUser();
+        }
+        private string CreateToken(User user)
+        {
+            List<Claim> claims = new List<Claim>
+            {
+                new Claim(ClaimTypes.Name, user.UserName),
+                new Claim(ClaimTypes.Role, "Admin")
+            };
+
+            var key = new SymmetricSecurityKey(System.Text.Encoding.UTF8.GetBytes(
+                _configuration.GetSection("AppSettings:Token").Value));
+
+            var creds = new SigningCredentials(key, SecurityAlgorithms.HmacSha512Signature);
+
+            var token = new JwtSecurityToken(
+                claims: claims,
+                expires: DateTime.Now.AddDays(1),
+                signingCredentials: creds);
+
+            var jwt = new JwtSecurityTokenHandler().WriteToken(token);
+
+            return jwt;
+        }
         private void CreatePasswordHash(string password, out byte[] passHash, out byte[] passSalt)
         {
             using(var hmac = new HMACSHA256())
@@ -101,7 +181,7 @@ namespace Bexchange.Jwt.API.Controllers
         }
         private async Task<bool> TestUserSearchAsync(UserDTO user)
         {
-            var testSearchUser = await _usersRepository.GetUserByNameAsync(user.NickName);
+            var testSearchUser = await _usersRepository.GetUserByNameAsync(user.UserName);
             if (testSearchUser != null)
                 return true;
 
@@ -144,5 +224,12 @@ namespace Bexchange.Jwt.API.Controllers
 
             return jwt.ToString();
         }
+        private int GetUserId()
+        {
+            var identity = HttpContext.User.Identity as ClaimsIdentity;
+            var id = identity.FindFirst("id").Value;
+            return Int32.Parse(id);
+        }
+
     }
 }
