@@ -4,12 +4,10 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace BexchangeAPI.Domain.Enum
+namespace Bexchange.Domain.DtoModels
 {
-    public enum Roles
+    public class IdDTO
     {
-        User,
-        Admin,
-        SuperAdmin
+        public int id { get; set; }
     }
 }

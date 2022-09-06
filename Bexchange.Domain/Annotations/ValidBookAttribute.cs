@@ -5,7 +5,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace Bexchange.Domain.Annotations
+namespace BexchangeAPI.Domain.Annotations
 {
     public class ValidBookAttribute : ValidationAttribute
     {

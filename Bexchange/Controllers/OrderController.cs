@@ -1,14 +1,17 @@
 ﻿using AutoMapper;
-using Bexchange.Domain.CustomExceptions;
-using Bexchange.Domain.Models;
-using Bexchange.DTOs;
-using Bexchange.Infrastructure.Repositories.Interfaces;
+using BexchangeAPI.Domain.CustomExceptions;
+using BexchangeAPI.Domain.Models;
+using BexchangeAPI.DTOs;
+using BexchangeAPI.Infrastructure.Repositories.Interfaces;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using System.Net;
+using System.Security.Claims;
 
-namespace Bexchange.Controllers
+namespace BexchangeAPI.Controllers
 {
+    [Authorize]
     [Route("api/[controller]")]
     [ApiController]
     public class OrderController : ControllerBase
@@ -27,10 +30,10 @@ namespace Bexchange.Controllers
         [HttpGet]
         public async Task<IActionResult> Orders()
         {
-            var orders = await _orderRepo.GetAllComponents();
+            var orders = await _orderRepo.GetAllComponentsAsync();
 
             if (orders == null) 
-                throw new NotFoundException("Orders not found", 404);
+                throw new NotFoundException("Orders not found", (int)HttpStatusCode.NotFound);
 
             return Ok(_mapper.Map<IEnumerable<ExchangeOrderDto>>(orders));
         }
@@ -38,23 +41,34 @@ namespace Bexchange.Controllers
         [HttpGet("{id}")]
         public async Task<IActionResult> GetOrder(int id)
         {
-            var order = await _orderRepo.GetComponent(id);
+            var order = await _orderRepo.GetComponentAsync(id);
 
-            if (order == null) 
-                throw new NotFoundException("Orders not found", 404);
+            if (order == null)
+                throw new NotFoundException("Orders not found", (int)HttpStatusCode.NotFound);
 
             return Ok(_mapper.Map<ExchangeOrderDto>(order));
         }
 
-        [HttpPost]
+        [HttpGet("user/{id}")]
+        public async Task<IActionResult> GetUserOrders(int id)
+        {
+            var order = await _orderRepo.GetUserComponentsAsync(id);
+
+            if (order == null)
+                throw new NotFoundException("Orders not found", (int)HttpStatusCode.NotFound);
+
+            return Ok(_mapper.Map<IEnumerable<ExchangeOrderDto>>(order));
+        }
+
+        [HttpPost("add")]
         public async Task<IActionResult> AddOrder(ExchangeOrderDto order)
         {
             if (ModelState.IsValid)
             {
                 var newOrder = _mapper.Map<ExchangeOrder>(order);
 
-                var firstBook = await _bookRepo.GetComponent(order.FirstBookId);
-                var secondBook = await _bookRepo.GetComponent(order.SecondBookId);
+                var firstBook = await _bookRepo.GetComponentAsync(order.FirstBookId);
+                var secondBook = await _bookRepo.GetComponentAsync(order.SecondBookId);
 
                 if(firstBook == null || secondBook == null) 
                     throw new NotFoundException("Books not found", (int)HttpStatusCode.NotFound);
@@ -62,7 +76,7 @@ namespace Bexchange.Controllers
                 newOrder.FirstBook = firstBook;
                 newOrder.SecondBook = secondBook;
 
-                await _orderRepo.AddComponent(newOrder);
+                await _orderRepo.AddComponentAsync(newOrder);
 
                 return Created(Request.Path, new { newOrder.Id });
             }
@@ -70,20 +84,20 @@ namespace Bexchange.Controllers
             return BadRequest(ModelState.Values.First().Errors.First().ErrorMessage);
         }
 
-        [HttpPut]
+        [HttpPut("modify")]
         public async Task<IActionResult> ModifyOrder(ExchangeOrderDto order)
         {
             if (ModelState.IsValid)
             {
-                if (await _orderRepo.GetComponent(order.Id) == null) 
-                    throw new NotFoundException("Order not found", 404);
+                if (await _orderRepo.GetComponentAsync(order.Id) == null) 
+                    throw new NotFoundException("Order not found", (int)HttpStatusCode.NotFound);
 
                 var mappedOrder = _mapper.Map<ExchangeOrder>(order);
 
-                mappedOrder.FirstBook = await _bookRepo.GetComponent(order.FirstBookId);
-                mappedOrder.SecondBook = await _bookRepo.GetComponent(order.SecondBookId);
+                mappedOrder.FirstBook = await _bookRepo.GetComponentAsync(order.FirstBookId);
+                mappedOrder.SecondBook = await _bookRepo.GetComponentAsync(order.SecondBookId);
 
-                await _orderRepo.ModifyComponent(mappedOrder);
+                await _orderRepo.ModifyComponentAsync(mappedOrder);
 
                 return Ok();
             }
@@ -91,15 +105,22 @@ namespace Bexchange.Controllers
             return BadRequest(ModelState.Values.First().Errors.First().ErrorMessage);
         }
 
-        [HttpDelete("{id}")]
+        [HttpDelete("delete/{id}")]
         public async Task<IActionResult> DeleteOrder(int id)
         {
-            if (await _orderRepo.GetComponent(id) == null) 
-                throw new NotFoundException("Order not found", 404);
+            if (await _orderRepo.GetComponentAsync(id) == null) 
+                throw new NotFoundException("Order not found", (int)HttpStatusCode.NotFound);
 
-            await _orderRepo.DeleteComponent(id);
+            await _orderRepo.DeleteComponentAsync(id);
 
             return Ok($"Orded with id {id} was deleted");
+        }
+
+        private int GetUserId()
+        {
+            var identity = HttpContext.User.Identity as ClaimsIdentity;
+            var id = identity.FindFirst("id").Value;
+            return Int32.Parse(id);
         }
     }
 }

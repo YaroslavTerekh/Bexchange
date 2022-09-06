@@ -1,4 +1,4 @@
-﻿namespace Bexchange.Domain.CustomExceptions
+﻿namespace BexchangeAPI.Domain.CustomExceptions
 {
     public class NotFoundException : Exception
     {

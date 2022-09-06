@@ -5,10 +5,10 @@ using System.ComponentModel.DataAnnotations.Schema;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
-using Bexchange.Domain.Annotations;
-using Bexchange.Domain.Enum;
+using BexchangeAPI.Domain.Annotations;
+using BexchangeAPI.Domain.Enum;
 
-namespace Bexchange.Domain.Models
+namespace BexchangeAPI.Domain.Models
 {
     public class Book
     {

@@ -1,12 +1,19 @@
-using Bexchange.Infrastructure;
-using Bexchange.Infrastructure.DtbContext;
-using Bexchange.Infrastructure.Repositories;
-using Bexchange.Infrastructure.Repositories.Interfaces;
+using BexchangeAPI.Infrastructure;
+using BexchangeAPI.Infrastructure.DtbContext;
+using BexchangeAPI.Infrastructure.Repositories;
+using BexchangeAPI.Infrastructure.Repositories.Interfaces;
 using Microsoft.EntityFrameworkCore;
 using AutoMapper;
-using Bexchange.Domain.Models;
-using Bexchange.Middleware;
+using BexchangeAPI.Domain.Models;
+using BexchangeAPI.Middleware;
 using System.Text.Json.Serialization;
+using Microsoft.AspNetCore.Authentication.JwtBearer;
+using Microsoft.IdentityModel.Tokens;
+using System.Text;
+using Microsoft.OpenApi.Models;
+using Swashbuckle.AspNetCore.Filters;
+using BexchangeAPI.Domain.Enum;
+using Bexchange.Infrastructure.Repositories.Interfaces;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -18,11 +25,61 @@ builder.Services.AddControllers().AddJsonOptions(x =>
 builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen();
 builder.Services.AddAutoMapper(AppDomain.CurrentDomain.GetAssemblies());
+// Add Auth
+builder.Services.AddSwaggerGen(options =>
+{
+    options.AddSecurityDefinition("oauth2", new OpenApiSecurityScheme
+    {
+        Description = "Standard Authorization header using the Bearer scheme (\"bearer {token}\")",
+        In = ParameterLocation.Header,
+        Name = "Authorization",
+        Type = SecuritySchemeType.ApiKey
+    });
+
+    options.OperationFilter<SecurityRequirementsOperationFilter>();
+});
+
+builder.Services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme)
+    .AddJwtBearer(options =>
+    {
+        options.TokenValidationParameters = new TokenValidationParameters
+        {
+            ValidateIssuerSigningKey = true,
+            IssuerSigningKey = new SymmetricSecurityKey(Encoding.UTF8
+                .GetBytes(builder.Configuration.GetSection("AppSettings:Token").Value)),
+            ValidateIssuer = false,
+            ValidateAudience = false,
+        };
+    });
+
+builder.Services.AddAuthorization(options =>
+{
+    options.AddPolicy("Admins", policy =>
+    {
+        policy.RequireRole(Roles.Admin.ToString(), Roles.SuperAdmin.ToString());
+    });
+
+    options.AddPolicy("SuperAdmin", policy =>
+    {
+        policy.RequireRole(Roles.SuperAdmin.ToString());
+    });
+});
+
+//Add Cookie
+builder.Services.Configure<CookiePolicyOptions>(options =>
+{
+    options.CheckConsentNeeded = context => true;
+    options.MinimumSameSitePolicy = SameSiteMode.None;
+});
+
 // Add SQL Server
 builder.Services.AddDbContextsCustom(builder.Configuration);
 //Depency Injection
 builder.Services.AddTransient<IContentRepository<Book>, BooksRepository>();
 builder.Services.AddTransient<IContentRepository<ExchangeOrder>, OrdersRepository>();
+builder.Services.AddTransient<IUsersRepository<User>, UsersRepository>();
+
+builder.Services.AddHttpClient();
 
 var app = builder.Build();
 
@@ -33,9 +90,10 @@ if (app.Environment.IsDevelopment())
     app.UseSwaggerUI();
 }
 
-app.UseCustomExceptionHandler();
+//app.UseCustomExceptionHandler();
 app.UseHttpsRedirection();
 
+app.UseAuthentication();
 app.UseAuthorization();
 
 app.MapControllers();

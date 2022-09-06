@@ -1,4 +1,4 @@
-namespace BexchangeAPI
+namespace BexchangeAPI.Jwt.API
 {
     public class WeatherForecast
     {

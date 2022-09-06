@@ -1,6 +1,7 @@
-﻿using Bexchange.Domain.Models;
-using Bexchange.Infrastructure.DtbContext;
-using Bexchange.Infrastructure.Repositories.Interfaces;
+﻿using BexchangeAPI.Domain.Enum;
+using BexchangeAPI.Domain.Models;
+using BexchangeAPI.Infrastructure.DtbContext;
+using BexchangeAPI.Infrastructure.Repositories.Interfaces;
 using Microsoft.EntityFrameworkCore;
 using System;
 using System.Collections.Generic;
@@ -8,7 +9,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace Bexchange.Infrastructure.Repositories
+namespace BexchangeAPI.Infrastructure.Repositories
 {
     public class BooksRepository : IContentRepository<Book>
     {
@@ -18,7 +19,7 @@ namespace Bexchange.Infrastructure.Repositories
             _context = context;
         }
 
-        public async Task<IEnumerable<Book>> GetAllComponents()
+        public async Task<IEnumerable<Book>> GetAllComponentsAsync()
         {
             return await _context.Books
                 .Include(b => b.Image)
@@ -29,19 +30,13 @@ namespace Bexchange.Infrastructure.Repositories
                 .ToListAsync();
         }
 
-        public async Task AddComponent(Book book)
+        public async Task AddComponentAsync(Book book)
         {
-            book.User = await _context.Users.Where(b => b.Id == book.UserId)
-                .Include(u => u.Address)
-                .Include(u => u.Books)
-                    .IgnoreAutoIncludes()
-                .FirstOrDefaultAsync();
-
             await _context.Books.AddAsync(book);
             await _context.SaveChangesAsync();
         }
 
-        public async Task<Book?> GetComponent(int id)
+        public async Task<Book?> GetComponentAsync(int id)
         {
             return await _context.Books.Where(b => b.Id == id)
                 .Include(b => b.Image)
@@ -52,15 +47,15 @@ namespace Bexchange.Infrastructure.Repositories
                 .FirstOrDefaultAsync();
         }
 
-        public async Task DeleteComponent(int id)
+        public async Task DeleteComponentAsync(int id)
         {
-            _context.Books.Remove(await GetComponent(id));
+            _context.Books.Remove(await GetComponentAsync(id));
             await _context.SaveChangesAsync();
         }
 
-        public async Task ModifyComponent(Book book)
+        public async Task ModifyComponentAsync(Book book)
         {
-            Book originalBook = await GetComponent(book.Id);
+            Book originalBook = await GetComponentAsync(book.Id);
 
             originalBook.Title = book.Title;
             originalBook.Description = book.Description;
@@ -68,6 +63,22 @@ namespace Bexchange.Infrastructure.Repositories
             originalBook.Image.Date = book.Image.Date; 
 
             await _context.SaveChangesAsync();
+        }
+
+        public async Task ModifyComponentStateAsync(int id, State state)
+        {
+            Book book = await GetComponentAsync(id);
+            book.State = state;
+            await _context.SaveChangesAsync();
+        }
+
+        public async Task<IEnumerable<Book>> GetUserComponentsAsync(int userId)
+        {
+            return await _context.Books
+                .Where(b => b.UserId == userId)
+                .Include(b => b.Image)
+                .Include(b => b.User)
+                .ToListAsync();
         }
     }
 }
