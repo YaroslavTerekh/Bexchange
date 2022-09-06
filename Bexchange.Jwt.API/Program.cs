@@ -14,6 +14,7 @@ builder.Services.AddSwaggerGen();
 builder.Services.AddDbContextsCustom(builder.Configuration);
 builder.Services.AddTransient<IUsersRepository<User>, UsersRepository>();
 
+builder.Services.AddCors();
 
 //Add Cookie
 builder.Services.Configure<CookiePolicyOptions>(options =>
@@ -30,6 +31,12 @@ if (app.Environment.IsDevelopment())
     app.UseSwagger();
     app.UseSwaggerUI();
 }
+
+app.UseCors(config =>
+{
+    config.WithOrigins("https://localhost:1234", "http://localhost:3334");
+    config.WithMethods("Register", "Login", "RefreshToken");
+});
 
 app.UseHttpsRedirection();
 

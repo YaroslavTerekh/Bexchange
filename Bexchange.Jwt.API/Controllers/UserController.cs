@@ -11,11 +11,13 @@ using Microsoft.IdentityModel.Tokens;
 using System.IdentityModel.Tokens.Jwt;
 using System.Text;
 using Bexchange.Domain.DtoModels;
+using Microsoft.AspNetCore.Cors;
 
 namespace Bexchange.Jwt.API.Controllers
 {
     [Route("api/[controller]")]
     [ApiController]
+    [EnableCors]
     public class UserController : ControllerBase
     {
         private readonly IUsersRepository<User> _usersRepository;
