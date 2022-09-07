@@ -6,8 +6,8 @@ using System.Threading.Tasks;
 
 namespace Bexchange.Domain.DtoModels
 {
-    public class IdDTO
+    public class BaseDTO
     {
-        public int id { get; set; }
+        public int Id { get; set; }
     }
 }

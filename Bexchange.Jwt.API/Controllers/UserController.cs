@@ -92,9 +92,9 @@ namespace Bexchange.Jwt.API.Controllers
         }
 
         [HttpPost("refresh-token")]
-        public async Task<ActionResult<string>> RefreshToken(IdDTO id)
+        public async Task<ActionResult<string>> RefreshToken(BaseDTO id)
         {
-            var user = await _usersRepository.GetUserAsync(id.id);
+            var user = await _usersRepository.GetUserAsync(id.Id);
 
             var refreshToken = Request.Cookies["refreshToken"];
 
