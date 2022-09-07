@@ -97,7 +97,7 @@ namespace Bexchange.API.Controllers
         private int GetUserId()
         {
             var identity = HttpContext.User.Identity as ClaimsIdentity;
-            var id = identity.FindFirst("id").Value;
+            var id = identity.FindFirst("Id").Value;
             return Int32.Parse(id);
         }
     }
