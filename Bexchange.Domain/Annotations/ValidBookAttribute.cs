@@ -11,7 +11,7 @@ namespace BexchangeAPI.Domain.Annotations
     {
         public override bool IsValid(object? value)
         {
-            return value == null || !Char.IsUpper(value.ToString()[0]) ? false : true;
+            return value != null && Char.IsUpper(value.ToString()[0]);
         }
     }
 }
