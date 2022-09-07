@@ -72,7 +72,7 @@ namespace BexchangeAPI.Controllers
             newBook.User = await _usersRepository.GetUserAsync(newBook.UserId);
             await _contentRepo.AddComponentAsync(newBook);
 
-            return Created(Request.Path, new { newBook.Id });
+            return Created(Request.Path, new { Id = newBook.Id, Path = Request.Path + $"/{newBook.Id}" });
 
             //return BadRequest(ModelState.Values.First().Errors.First().ErrorMessage);
         }
