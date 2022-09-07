@@ -67,7 +67,7 @@ namespace BexchangeAPI.Controllers
         {
             var jwtApiClient = _httpClientFactory.CreateClient();
 
-            var responce = await jwtApiClient.PostAsJsonAsync("https://localhost:9266/api/user/refresh-token", new IdDTO { id = GetUserId() }) ;
+            var responce = await jwtApiClient.PostAsJsonAsync("https://localhost:9266/api/user/refresh-token", new BaseDTO { Id = GetUserId() }) ;
             var token = await responce.Content.ReadAsStringAsync();
 
             var refreshToken = responce.Headers.GetValues("token").ToArray()[0].ToString();
@@ -89,7 +89,7 @@ namespace BexchangeAPI.Controllers
         private int GetUserId()
         {
             var identity = HttpContext.User.Identity as ClaimsIdentity;
-            var id = identity.FindFirst("Id").Value;
+            var id = identity.FindFirst("id").Value;
             return Int32.Parse(id);
         }
     }
