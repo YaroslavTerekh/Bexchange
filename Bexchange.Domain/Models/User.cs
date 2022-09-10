@@ -6,10 +6,11 @@ using System.Text;
 using System.Threading.Tasks;
 using BexchangeAPI.Domain.Enum;
 using System.ComponentModel.DataAnnotations.Schema;
+using Microsoft.AspNet.Identity.EntityFramework;
 
 namespace BexchangeAPI.Domain.Models
 {
-    public class User
+    public class User : IdentityUser
     {
         [Key]
         public int Id { get; set; }
@@ -17,7 +18,6 @@ namespace BexchangeAPI.Domain.Models
         public string FirstName { get; set; }
         public string LastName { get; set; }
         public string Email { get; set; }
-        [ForeignKey(nameof(AddressInfo))]
         public int AddressId { get; set; }
         public AddressInfo Address { get; set; }
         public ICollection<Book>? Books { get; set; }

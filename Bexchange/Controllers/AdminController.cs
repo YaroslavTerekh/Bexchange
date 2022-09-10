@@ -51,7 +51,7 @@ namespace Bexchange.API.Controllers
             }
         }
 
-        [HttpPut("ban/{id}")]
+        [HttpPatch("ban/{id}")]
         public async Task<IActionResult> BanUser(int id)
         {
             if (id != GetUserId()) {
@@ -63,7 +63,7 @@ namespace Bexchange.API.Controllers
             return BadRequest("You can't ban yourself");
         }
 
-        [HttpPut("book/state/{id}/{state}")]
+        [HttpPatch("book/state/{id}/{state}")]
         public async Task<IActionResult> AcceptBook(int id, State state)
         {
             await _contentRepository.ModifyComponentStateAsync(id, state);
