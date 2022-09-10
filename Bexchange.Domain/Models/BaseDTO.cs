@@ -4,9 +4,9 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace Bexchange.Domain.DtoModels
+namespace Bexchange.Domain.Models
 {
-    public class IdDTO
+    public abstract class BaseDTO
     {
         public int Id { get; set; }
     }

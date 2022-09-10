@@ -1,4 +1,5 @@
-﻿using System;
+﻿using Bexchange.Domain.Models;
+using System;
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
 using System.Linq;
@@ -7,10 +8,8 @@ using System.Threading.Tasks;
 
 namespace BexchangeAPI.Domain.Models
 {
-    public class Image
+    public class Image : BaseDTO
     {
-        [Key]
-        public int Id { get; set; }
         public string Path { get; set; }
         public DateTime Date { get; set; } = DateTime.Now;
     }
