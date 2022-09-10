@@ -12,6 +12,7 @@ using System.IdentityModel.Tokens.Jwt;
 using System.Text;
 using Bexchange.Domain.DtoModels;
 using Microsoft.AspNetCore.Cors;
+using Microsoft.AspNetCore.Identity;
 
 namespace Bexchange.Jwt.API.Controllers
 {
@@ -22,11 +23,16 @@ namespace Bexchange.Jwt.API.Controllers
     {
         private readonly IUsersRepository<User> _usersRepository;
         private readonly IConfiguration _configuration;
+        private readonly UserManager<User> _userManager;
+        private readonly SignInManager<User> _signInManager;
 
-        public UserController(IUsersRepository<User> usersRepository, IConfiguration configuration)
+        public UserController(IUsersRepository<User> usersRepository, IConfiguration configuration,
+            UserManager<User> userManager, SignInManager<User> signInManager)
         {
             _usersRepository = usersRepository;
             _configuration = configuration;
+            _userManager = userManager;
+            _signInManager = signInManager;
         }
 
         [HttpPost("register")]
@@ -36,11 +42,6 @@ namespace Bexchange.Jwt.API.Controllers
             {
                 return BadRequest("User already exists");
             }
-
-            byte[] passHash = null;
-            byte[] passSalt = null;
-
-            CreatePasswordHash(user.Password, out passHash, out passSalt);
 
             User mappedUser = new User {
                 UserName = user.UserName,
@@ -53,14 +54,18 @@ namespace Bexchange.Jwt.API.Controllers
                     City = user.AddressInfo.City,
                     PostIndex = user.AddressInfo.PostIndex,
                 },
-                PasswordHash = passHash,
-                PasswordSalt = passSalt,
+                
                 Role = Roles.User
             };
 
-            await _usersRepository.RegisterUserAsync(mappedUser);
+            var result = await _userManager.CreateAsync(mappedUser, user.Password);
 
-            return mappedUser;
+            if(result.Succeeded)
+            {
+                return Ok(mappedUser);
+            }
+
+            return BadRequest(result.Errors);
         }
 
         [HttpPost("login")]
@@ -80,7 +85,9 @@ namespace Bexchange.Jwt.API.Controllers
             if (user == null)
                 return BadRequest("Wrong username or e-mail");
 
-            if (!VerifyPasswordHash(loginUser.Password, user.PasswordHash, user.PasswordSalt))
+            var result = _signInManager.CanSignInAsync(user);
+
+            if (!result.Result)
                 return BadRequest("Wrong password");
 
             var token = await CreateTokenAsync(user);
@@ -159,7 +166,7 @@ namespace Bexchange.Jwt.API.Controllers
                 new Claim(ClaimTypes.Role, "Admin")
             };
 
-            var key = new SymmetricSecurityKey(System.Text.Encoding.UTF8.GetBytes(
+            var key = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(
                 _configuration.GetSection("AppSettings:Token").Value));
 
             var creds = new SigningCredentials(key, SecurityAlgorithms.HmacSha512Signature);
@@ -173,11 +180,10 @@ namespace Bexchange.Jwt.API.Controllers
 
             return jwt;
         }
-        private void CreatePasswordHash(string password, out byte[] passHash, out byte[] passSalt)
+        private void CreatePasswordHash(string password, out byte[] passHash)
         {
             using(var hmac = new HMACSHA256())
             {
-                passSalt = hmac.Key;
                 passHash = hmac.ComputeHash(System.Text.Encoding.UTF8.GetBytes(password));                 
             }
         }
@@ -193,9 +199,9 @@ namespace Bexchange.Jwt.API.Controllers
 
             return false;
         }
-        private bool VerifyPasswordHash(string password, byte[] passHash, byte[] passSalt)
+        private bool VerifyPasswordHash(string password, byte[] passHash)
         {
-            using(var hmac = new HMACSHA256(passSalt))
+            using(var hmac = new HMACSHA256())
             {
                 var computedHash = hmac.ComputeHash(System.Text.Encoding.UTF8.GetBytes(password));
                 return computedHash.SequenceEqual(passHash);

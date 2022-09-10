@@ -12,7 +12,7 @@
     "Bexchange.Jwt.API": {
       "commandName": "Project",
       "dotnetRunMessages": true,
-      "launchBrowser": false,
+      "launchBrowser": true,
       "launchUrl": "swagger",
       "applicationUrl": "https://localhost:9266;http://localhost:9366",
       "environmentVariables": {

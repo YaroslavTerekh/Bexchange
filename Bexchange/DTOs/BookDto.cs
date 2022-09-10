@@ -16,6 +16,10 @@ namespace BexchangeAPI.DTOs
         [MinLength(50, ErrorMessage = "Too short description (50 min)")]
         [ValidBook(ErrorMessage = "Description must start with big letter")]
         public string Description { get; set; }
+        [Required(ErrorMessage = "'Author' field is empty")]
+        public string Author { get; set; }
+        [Required(ErrorMessage = "'Genre' field is empty")]
+        public string Genre { get; set; }
         [Required(ErrorMessage = "No photo uploaded")]
         public Image Image { get; set; }
         [Required(ErrorMessage = "No User applied")]

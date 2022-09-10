@@ -1,5 +1,7 @@
-﻿using BexchangeAPI.Domain.Models;
+﻿using Bexchange.Domain;
+using BexchangeAPI.Domain.Models;
 using BexchangeAPI.Infrastructure.Configurations;
+using Microsoft.AspNetCore.Identity.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore;
 using System;
 using System.Collections.Generic;
@@ -9,7 +11,7 @@ using System.Threading.Tasks;
 
 namespace BexchangeAPI.Infrastructure.DtbContext
 {
-    public class ContentDbContext : DbContext
+    public class ContentDbContext : IdentityDbContext<User, ApplicationRole, int>
     {
         public ContentDbContext(DbContextOptions<ContentDbContext> opts) : base(opts) { }
 
@@ -17,7 +19,6 @@ namespace BexchangeAPI.Infrastructure.DtbContext
         public DbSet<ExchangeOrder> Orders { get; set; }
         public DbSet<Image> Images { get; set; }
         public DbSet<AddressInfo> Addresses { get; set; }
-        public DbSet<User> Users { get; set; }
 
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)
@@ -47,6 +48,7 @@ namespace BexchangeAPI.Infrastructure.DtbContext
                 //    .OnDelete(DeleteBehavior.Restrict);
             }
 
+            base.OnModelCreating(modelBuilder);
             modelBuilder.ApplyConfiguration(new BookConfiguration());
             modelBuilder.ApplyConfiguration(new ExchangeOrderConfiguration());
         }
