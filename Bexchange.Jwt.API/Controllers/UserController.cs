@@ -68,22 +68,34 @@ namespace Bexchange.Jwt.API.Controllers
             return BadRequest(result.Errors);
         }
 
-        [HttpPost("login")]
-        public async Task<ActionResult<string>> Login(LoginUserDTO loginUser)
+        [HttpPost("login/name")]
+        public async Task<ActionResult<string>> LoginWithName(LoginUserDTO loginUser)
         {
-            User user;
-
-            if (loginUser.UserName.Contains("@"))
-            {
-                user = await _usersRepository.GetUserByEmailAsync(loginUser.UserName);
-            }
-            else
-            {
-                user = await _usersRepository.GetUserByNameAsync(loginUser.UserName);
-            }
+            User user = await _usersRepository.GetUserByNameAsync(loginUser.UserName);
 
             if (user == null)
-                return BadRequest("Wrong username or e-mail");
+                return BadRequest("Wrong name");
+
+            var result = _signInManager.CanSignInAsync(user);
+
+            if (!result.Result)
+                return BadRequest("Wrong password");
+
+            var token = await CreateTokenAsync(user);
+
+            var refreshToken = GenerateRefreshToken();
+            SetRefreshToken(refreshToken, user);
+
+            return Ok(token);
+        }
+
+        [HttpPost("login/email")]
+        public async Task<ActionResult<string>> LoginWithEmail(LoginUserDTO loginUser)
+        {
+            User user = await _usersRepository.GetUserByEmailAsync(loginUser.UserName);
+
+            if (user == null)
+                return BadRequest("Wrong e-mail");
 
             var result = _signInManager.CanSignInAsync(user);
 
@@ -180,13 +192,6 @@ namespace Bexchange.Jwt.API.Controllers
 
             return jwt;
         }
-        private void CreatePasswordHash(string password, out byte[] passHash)
-        {
-            using(var hmac = new HMACSHA256())
-            {
-                passHash = hmac.ComputeHash(System.Text.Encoding.UTF8.GetBytes(password));                 
-            }
-        }
         private async Task<bool> TestUserSearchAsync(UserDTO user)
         {
             var testSearchUser = await _usersRepository.GetUserByNameAsync(user.UserName);
@@ -198,14 +203,6 @@ namespace Bexchange.Jwt.API.Controllers
                 return true;
 
             return false;
-        }
-        private bool VerifyPasswordHash(string password, byte[] passHash)
-        {
-            using(var hmac = new HMACSHA256())
-            {
-                var computedHash = hmac.ComputeHash(System.Text.Encoding.UTF8.GetBytes(password));
-                return computedHash.SequenceEqual(passHash);
-            }
         }
         private async Task<string> CreateTokenAsync(User user)
         {
@@ -231,12 +228,6 @@ namespace Bexchange.Jwt.API.Controllers
             var jwt = new JwtSecurityTokenHandler().WriteToken(token);
 
             return jwt.ToString();
-        }
-        private int GetUserId()
-        {
-            var identity = HttpContext.User.Identity as ClaimsIdentity;
-            var id = identity.FindFirst("id").Value;
-            return Int32.Parse(id);
         }
 
     }

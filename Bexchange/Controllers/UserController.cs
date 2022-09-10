@@ -37,12 +37,37 @@ namespace BexchangeAPI.Controllers
         }
 
         [AllowAnonymous]
-        [HttpPost("login")]
-        public async Task<IActionResult> Login(LoginUserDTO user)
+        [HttpPost("login/email")]
+        public async Task<IActionResult> LoginWithEmail(LoginUserDTO user)
         {
             var jwtApiClient = _httpClientFactory.CreateClient();
 
-            var responce = await jwtApiClient.PostAsJsonAsync("https://localhost:9266/api/user/login", user);
+            var responce = await jwtApiClient.PostAsJsonAsync("https://localhost:9266/api/user/login/email", user);
+            var token = await responce.Content.ReadAsStringAsync();
+
+            var refreshToken = responce.Headers.GetValues("token").ToArray()[0].ToString();
+            var refreshTokenExp = DateTime.Parse(responce.Headers.GetValues("tokenExp").ToArray()[0].ToString());
+
+            var cookieOpts = new CookieOptions
+            {
+                HttpOnly = true,
+                IsEssential = true,
+                Expires = refreshTokenExp,
+                Secure = true,
+            };
+
+            Response.Cookies.Append("refreshToken", refreshToken, cookieOpts);
+
+            return Ok(token);
+        }
+
+        [AllowAnonymous]
+        [HttpPost("login/name")]
+        public async Task<IActionResult> LoginWithName(LoginUserDTO user)
+        {
+            var jwtApiClient = _httpClientFactory.CreateClient();
+
+            var responce = await jwtApiClient.PostAsJsonAsync("https://localhost:9266/api/user/login/name", user);
             var token = await responce.Content.ReadAsStringAsync();
 
             var refreshToken = responce.Headers.GetValues("token").ToArray()[0].ToString();
