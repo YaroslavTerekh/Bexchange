@@ -21,9 +21,9 @@ namespace BexchangeAPI.Domain.Models
         public DateTime RegisteredDate { get; set; } = DateTime.UtcNow;     
         public Roles Role { get; set; }
 
-        public string RefreshToken { get; set; }
-        public DateTime TokenCreated { get; set; } 
-        public DateTime TokenExpires { get; set; }
+        public string? RefreshToken { get; set; }
+        public DateTime? TokenCreated { get; set; } 
+        public DateTime? TokenExpires { get; set; }
 
         public bool IsBanned { get; set; }
     }

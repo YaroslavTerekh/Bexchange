@@ -9,11 +9,11 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 
 #nullable disable
 
-namespace BexchangeAPI.Migrations
+namespace Bexchange.API.Migrations
 {
     [DbContext(typeof(ContentDbContext))]
-    [Migration("20220910105734_IdentityUserInitial")]
-    partial class IdentityUserInitial
+    [Migration("20220910110847_Initial")]
+    partial class Initial
     {
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {

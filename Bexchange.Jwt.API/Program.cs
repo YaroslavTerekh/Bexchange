@@ -1,7 +1,11 @@
 using Bexchange.Infrastructure.Repositories.Interfaces;
 using BexchangeAPI.Domain.Models;
+using BexchangeAPI.Domain;
 using BexchangeAPI.Infrastructure;
 using BexchangeAPI.Infrastructure.Repositories;
+using BexchangeAPI.Infrastructure.DtbContext;
+using Microsoft.AspNetCore.Identity;
+using Bexchange.Domain;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -15,6 +19,20 @@ builder.Services.AddDbContextsCustom(builder.Configuration);
 builder.Services.AddTransient<IUsersRepository<User>, UsersRepository>();
 
 builder.Services.AddCors();
+
+builder.Services.AddIdentity<User, ApplicationRole>()
+    .AddEntityFrameworkStores<ContentDbContext>()
+    .AddDefaultTokenProviders();
+
+builder.Services.Configure<IdentityOptions>(options =>
+{
+    options.Password.RequireDigit = false;
+    options.Password.RequireLowercase = false;
+    options.Password.RequireNonAlphanumeric = false;
+    options.Password.RequireUppercase = false;
+    options.Password.RequiredLength = 4;
+    options.Password.RequiredUniqueChars = 0;
+});
 
 //Add Cookie
 builder.Services.Configure<CookiePolicyOptions>(options =>
