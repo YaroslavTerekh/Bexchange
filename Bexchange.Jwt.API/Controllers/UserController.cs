@@ -12,6 +12,7 @@ using System.IdentityModel.Tokens.Jwt;
 using System.Text;
 using Bexchange.Domain.DtoModels;
 using Microsoft.AspNetCore.Cors;
+using Microsoft.AspNetCore.Identity;
 
 namespace Bexchange.Jwt.API.Controllers
 {
@@ -22,11 +23,16 @@ namespace Bexchange.Jwt.API.Controllers
     {
         private readonly IUsersRepository<User> _usersRepository;
         private readonly IConfiguration _configuration;
+        private readonly UserManager<User> _userManager;
+        private readonly SignInManager<User> _signInManager;
 
-        public UserController(IUsersRepository<User> usersRepository, IConfiguration configuration)
+        public UserController(IUsersRepository<User> usersRepository, IConfiguration configuration,
+            UserManager<User> userManager, SignInManager<User> signInManager)
         {
             _usersRepository = usersRepository;
             _configuration = configuration;
+            _userManager = userManager;
+            _signInManager = signInManager;
         }
 
         [HttpPost("register")]
@@ -36,10 +42,6 @@ namespace Bexchange.Jwt.API.Controllers
             {
                 return BadRequest("User already exists");
             }
-
-            byte[] passHash = null;
-
-            CreatePasswordHash(user.Password, out passHash);
 
             User mappedUser = new User {
                 UserName = user.UserName,
@@ -52,13 +54,18 @@ namespace Bexchange.Jwt.API.Controllers
                     City = user.AddressInfo.City,
                     PostIndex = user.AddressInfo.PostIndex,
                 },
-                PasswordHash = passHash.ToString(),
+                
                 Role = Roles.User
             };
 
-            await _usersRepository.RegisterUserAsync(mappedUser);
+            var result = await _userManager.CreateAsync(mappedUser, user.Password);
 
-            return mappedUser;
+            if(result.Succeeded)
+            {
+                return Ok(mappedUser);
+            }
+
+            return BadRequest(result.Errors);
         }
 
         [HttpPost("login")]
@@ -78,7 +85,9 @@ namespace Bexchange.Jwt.API.Controllers
             if (user == null)
                 return BadRequest("Wrong username or e-mail");
 
-            if (!VerifyPasswordHash(loginUser.Password, Encoding.UTF8.GetBytes(user.PasswordHash)))
+            var result = _signInManager.CanSignInAsync(user);
+
+            if (!result.Result)
                 return BadRequest("Wrong password");
 
             var token = await CreateTokenAsync(user);
