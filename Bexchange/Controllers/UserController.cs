@@ -1,6 +1,7 @@
 ﻿using AutoMapper;
 using Bexchange.Domain.DtoModels;
 using Bexchange.Infrastructure.Repositories.Interfaces;
+using Bexchange.Infrastructure.Services;
 using BexchangeAPI.Domain.DtoModels;
 using BexchangeAPI.Domain.Models;
 using BexchangeAPI.Infrastructure.Repositories.Interfaces;
@@ -18,11 +19,13 @@ namespace BexchangeAPI.Controllers
     {
         private readonly IHttpClientFactory _httpClientFactory;
         private readonly IUsersRepository<User> _usersRepository;
+        private readonly IUserService _userService;
 
-        public UserController(IHttpClientFactory httpClientFactory, IUsersRepository<User> usersRepository)
+        public UserController(IHttpClientFactory httpClientFactory, IUsersRepository<User> usersRepository, IUserService userService)
         {
             _httpClientFactory = httpClientFactory;
             _usersRepository = usersRepository;
+            _userService = userService;
         }
 
         [AllowAnonymous]
@@ -92,7 +95,7 @@ namespace BexchangeAPI.Controllers
         {
             var jwtApiClient = _httpClientFactory.CreateClient();
 
-            var responce = await jwtApiClient.PostAsJsonAsync("https://localhost:9266/api/user/refresh-token",GetUserId() ) ;
+            var responce = await jwtApiClient.PostAsJsonAsync("https://localhost:9266/api/user/refresh-token", _userService.GetUserId(HttpContext)) ;
             var token = await responce.Content.ReadAsStringAsync();
 
             var refreshToken = responce.Headers.GetValues("token").ToArray()[0].ToString();
@@ -109,13 +112,6 @@ namespace BexchangeAPI.Controllers
             Response.Cookies.Append("refreshToken", refreshToken, cookieOpts);
 
             return Ok(token);
-        }
-
-        private int GetUserId()
-        {
-            var identity = HttpContext.User.Identity as ClaimsIdentity;
-            var id = identity.FindFirst("id").Value;
-            return Int32.Parse(id);
         }
     }
 }

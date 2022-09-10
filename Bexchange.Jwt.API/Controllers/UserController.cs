@@ -132,12 +132,7 @@ namespace Bexchange.Jwt.API.Controllers
 
             return Ok(token);
         }
-
-        [HttpGet]
-        public async Task<IActionResult> GetUser(int id)
-        {
-            return Ok(await _usersRepository.GetUserAsync(id));
-        }
+        
         private RefreshToken GenerateRefreshToken()
         {
             var refreshToken = new RefreshToken {
@@ -148,7 +143,6 @@ namespace Bexchange.Jwt.API.Controllers
 
             return refreshToken;
         }
-
         private void SetRefreshToken(RefreshToken token, User user)
         {
             var cookieOpts = new Microsoft.AspNetCore.Http.CookieOptions

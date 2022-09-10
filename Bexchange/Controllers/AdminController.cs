@@ -1,4 +1,5 @@
 ﻿using Bexchange.Infrastructure.Repositories.Interfaces;
+using Bexchange.Infrastructure.Services;
 using BexchangeAPI.Domain.Enum;
 using BexchangeAPI.Domain.Models;
 using BexchangeAPI.Infrastructure.Repositories.Interfaces;
@@ -16,11 +17,13 @@ namespace Bexchange.API.Controllers
     {
         private readonly IUsersRepository<User> _usersRepository;
         private readonly IContentRepository<Book> _contentRepository;
+        private readonly IUserService _userService;
 
-        public AdminController(IUsersRepository<User> usersRepository, IContentRepository<Book> contentRepository)
+        public AdminController(IUsersRepository<User> usersRepository, IContentRepository<Book> contentRepository, IUserService userService)
         {
             _usersRepository = usersRepository;
             _contentRepository = contentRepository;
+            _userService = userService;
         }
 
         [HttpGet("users")]
@@ -54,7 +57,7 @@ namespace Bexchange.API.Controllers
         [HttpPatch("ban/{id}")]
         public async Task<IActionResult> BanUser(int id)
         {
-            if (id != GetUserId()) {
+            if (id != _userService.GetUserId(HttpContext)) {
                 await _usersRepository.BanUserAsync(id);
 
                 return Ok($"User with id {id} has been banned");
@@ -94,11 +97,5 @@ namespace Bexchange.API.Controllers
             return Ok("Modified successfully");
         }
 
-        private int GetUserId()
-        {
-            var identity = HttpContext.User.Identity as ClaimsIdentity;
-            var id = identity.FindFirst("Id").Value;
-            return Int32.Parse(id);
-        }
     }
 }
