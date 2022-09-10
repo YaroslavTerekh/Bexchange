@@ -14,6 +14,7 @@ using Microsoft.OpenApi.Models;
 using Swashbuckle.AspNetCore.Filters;
 using BexchangeAPI.Domain.Enum;
 using Bexchange.Infrastructure.Repositories.Interfaces;
+using Bexchange.Infrastructure.Services;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -78,6 +79,7 @@ builder.Services.AddDbContextsCustom(builder.Configuration);
 builder.Services.AddTransient<IContentRepository<Book>, BooksRepository>();
 builder.Services.AddTransient<IContentRepository<ExchangeOrder>, OrdersRepository>();
 builder.Services.AddTransient<IUsersRepository<User>, UsersRepository>();
+builder.Services.AddTransient<IUserService, UserService>();
 
 builder.Services.AddHttpClient();
 
