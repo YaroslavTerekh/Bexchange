@@ -1,4 +1,5 @@
-﻿using Bexchange.Infrastructure.Repositories.Interfaces;
+﻿using Bexchange.Domain;
+using Bexchange.Infrastructure.Repositories.Interfaces;
 using Bexchange.Infrastructure.Services;
 using BexchangeAPI.Domain.CustomExceptions;
 using BexchangeAPI.Domain.Enum;
@@ -11,7 +12,7 @@ using System.Security.Claims;
 
 namespace Bexchange.API.Controllers
 {
-    [Authorize(Policy = "Admins")]
+    [Authorize(Policy = PoliciesConstants.Admins)]
     [Route("api/[controller]/[action]")]
     [ApiController]
     public class AdminController : ControllerBase
@@ -82,13 +83,13 @@ namespace Bexchange.API.Controllers
 
         //SuperAdmin part
 
-        [HttpGet("admins"), Authorize(Policy = "SuperAdmin")]
+        [HttpGet("admins"), Authorize(Policy = PoliciesConstants.SuperAdmins)]
         public async Task<IActionResult> GetAdmins()
         {
             return Ok(await _usersRepository.GetAdminsOnlyAsync());
         }
 
-        [HttpPut("role/{id}/{role}"), Authorize(Policy = "SuperAdmin")]
+        [HttpPut("role/{id}/{role}"), Authorize(Policy = PoliciesConstants.SuperAdmins)]
         public async Task<IActionResult> ChangeUserRole(Roles role, int id)
         {
             await _usersRepository.ChangeRoleAsync(role, id);
@@ -96,7 +97,7 @@ namespace Bexchange.API.Controllers
             return Ok("Successfully changed the role");
         }
 
-        [HttpPut("modify/{id}"), Authorize(Policy = "SuperAdmin")]
+        [HttpPut("modify/{id}"), Authorize(Policy = PoliciesConstants.SuperAdmins)]
         public async Task<IActionResult> ModifyUser(User user)
         {
             await _usersRepository.ModifyUserAsync(user);
