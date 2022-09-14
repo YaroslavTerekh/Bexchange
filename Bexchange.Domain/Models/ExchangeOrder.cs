@@ -10,7 +10,7 @@ using BexchangeAPI.Domain.Enum;
 
 namespace BexchangeAPI.Domain.Models
 {
-    public class ExchangeOrder : BaseDTO
+    public class ExchangeOrder : BaseModel
     {
         public new Book FirstBook { get; set; }
         public new Book SecondBook { get; set; }

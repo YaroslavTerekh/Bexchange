@@ -11,7 +11,7 @@ using BexchangeAPI.Domain.Enum;
 
 namespace BexchangeAPI.Domain.Models
 {
-    public class Book : BaseDTO
+    public class Book : BaseModel
     {
         public string Title { get; set; }
         public string Author { get; set; }

@@ -6,7 +6,7 @@ using System.Threading.Tasks;
 
 namespace Bexchange.Domain.Models
 {
-    public abstract class BaseDTO
+    public abstract class BaseModel
     {
         public int Id { get; set; }
     }

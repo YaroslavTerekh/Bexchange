@@ -17,6 +17,7 @@ using Bexchange.Infrastructure.Repositories.Interfaces;
 using Bexchange.Infrastructure.Services;
 using Bexchange.Domain;
 using Microsoft.AspNetCore.Identity;
+using Bexchange.Infrastructure.Services.Repositories;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -111,7 +112,7 @@ if (app.Environment.IsDevelopment())
     app.UseSwaggerUI();
 }
 
-app.UseCustomExceptionHandler();
+//app.UseCustomExceptionHandler();
 app.UseHttpsRedirection();
 
 app.UseAuthentication();

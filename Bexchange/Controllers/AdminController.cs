@@ -1,14 +1,12 @@
 ﻿using Bexchange.Domain;
 using Bexchange.Infrastructure.Repositories.Interfaces;
-using Bexchange.Infrastructure.Services;
+using Bexchange.Infrastructure.Services.Repositories;
 using BexchangeAPI.Domain.CustomExceptions;
 using BexchangeAPI.Domain.Enum;
 using BexchangeAPI.Domain.Models;
 using BexchangeAPI.Infrastructure.Repositories.Interfaces;
 using Microsoft.AspNetCore.Authorization;
-using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
-using System.Security.Claims;
 
 namespace Bexchange.API.Controllers
 {
