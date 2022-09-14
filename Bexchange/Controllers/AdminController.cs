@@ -1,5 +1,6 @@
 ﻿using Bexchange.Infrastructure.Repositories.Interfaces;
 using Bexchange.Infrastructure.Services;
+using BexchangeAPI.Domain.CustomExceptions;
 using BexchangeAPI.Domain.Enum;
 using BexchangeAPI.Domain.Models;
 using BexchangeAPI.Infrastructure.Repositories.Interfaces;
@@ -11,7 +12,7 @@ using System.Security.Claims;
 namespace Bexchange.API.Controllers
 {
     [Authorize(Policy = "Admins")]
-    [Route("api/[controller]")]
+    [Route("api/[controller]/[action]")]
     [ApiController]
     public class AdminController : ControllerBase
     {
@@ -39,19 +40,24 @@ namespace Bexchange.API.Controllers
             return Ok(user);
         }
 
-        [HttpGet("uore/{nameOrEmail}")]
-        public async Task<IActionResult> GetUserByNameOrEmail(string nameOrEmail)
+        [HttpGet("users/{name}")]
+        public async Task<IActionResult> GetUserByName(string name)
         {
-            if (nameOrEmail.Contains("@"))
-            {
-                var user = await _usersRepository.GetUserByEmailAsync(nameOrEmail);
-                return Ok(user);
-            }
-            else
-            {
-                var user = await _usersRepository.GetUserByNameAsync(nameOrEmail);
-                return Ok(user);
-            }
+            var user = await _usersRepository.GetUserByNameAsync(name);
+
+            if (user == null)
+                throw new NotFoundException("user not found", StatusCodes.Status404NotFound);
+            return Ok(user);
+        }
+
+        [HttpGet("users/{email}")]
+        public async Task<IActionResult> GetUserByEmail(string email)
+        {
+            var user = await _usersRepository.GetUserByEmailAsync(email);
+
+            if (user == null)
+                throw new NotFoundException("user not found", StatusCodes.Status404NotFound);
+            return Ok(user);
         }
 
         [HttpPatch("ban/{id}")]
