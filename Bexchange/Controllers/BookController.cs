@@ -110,7 +110,7 @@ namespace BexchangeAPI.Controllers
             if (_userService.GetUserId(HttpContext) == book.UserId || _userService.IsAdmin(HttpContext))
             {
                 await _contentRepo.DeleteComponentAsync(id);
-                return Ok($"Book with id {id} was deleted");
+                return NoContent();
             }
 
             return BadRequest("You can delete only your own book");
