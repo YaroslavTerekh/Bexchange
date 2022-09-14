@@ -3,16 +3,21 @@ using Bexchange.Domain.DtoModels;
 using Bexchange.Infrastructure.Repositories.Interfaces;
 using Bexchange.Infrastructure.Services;
 using BexchangeAPI.Domain.DtoModels;
+using BexchangeAPI.Domain.Enum;
 using BexchangeAPI.Domain.Models;
 using BexchangeAPI.Infrastructure.Repositories.Interfaces;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Http;
+using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.IdentityModel.Tokens;
+using System.IdentityModel.Tokens.Jwt;
 using System.Security.Claims;
+using System.Security.Cryptography;
+using System.Text;
 
 namespace BexchangeAPI.Controllers
 {
-    [Authorize]
     [Route("api/[controller]")]
     [ApiController]
     public class UserController : ControllerBase
@@ -20,98 +25,211 @@ namespace BexchangeAPI.Controllers
         private readonly IHttpClientFactory _httpClientFactory;
         private readonly IUsersRepository<User> _usersRepository;
         private readonly IUserService _userService;
+        private readonly UserManager<User> _userManager;
+        private readonly SignInManager<User> _signInManager;
+        private readonly IConfiguration _configuration;
 
-        public UserController(IHttpClientFactory httpClientFactory, IUsersRepository<User> usersRepository, IUserService userService)
+        public UserController(IHttpClientFactory httpClientFactory, IUsersRepository<User> usersRepository, IUserService userService, IConfiguration configuration,
+                                UserManager<User> userManager, SignInManager<User> signInManager)
         {
             _httpClientFactory = httpClientFactory;
             _usersRepository = usersRepository;
             _userService = userService;
+            _configuration = configuration;
+            _userManager = userManager;
+            _signInManager = signInManager;
         }
 
-        [AllowAnonymous]
         [HttpPost("register")]
         public async Task<IActionResult> Register(UserDTO user)
         {
-            var jwtApiClient = _httpClientFactory.CreateClient();
-
-            var responce = await jwtApiClient.PostAsJsonAsync("https://localhost:9266/api/user/register", user);
-
-            return Ok(responce);
-        }
-
-        [AllowAnonymous]
-        [HttpPost("login/email")]
-        public async Task<IActionResult> LoginWithEmail(LoginUserDTO user)
-        {
-            var jwtApiClient = _httpClientFactory.CreateClient();
-
-            var responce = await jwtApiClient.PostAsJsonAsync("https://localhost:9266/api/user/login/email", user);
-            var token = await responce.Content.ReadAsStringAsync();
-
-            var refreshToken = responce.Headers.GetValues("token").ToArray()[0].ToString();
-            var refreshTokenExp = DateTime.Parse(responce.Headers.GetValues("tokenExp").ToArray()[0].ToString());
-
-            var cookieOpts = new CookieOptions
+            if (await TestUserSearchAsync(user))
             {
-                HttpOnly = true,
-                IsEssential = true,
-                Expires = refreshTokenExp,
-                Secure = true,
+                return BadRequest("User already exists");
+            }
+
+            User mappedUser = new User
+            {
+                UserName = user.UserName,
+                Email = user.Email,
+                FirstName = user.FirstName,
+                LastName = user.LastName,
+                Address = new AddressInfo
+                {
+                    Country = user.AddressInfo.Country,
+                    City = user.AddressInfo.City,
+                    PostIndex = user.AddressInfo.PostIndex,
+                },
+
+                Role = Roles.User
             };
 
-            Response.Cookies.Append("refreshToken", refreshToken, cookieOpts);
+            var result = await _userManager.CreateAsync(mappedUser, user.Password);
+
+            if (result.Succeeded)
+            {
+                return Ok(mappedUser);
+            }
+
+            return BadRequest(result.Errors);
+        }
+
+        [HttpPost("login/email")]
+        public async Task<ActionResult<string>> LoginWithEmail(LoginUserDTO loginUser)
+        {
+            User user = await _usersRepository.GetUserByEmailAsync(loginUser.UserName);
+
+            if (user == null)
+                return BadRequest("Wrong e-mail");
+
+            var result = _signInManager.CanSignInAsync(user);
+
+            if (!result.Result)
+                return BadRequest("Wrong password");
+
+            var token = await CreateTokenAsync(user);
+
+            var refreshToken = GenerateRefreshToken();
+            SetRefreshToken(refreshToken, user);
 
             return Ok(token);
         }
 
-        [AllowAnonymous]
         [HttpPost("login/name")]
-        public async Task<IActionResult> LoginWithName(LoginUserDTO user)
+        public async Task<ActionResult<string>> LoginWithName(LoginUserDTO loginUser)
         {
-            var jwtApiClient = _httpClientFactory.CreateClient();
+            User user = await _usersRepository.GetUserByNameAsync(loginUser.UserName);
 
-            var responce = await jwtApiClient.PostAsJsonAsync("https://localhost:9266/api/user/login/name", user);
-            var token = await responce.Content.ReadAsStringAsync();
+            if (user == null)
+                return BadRequest("Wrong name");
 
-            var refreshToken = responce.Headers.GetValues("token").ToArray()[0].ToString();
-            var refreshTokenExp = DateTime.Parse(responce.Headers.GetValues("tokenExp").ToArray()[0].ToString());
+            var result = _signInManager.CanSignInAsync(user);
 
-            var cookieOpts = new CookieOptions
-            {
-                HttpOnly = true,
-                IsEssential = true,
-                Expires = refreshTokenExp,
-                Secure = true,
-            };
+            if (!result.Result)
+                return BadRequest("Wrong password");
 
-            Response.Cookies.Append("refreshToken", refreshToken, cookieOpts);
+            var token = await CreateTokenAsync(user);
+
+            var refreshToken = GenerateRefreshToken();
+            SetRefreshToken(refreshToken, user);
 
             return Ok(token);
         }
 
         [Authorize]
         [HttpPost("refresh-token")]
-        public async Task<IActionResult> RefreshToken()
+        public async Task<ActionResult<string>> RefreshToken()
         {
-            var jwtApiClient = _httpClientFactory.CreateClient();
+            var user = await _usersRepository.GetUserAsync(_userService.GetUserId(HttpContext));
 
-            var responce = await jwtApiClient.PostAsJsonAsync("https://localhost:9266/api/user/refresh-token", _userService.GetUserId(HttpContext)) ;
-            var token = await responce.Content.ReadAsStringAsync();
+            var refreshToken = Request.Cookies["refreshToken"];
 
-            var refreshToken = responce.Headers.GetValues("token").ToArray()[0].ToString();
-            var refreshTokenExp = DateTime.Parse(responce.Headers.GetValues("tokenExp").ToArray()[0].ToString());
+            if (!user.RefreshToken.Equals(refreshToken))
+            {
+                return Unauthorized("Invalid Refresh Token.");
+            }
+            else if (user.TokenExpires < DateTime.Now)
+            {
+                return Unauthorized("Token expired.");
+            }
 
-            var cookieOpts = new CookieOptions
+            string token = CreateToken(user);
+            var newRefreshToken = GenerateRefreshToken();
+            SetRefreshToken(newRefreshToken, user);
+
+            return Ok(token);
+        }
+
+        private RefreshToken GenerateRefreshToken()
+        {
+            var refreshToken = new RefreshToken
+            {
+                Token = Convert.ToBase64String(RandomNumberGenerator.GetBytes(64)),
+                Expires = DateTime.Now.AddDays(7),
+                CreateTime = DateTime.Now
+            };
+
+            return refreshToken;
+        }
+        private void SetRefreshToken(RefreshToken token, User user)
+        {
+            var cookieOpts = new Microsoft.AspNetCore.Http.CookieOptions
             {
                 HttpOnly = true,
+                Expires = token.Expires,
                 IsEssential = true,
-                Expires = refreshTokenExp,
                 Secure = true,
             };
 
-            Response.Cookies.Append("refreshToken", refreshToken, cookieOpts);
+            Response.Cookies.Append("refreshToken", token.Token, cookieOpts);
 
-            return Ok(token);
+            Response.Headers.Add("token", token.Token);
+            Response.Headers.Add("tokenExp", token.Expires.ToString());
+
+            user.RefreshToken = token.Token;
+            user.TokenCreated = token.CreateTime;
+            user.TokenExpires = token.Expires;
+
+            _usersRepository.SaveUser();
+        }
+        private string CreateToken(User user)
+        {
+            List<Claim> claims = new List<Claim>
+            {
+                new Claim(ClaimTypes.Name, user.UserName),
+                new Claim(ClaimTypes.Role, "Admin")
+            };
+
+            var key = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(
+                _configuration.GetSection("AppSettings:Token").Value));
+
+            var creds = new SigningCredentials(key, SecurityAlgorithms.HmacSha512Signature);
+
+            var token = new JwtSecurityToken(
+                claims: claims,
+                expires: DateTime.Now.AddDays(1),
+                signingCredentials: creds);
+
+            var jwt = new JwtSecurityTokenHandler().WriteToken(token);
+
+            return jwt;
+        }
+        private async Task<bool> TestUserSearchAsync(UserDTO user)
+        {
+            var testSearchUser = await _usersRepository.GetUserByNameAsync(user.UserName);
+            if (testSearchUser != null)
+                return true;
+
+            testSearchUser = await _usersRepository.GetUserByEmailAsync(user.Email);
+            if (testSearchUser != null)
+                return true;
+
+            return false;
+        }
+        private async Task<string> CreateTokenAsync(User user)
+        {
+            List<Claim> claims = new List<Claim>
+            {
+                new Claim(type: "Id", value: user.Id.ToString()),
+                new Claim(type: "AddressId", value: user.AddressId.ToString()),
+                new Claim(ClaimTypes.Name, user.FirstName),
+                new Claim(ClaimTypes.Surname, user.LastName),
+                new Claim(ClaimTypes.Email, user.Email),
+                new Claim(ClaimTypes.Role, user.Role.ToString())
+            };
+
+            var key = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(_configuration.GetSection("AppSettings:Token").Value));
+
+            var creds = new SigningCredentials(key, SecurityAlgorithms.HmacSha256);
+
+            var token = new JwtSecurityToken(
+                claims: claims,
+                expires: DateTime.Now.AddMinutes(15),
+                signingCredentials: creds);
+
+            var jwt = new JwtSecurityTokenHandler().WriteToken(token);
+
+            return jwt.ToString();
         }
     }
 }
