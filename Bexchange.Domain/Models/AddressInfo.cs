@@ -8,7 +8,7 @@ using System.Threading.Tasks;
 
 namespace BexchangeAPI.Domain.Models
 {
-    public class AddressInfo : BaseDTO
+    public class AddressInfo : BaseModel
     {
         public string Country { get; set; }
         public string City { get; set; }

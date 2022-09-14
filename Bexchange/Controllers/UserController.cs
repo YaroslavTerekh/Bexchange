@@ -1,7 +1,6 @@
 ﻿using AutoMapper;
-using Bexchange.Domain.DtoModels;
 using Bexchange.Infrastructure.Repositories.Interfaces;
-using Bexchange.Infrastructure.Services;
+using Bexchange.Infrastructure.Services.Repositories;
 using BexchangeAPI.Domain.DtoModels;
 using BexchangeAPI.Domain.Enum;
 using BexchangeAPI.Domain.Models;
@@ -22,17 +21,15 @@ namespace BexchangeAPI.Controllers
     [ApiController]
     public class UserController : ControllerBase
     {
-        private readonly IHttpClientFactory _httpClientFactory;
         private readonly IUsersRepository<User> _usersRepository;
         private readonly IUserService _userService;
         private readonly UserManager<User> _userManager;
         private readonly SignInManager<User> _signInManager;
         private readonly IConfiguration _configuration;
 
-        public UserController(IHttpClientFactory httpClientFactory, IUsersRepository<User> usersRepository, IUserService userService, IConfiguration configuration,
+        public UserController(IUsersRepository<User> usersRepository, IUserService userService, IConfiguration configuration,
                                 UserManager<User> userManager, SignInManager<User> signInManager)
         {
-            _httpClientFactory = httpClientFactory;
             _usersRepository = usersRepository;
             _userService = userService;
             _configuration = configuration;
@@ -41,9 +38,9 @@ namespace BexchangeAPI.Controllers
         }
 
         [HttpPost("register")]
-        public async Task<IActionResult> Register(UserDTO user)
+        public async Task<IActionResult> Register(UserRequest user)
         {
-            if (await TestUserSearchAsync(user))
+            if (await _userService.TestUserSearchAsync(user, _usersRepository))
             {
                 return BadRequest("User already exists");
             }
@@ -75,43 +72,43 @@ namespace BexchangeAPI.Controllers
         }
 
         [HttpPost("login/email")]
-        public async Task<ActionResult<string>> LoginWithEmail(LoginUserDTO loginUser)
+        public async Task<ActionResult<string>> LoginWithEmail(LoginRequest loginUser)
         {
             User user = await _usersRepository.GetUserByEmailAsync(loginUser.UserName);
 
             if (user == null)
                 return BadRequest("Wrong e-mail");
 
-            var result = _signInManager.CanSignInAsync(user);
+            var result = _signInManager.CheckPasswordSignInAsync(user, loginUser.Password, false);
 
-            if (!result.Result)
+            if (!result.Result.Succeeded)
                 return BadRequest("Wrong password");
 
-            var token = await CreateTokenAsync(user);
+            var token = await _userService.CreateTokenAsync(user, _configuration);
 
-            var refreshToken = GenerateRefreshToken();
-            SetRefreshToken(refreshToken, user);
+            var refreshToken = _userService.GenerateRefreshToken();
+            _userService.SetRefreshToken(refreshToken, user, HttpContext, _usersRepository);
 
             return Ok(token);
         }
 
         [HttpPost("login/name")]
-        public async Task<ActionResult<string>> LoginWithName(LoginUserDTO loginUser)
+        public async Task<ActionResult<string>> LoginWithName(LoginRequest loginUser)
         {
             User user = await _usersRepository.GetUserByNameAsync(loginUser.UserName);
 
             if (user == null)
                 return BadRequest("Wrong name");
 
-            var result = _signInManager.CanSignInAsync(user);
+            var result = _signInManager.CheckPasswordSignInAsync(user, loginUser.Password, false);
 
-            if (!result.Result)
+            if (!result.Result.Succeeded)
                 return BadRequest("Wrong password");
 
-            var token = await CreateTokenAsync(user);
+            var token = await _userService.CreateTokenAsync(user, _configuration);
 
-            var refreshToken = GenerateRefreshToken();
-            SetRefreshToken(refreshToken, user);
+            var refreshToken = _userService.GenerateRefreshToken();
+            _userService.SetRefreshToken(refreshToken, user, HttpContext, _usersRepository);
 
             return Ok(token);
         }
@@ -133,103 +130,13 @@ namespace BexchangeAPI.Controllers
                 return Unauthorized("Token expired.");
             }
 
-            string token = CreateToken(user);
-            var newRefreshToken = GenerateRefreshToken();
-            SetRefreshToken(newRefreshToken, user);
+            string token = _userService.CreateToken(user, _configuration);
+            var newRefreshToken = _userService.GenerateRefreshToken();
+            _userService.SetRefreshToken(newRefreshToken, user, HttpContext, _usersRepository);
 
             return Ok(token);
         }
 
-        private RefreshToken GenerateRefreshToken()
-        {
-            var refreshToken = new RefreshToken
-            {
-                Token = Convert.ToBase64String(RandomNumberGenerator.GetBytes(64)),
-                Expires = DateTime.Now.AddDays(7),
-                CreateTime = DateTime.Now
-            };
-
-            return refreshToken;
-        }
-        private void SetRefreshToken(RefreshToken token, User user)
-        {
-            var cookieOpts = new Microsoft.AspNetCore.Http.CookieOptions
-            {
-                HttpOnly = true,
-                Expires = token.Expires,
-                IsEssential = true,
-                Secure = true,
-            };
-
-            Response.Cookies.Append("refreshToken", token.Token, cookieOpts);
-
-            Response.Headers.Add("token", token.Token);
-            Response.Headers.Add("tokenExp", token.Expires.ToString());
-
-            user.RefreshToken = token.Token;
-            user.TokenCreated = token.CreateTime;
-            user.TokenExpires = token.Expires;
-
-            _usersRepository.SaveUser();
-        }
-        private string CreateToken(User user)
-        {
-            List<Claim> claims = new List<Claim>
-            {
-                new Claim(ClaimTypes.Name, user.UserName),
-                new Claim(ClaimTypes.Role, "Admin")
-            };
-
-            var key = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(
-                _configuration.GetSection("AppSettings:Token").Value));
-
-            var creds = new SigningCredentials(key, SecurityAlgorithms.HmacSha512Signature);
-
-            var token = new JwtSecurityToken(
-                claims: claims,
-                expires: DateTime.Now.AddDays(1),
-                signingCredentials: creds);
-
-            var jwt = new JwtSecurityTokenHandler().WriteToken(token);
-
-            return jwt;
-        }
-        private async Task<bool> TestUserSearchAsync(UserDTO user)
-        {
-            var testSearchUser = await _usersRepository.GetUserByNameAsync(user.UserName);
-            if (testSearchUser != null)
-                return true;
-
-            testSearchUser = await _usersRepository.GetUserByEmailAsync(user.Email);
-            if (testSearchUser != null)
-                return true;
-
-            return false;
-        }
-        private async Task<string> CreateTokenAsync(User user)
-        {
-            List<Claim> claims = new List<Claim>
-            {
-                new Claim(type: "Id", value: user.Id.ToString()),
-                new Claim(type: "AddressId", value: user.AddressId.ToString()),
-                new Claim(ClaimTypes.Name, user.FirstName),
-                new Claim(ClaimTypes.Surname, user.LastName),
-                new Claim(ClaimTypes.Email, user.Email),
-                new Claim(ClaimTypes.Role, user.Role.ToString())
-            };
-
-            var key = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(_configuration.GetSection("AppSettings:Token").Value));
-
-            var creds = new SigningCredentials(key, SecurityAlgorithms.HmacSha256);
-
-            var token = new JwtSecurityToken(
-                claims: claims,
-                expires: DateTime.Now.AddMinutes(15),
-                signingCredentials: creds);
-
-            var jwt = new JwtSecurityTokenHandler().WriteToken(token);
-
-            return jwt.ToString();
-        }
+        
     }
 }
