@@ -113,14 +113,7 @@ namespace BexchangeAPI.Controllers
 
             await _orderRepo.DeleteComponentAsync(id);
 
-            return Ok($"Orded with id {id} was deleted");
-        }
-
-        private int GetUserId()
-        {
-            var identity = HttpContext.User.Identity as ClaimsIdentity;
-            var id = identity.FindFirst("id").Value;
-            return Int32.Parse(id);
+            return NoContent();
         }
     }
 }

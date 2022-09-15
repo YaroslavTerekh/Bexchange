@@ -8,8 +8,17 @@ namespace BexchangeAPI.Domain.Enum
 {
     public enum Roles
     {
-        User,
-        Admin,
-        SuperAdmin
+        User = 1,
+        Admin = 2,
+        SuperAdmin = 4
     }
+
+    //public class Test
+    //{
+    //    public void Test1()
+    //    {
+    //        Roles roles = Roles.User | Roles.SuperAdmin;
+    //        var isAdmin = roles.HasFlag(Roles.Admin);
+    //    }
+    //}
 }

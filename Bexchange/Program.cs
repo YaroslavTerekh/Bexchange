@@ -14,6 +14,10 @@ using Microsoft.OpenApi.Models;
 using Swashbuckle.AspNetCore.Filters;
 using BexchangeAPI.Domain.Enum;
 using Bexchange.Infrastructure.Repositories.Interfaces;
+using Bexchange.Infrastructure.Services;
+using Bexchange.Domain;
+using Microsoft.AspNetCore.Identity;
+using Bexchange.Infrastructure.Services.Repositories;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -26,6 +30,20 @@ builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen();
 builder.Services.AddAutoMapper(AppDomain.CurrentDomain.GetAssemblies());
 // Add Auth
+builder.Services.AddIdentity<User, ApplicationRole>()
+    .AddEntityFrameworkStores<ContentDbContext>()
+    .AddDefaultTokenProviders();
+
+builder.Services.Configure<IdentityOptions>(options =>
+{
+    options.Password.RequireDigit = false;
+    options.Password.RequireLowercase = false;
+    options.Password.RequireNonAlphanumeric = false;
+    options.Password.RequireUppercase = false;
+    options.Password.RequiredLength = 4;
+    options.Password.RequiredUniqueChars = 0;
+});
+
 builder.Services.AddSwaggerGen(options =>
 {
     options.AddSecurityDefinition("oauth2", new OpenApiSecurityScheme
@@ -38,8 +56,11 @@ builder.Services.AddSwaggerGen(options =>
 
     options.OperationFilter<SecurityRequirementsOperationFilter>();
 });
-
-builder.Services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme)
+builder.Services.AddAuthentication(options => {
+    options.DefaultAuthenticateScheme = JwtBearerDefaults.AuthenticationScheme;
+    options.DefaultChallengeScheme = JwtBearerDefaults.AuthenticationScheme;
+    options.DefaultScheme = JwtBearerDefaults.AuthenticationScheme;
+    })
     .AddJwtBearer(options =>
     {
         options.TokenValidationParameters = new TokenValidationParameters
@@ -78,6 +99,7 @@ builder.Services.AddDbContextsCustom(builder.Configuration);
 builder.Services.AddTransient<IContentRepository<Book>, BooksRepository>();
 builder.Services.AddTransient<IContentRepository<ExchangeOrder>, OrdersRepository>();
 builder.Services.AddTransient<IUsersRepository<User>, UsersRepository>();
+builder.Services.AddTransient<IUserService, UserService>();
 
 builder.Services.AddHttpClient();
 

@@ -1,5 +1,6 @@
 ﻿using AutoMapper;
 using Bexchange.Infrastructure.Repositories.Interfaces;
+using Bexchange.Infrastructure.Services.Repositories;
 using BexchangeAPI.Domain.CustomExceptions;
 using BexchangeAPI.Domain.Enum;
 using BexchangeAPI.Domain.Models;
@@ -19,14 +20,17 @@ namespace BexchangeAPI.Controllers
     public class BookController : ControllerBase
     {
         private readonly IContentRepository<Book> _contentRepo;
-        public readonly IUsersRepository<User> _usersRepository;
+        private readonly IUsersRepository<User> _usersRepository;
         private readonly IMapper _mapper;
+        private readonly IUserService _userService;
 
-        public BookController(IContentRepository<Book> contentRepo, IUsersRepository<User> usersRepository, IMapper mapper)
+        public BookController(IContentRepository<Book> contentRepo, IUsersRepository<User> usersRepository, 
+            IMapper mapper, IUserService userService)
         {
             _mapper = mapper;
             _contentRepo = contentRepo;
             _usersRepository = usersRepository;
+            _userService = userService;
         }
 
         [HttpGet, AllowAnonymous]
@@ -68,11 +72,11 @@ namespace BexchangeAPI.Controllers
         {
             var newBook = _mapper.Map<Book>(book);
 
-            newBook.UserId = GetUserId();
+            newBook.UserId = _userService.GetUserId(HttpContext);
             newBook.User = await _usersRepository.GetUserAsync(newBook.UserId);
             await _contentRepo.AddComponentAsync(newBook);
 
-            return Created(Request.Path, new { newBook.Id });
+            return Created(Request.Path, new { Id = newBook.Id, Path = Request.Path + $"/{newBook.Id}" });
 
             //return BadRequest(ModelState.Values.First().Errors.First().ErrorMessage);
         }
@@ -80,7 +84,7 @@ namespace BexchangeAPI.Controllers
         [HttpPut("modify")]
         public async Task<IActionResult> ModifyBook(BookDto book)
         {
-            if (GetUserId() == book.UserId || IsAdmin())
+            if (_userService.GetUserId(HttpContext) == book.UserId || _userService.IsAdmin(HttpContext))
             {
                 if (await _contentRepo.GetComponentAsync(book.Id) == null)
                     throw new NotFoundException("Book not found", (int)HttpStatusCode.NotFound);
@@ -103,28 +107,13 @@ namespace BexchangeAPI.Controllers
             
             Book book = await _contentRepo.GetComponentAsync(id);
 
-            if (GetUserId() == book.UserId || IsAdmin())
+            if (_userService.GetUserId(HttpContext) == book.UserId || _userService.IsAdmin(HttpContext))
             {
                 await _contentRepo.DeleteComponentAsync(id);
-                return Ok($"Book with id {id} was deleted");
+                return NoContent();
             }
 
             return BadRequest("You can delete only your own book");
-        }
-
-        private int GetUserId()
-        {
-            var identity = HttpContext.User.Identity as ClaimsIdentity;
-            var id = identity.FindFirst("id").Value;
-            return Int32.Parse(id);
-        }
-
-        private bool IsAdmin()
-        {
-            var identity = HttpContext.User.Identity as ClaimsIdentity;
-            var role = identity.FindFirst(ClaimTypes.Role).Value;
-
-            return role == Roles.Admin.ToString() | role == Roles.SuperAdmin.ToString() ? true : false;
         }
     }
 }

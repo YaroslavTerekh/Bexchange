@@ -1,96 +1,142 @@
 ﻿using AutoMapper;
-using Bexchange.Domain.DtoModels;
 using Bexchange.Infrastructure.Repositories.Interfaces;
+using Bexchange.Infrastructure.Services.Repositories;
 using BexchangeAPI.Domain.DtoModels;
+using BexchangeAPI.Domain.Enum;
 using BexchangeAPI.Domain.Models;
 using BexchangeAPI.Infrastructure.Repositories.Interfaces;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Http;
+using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.IdentityModel.Tokens;
+using System.IdentityModel.Tokens.Jwt;
 using System.Security.Claims;
+using System.Security.Cryptography;
+using System.Text;
 
 namespace BexchangeAPI.Controllers
 {
-    [Authorize]
     [Route("api/[controller]")]
     [ApiController]
     public class UserController : ControllerBase
     {
-        private readonly IHttpClientFactory _httpClientFactory;
         private readonly IUsersRepository<User> _usersRepository;
+        private readonly IUserService _userService;
+        private readonly UserManager<User> _userManager;
+        private readonly SignInManager<User> _signInManager;
+        private readonly IConfiguration _configuration;
 
-        public UserController(IHttpClientFactory httpClientFactory, IUsersRepository<User> usersRepository)
+        public UserController(IUsersRepository<User> usersRepository, IUserService userService, IConfiguration configuration,
+                                UserManager<User> userManager, SignInManager<User> signInManager)
         {
-            _httpClientFactory = httpClientFactory;
             _usersRepository = usersRepository;
+            _userService = userService;
+            _configuration = configuration;
+            _userManager = userManager;
+            _signInManager = signInManager;
         }
 
-        [AllowAnonymous]
         [HttpPost("register")]
-        public async Task<IActionResult> Register(UserDTO user)
+        public async Task<IActionResult> Register(UserRequest user)
         {
-            var jwtApiClient = _httpClientFactory.CreateClient();
-
-            var responce = await jwtApiClient.PostAsJsonAsync("https://localhost:9266/api/user/register", user);
-
-            return Ok(responce);
-        }
-
-        [AllowAnonymous]
-        [HttpPost("login")]
-        public async Task<IActionResult> Login(LoginUserDTO user)
-        {
-            var jwtApiClient = _httpClientFactory.CreateClient();
-
-            var responce = await jwtApiClient.PostAsJsonAsync("https://localhost:9266/api/user/login", user);
-            var token = await responce.Content.ReadAsStringAsync();
-
-            var refreshToken = responce.Headers.GetValues("token").ToArray()[0].ToString();
-            var refreshTokenExp = DateTime.Parse(responce.Headers.GetValues("tokenExp").ToArray()[0].ToString());
-
-            var cookieOpts = new CookieOptions
+            if (await _userService.TestUserSearchAsync(user, _usersRepository))
             {
-                HttpOnly = true,
-                IsEssential = true,
-                Expires = refreshTokenExp,
-                Secure = true,
+                return BadRequest("User already exists");
+            }
+
+            User mappedUser = new User
+            {
+                UserName = user.UserName,
+                Email = user.Email,
+                FirstName = user.FirstName,
+                LastName = user.LastName,
+                Address = new AddressInfo
+                {
+                    Country = user.AddressInfo.Country,
+                    City = user.AddressInfo.City,
+                    PostIndex = user.AddressInfo.PostIndex,
+                },
+
+                Role = Roles.User
             };
 
-            Response.Cookies.Append("refreshToken", refreshToken, cookieOpts);
+            var result = await _userManager.CreateAsync(mappedUser, user.Password);
+
+            if (result.Succeeded)
+            {
+                return Ok(mappedUser);
+            }
+
+            return BadRequest(result.Errors);
+        }
+
+        [HttpPost("login/email")]
+        public async Task<ActionResult<string>> LoginWithEmail(LoginRequest loginUser)
+        {
+            User user = await _usersRepository.GetUserByEmailAsync(loginUser.UserName);
+
+            if (user == null)
+                return BadRequest("Wrong e-mail");
+
+            var result = _signInManager.CheckPasswordSignInAsync(user, loginUser.Password, false);
+
+            if (!result.Result.Succeeded)
+                return BadRequest("Wrong password");
+
+            var token = await _userService.CreateTokenAsync(user, _configuration);
+
+            var refreshToken = _userService.GenerateRefreshToken();
+            _userService.SetRefreshToken(refreshToken, user, HttpContext, _usersRepository);
+
+            return Ok(token);
+        }
+
+        [HttpPost("login/name")]
+        public async Task<ActionResult<string>> LoginWithName(LoginRequest loginUser)
+        {
+            User user = await _usersRepository.GetUserByNameAsync(loginUser.UserName);
+
+            if (user == null)
+                return BadRequest("Wrong name");
+
+            var result = _signInManager.CheckPasswordSignInAsync(user, loginUser.Password, false);
+
+            if (!result.Result.Succeeded)
+                return BadRequest("Wrong password");
+
+            var token = await _userService.CreateTokenAsync(user, _configuration);
+
+            var refreshToken = _userService.GenerateRefreshToken();
+            _userService.SetRefreshToken(refreshToken, user, HttpContext, _usersRepository);
 
             return Ok(token);
         }
 
         [Authorize]
         [HttpPost("refresh-token")]
-        public async Task<IActionResult> RefreshToken()
+        public async Task<ActionResult<string>> RefreshToken()
         {
-            var jwtApiClient = _httpClientFactory.CreateClient();
+            var user = await _usersRepository.GetUserAsync(_userService.GetUserId(HttpContext));
 
-            var responce = await jwtApiClient.PostAsJsonAsync("https://localhost:9266/api/user/refresh-token", new IdDTO { id = GetUserId() }) ;
-            var token = await responce.Content.ReadAsStringAsync();
+            var refreshToken = Request.Cookies["refreshToken"];
 
-            var refreshToken = responce.Headers.GetValues("token").ToArray()[0].ToString();
-            var refreshTokenExp = DateTime.Parse(responce.Headers.GetValues("tokenExp").ToArray()[0].ToString());
-
-            var cookieOpts = new CookieOptions
+            if (!user.RefreshToken.Equals(refreshToken))
             {
-                HttpOnly = true,
-                IsEssential = true,
-                Expires = refreshTokenExp,
-                Secure = true,
-            };
+                return Unauthorized("Invalid Refresh Token.");
+            }
+            else if (user.TokenExpires < DateTime.Now)
+            {
+                return Unauthorized("Token expired.");
+            }
 
-            Response.Cookies.Append("refreshToken", refreshToken, cookieOpts);
+            string token = _userService.CreateToken(user, _configuration);
+            var newRefreshToken = _userService.GenerateRefreshToken();
+            _userService.SetRefreshToken(newRefreshToken, user, HttpContext, _usersRepository);
 
             return Ok(token);
         }
 
-        private int GetUserId()
-        {
-            var identity = HttpContext.User.Identity as ClaimsIdentity;
-            var id = identity.FindFirst("id").Value;
-            return Int32.Parse(id);
-        }
+        
     }
 }

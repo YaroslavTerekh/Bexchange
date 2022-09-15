@@ -4,10 +4,10 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace Bexchange.Domain.DtoModels
+namespace Bexchange.Domain.Models
 {
-    public class IdDTO
+    public abstract class BaseModel
     {
-        public int id { get; set; }
+        public int Id { get; set; }
     }
 }

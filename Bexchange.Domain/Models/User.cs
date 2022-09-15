@@ -6,30 +6,25 @@ using System.Text;
 using System.Threading.Tasks;
 using BexchangeAPI.Domain.Enum;
 using System.ComponentModel.DataAnnotations.Schema;
+using Microsoft.AspNet.Identity.EntityFramework;
+using Microsoft.AspNetCore.Identity;
 
 namespace BexchangeAPI.Domain.Models
 {
-    public class User
+    public class User : IdentityUser<int>
     {
-        [Key]
-        public int Id { get; set; }
-        public string UserName { get; set; }
         public string FirstName { get; set; }
         public string LastName { get; set; }
-        public string Email { get; set; }
-        [ForeignKey(nameof(AddressInfo))]
         public int AddressId { get; set; }
         public AddressInfo Address { get; set; }
         public ICollection<Book>? Books { get; set; }
-        public DateTime RegisteredDate { get; set; } = DateTime.UtcNow;
-        public byte[] PasswordHash { get; set; }
-        public byte[] PasswordSalt { get; set; }        
+        public DateTime RegisteredDate { get; set; } = DateTime.UtcNow;     
         public Roles Role { get; set; }
 
-        public string RefreshToken { get; set; } = string.Empty;
-        public DateTime TokenCreated { get; set; } 
-        public DateTime TokenExpires { get; set; }
+        public string? RefreshToken { get; set; }
+        public DateTime? TokenCreated { get; set; } 
+        public DateTime? TokenExpires { get; set; }
 
-        public bool IsBanned { get; set; } = false;
+        public bool IsBanned { get; set; }
     }
 }

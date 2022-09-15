@@ -1,26 +1,29 @@
-﻿using Bexchange.Infrastructure.Repositories.Interfaces;
+﻿using Bexchange.Domain;
+using Bexchange.Infrastructure.Repositories.Interfaces;
+using Bexchange.Infrastructure.Services.Repositories;
+using BexchangeAPI.Domain.CustomExceptions;
 using BexchangeAPI.Domain.Enum;
 using BexchangeAPI.Domain.Models;
 using BexchangeAPI.Infrastructure.Repositories.Interfaces;
 using Microsoft.AspNetCore.Authorization;
-using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
-using System.Security.Claims;
 
 namespace Bexchange.API.Controllers
 {
-    [Authorize(Policy = "Admins")]
-    [Route("api/[controller]")]
+    [Authorize(Policy = PoliciesConstants.Admins)]
+    [Route("api/[controller]/[action]")]
     [ApiController]
     public class AdminController : ControllerBase
     {
         private readonly IUsersRepository<User> _usersRepository;
         private readonly IContentRepository<Book> _contentRepository;
+        private readonly IUserService _userService;
 
-        public AdminController(IUsersRepository<User> usersRepository, IContentRepository<Book> contentRepository)
+        public AdminController(IUsersRepository<User> usersRepository, IContentRepository<Book> contentRepository, IUserService userService)
         {
             _usersRepository = usersRepository;
             _contentRepository = contentRepository;
+            _userService = userService;
         }
 
         [HttpGet("users")]
@@ -36,25 +39,30 @@ namespace Bexchange.API.Controllers
             return Ok(user);
         }
 
-        [HttpGet("uore/{nameOrEmail}")]
-        public async Task<IActionResult> GetUserByNameOrEmail(string nameOrEmail)
+        [HttpGet("users/{name}")]
+        public async Task<IActionResult> GetUserByName(string name)
         {
-            if (nameOrEmail.Contains("@"))
-            {
-                var user = await _usersRepository.GetUserByEmailAsync(nameOrEmail);
-                return Ok(user);
-            }
-            else
-            {
-                var user = await _usersRepository.GetUserByNameAsync(nameOrEmail);
-                return Ok(user);
-            }
+            var user = await _usersRepository.GetUserByNameAsync(name);
+
+            if (user == null)
+                throw new NotFoundException("user not found", StatusCodes.Status404NotFound);
+            return Ok(user);
         }
 
-        [HttpPut("ban/{id}")]
+        [HttpGet("users/{email}")]
+        public async Task<IActionResult> GetUserByEmail(string email)
+        {
+            var user = await _usersRepository.GetUserByEmailAsync(email);
+
+            if (user == null)
+                throw new NotFoundException("user not found", StatusCodes.Status404NotFound);
+            return Ok(user);
+        }
+
+        [HttpPatch("ban/{id}")]
         public async Task<IActionResult> BanUser(int id)
         {
-            if (id != GetUserId()) {
+            if (id != _userService.GetUserId(HttpContext)) {
                 await _usersRepository.BanUserAsync(id);
 
                 return Ok($"User with id {id} has been banned");
@@ -63,7 +71,7 @@ namespace Bexchange.API.Controllers
             return BadRequest("You can't ban yourself");
         }
 
-        [HttpPut("book/state/{id}/{state}")]
+        [HttpPatch("book/state/{id}/{state}")]
         public async Task<IActionResult> AcceptBook(int id, State state)
         {
             await _contentRepository.ModifyComponentStateAsync(id, state);
@@ -73,13 +81,13 @@ namespace Bexchange.API.Controllers
 
         //SuperAdmin part
 
-        [HttpGet("admins"), Authorize(Policy = "SuperAdmin")]
+        [HttpGet("admins"), Authorize(Policy = PoliciesConstants.SuperAdmins)]
         public async Task<IActionResult> GetAdmins()
         {
             return Ok(await _usersRepository.GetAdminsOnlyAsync());
         }
 
-        [HttpPut("role/{id}/{role}"), Authorize(Policy = "SuperAdmin")]
+        [HttpPut("role/{id}/{role}"), Authorize(Policy = PoliciesConstants.SuperAdmins)]
         public async Task<IActionResult> ChangeUserRole(Roles role, int id)
         {
             await _usersRepository.ChangeRoleAsync(role, id);
@@ -87,18 +95,12 @@ namespace Bexchange.API.Controllers
             return Ok("Successfully changed the role");
         }
 
-        [HttpPut("modify/{id}"), Authorize(Policy = "SuperAdmin")]
+        [HttpPut("modify/{id}"), Authorize(Policy = PoliciesConstants.SuperAdmins)]
         public async Task<IActionResult> ModifyUser(User user)
         {
             await _usersRepository.ModifyUserAsync(user);
             return Ok("Modified successfully");
         }
 
-        private int GetUserId()
-        {
-            var identity = HttpContext.User.Identity as ClaimsIdentity;
-            var id = identity.FindFirst("id").Value;
-            return Int32.Parse(id);
-        }
     }
 }
