@@ -1,0 +1,16 @@
+.book-img {
+    width: 400px;
+    height: 625px;
+    margin-right: 50px;
+    opacity: 1;
+    transition: .4s;
+}
+
+.book-img img {
+    width: 100%;
+}
+
+.hide {
+    opacity: 0;
+    transition: .4s;
+}
