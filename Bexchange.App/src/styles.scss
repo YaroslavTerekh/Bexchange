@@ -1,1 +1,98 @@
+@import '~normalize.css';
+
 /* You can add global styles to this file, and also import other style files */
+* {
+    padding: 0px;
+	margin: 0px;
+	border: none;
+    font-family: 'Comfortaa', sans-serif;
+    color: #fff;
+}
+
+ul {
+    list-style-type: none;
+}
+
+a {
+    text-decoration: none;
+}
+
+body {
+    background: linear-gradient( rgba(0, 0, 0, 0.5), rgba(0, 0, 0, 0.5) ), url('../src/assets/background.png');
+    -webkit-background-size: cover;
+    -moz-background-size:  cover;
+    -o-background-size: cover;
+    background-size: cover;
+    background-attachment: fixed;
+}
+
+.shadow {
+    position: absolute;
+    z-index: -1;
+    width: 100%;
+    min-height: 100%;
+    background-color: rgba(0, 0, 0, 0.5);
+}
+
+header {
+    height: 70px;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding-left: 5%;
+    padding-right: 5%;
+}
+
+.nav-header {
+    width: 50%;
+}
+
+.nav-header > ul {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
+
+.nav-header > ul > li > a {
+    position: relative;
+    font-style: normal;
+    font-weight: 300;
+    font-size: 18px;
+}
+
+.nav-header > ul > li > a::before {
+    content: '';
+    position: absolute;
+    bottom: 0;
+    left: 0;
+    width: 0%;
+    height: 2px;
+    background-color: #fff;
+    transition: .2s;
+}
+
+.nav-header > ul > li > a:hover:before {
+    width: 100%;
+}
+
+.nav-header_account {
+    width: 180px;
+    height: 50px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    border-radius: 10px;    
+    
+    cursor: pointer;
+    background-color: #BA8B60;
+    font-style: normal;
+    font-weight: 300;
+    font-size: 18px;
+
+    transition: .2s;
+}
+
+.nav-header_account:hover {
+    background-color: #c4854b;
+    transition: .2s;
+}
