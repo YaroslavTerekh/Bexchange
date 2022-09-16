@@ -7,13 +7,15 @@ import { AppRoutingModule } from './app-routing.module';
 import { AppComponent } from './app.component';
 import { MainBookComponent } from './main-book/main-book.component';
 import { GenresContentComponent } from './genres-content/genres-content.component';
+import { AuthorsContentComponent } from './authors-content/authors-content.component';
 
 @NgModule({
   declarations: [
     AppComponent,
     MainBookComponent,
     GenresContentComponent,
-    MainPageComponent
+    MainPageComponent,
+    AuthorsContentComponent
   ],
   imports: [
     BrowserModule,
