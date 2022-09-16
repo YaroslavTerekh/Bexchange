@@ -1,0 +1,13 @@
+<div class="lib-book" [routerLink]="['/library/', 2]">
+    <img src="{{book.img}}" alt="">
+    <div class="lib-book-content">
+        <div class="lib-bg"></div>
+        <div class="lib-book-info">
+            <h4>Title: {{book.title}}</h4> <br>
+            <p>Genre: {{book.genre}}</p>
+            <p>Author: {{book.author}}</p><br>   
+            <p class="sdesc">Short description:</p> 
+            <p>{{book.description}}</p>
+        </div>
+    </div>    
+</div>
