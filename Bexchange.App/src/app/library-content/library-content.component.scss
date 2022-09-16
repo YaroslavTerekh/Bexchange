@@ -1,0 +1,22 @@
+.content {
+    max-width: 940px;
+    margin: 0 auto;
+
+    .sbar {
+        display: flex;
+        justify-content: flex-end;
+        margin-top: 30px;
+        margin-bottom: 30px;
+    }
+
+    .books {
+        width: 100%;
+        display: flex;
+        flex-wrap: wrap;
+        justify-content: space-between;
+    }
+    
+    .book {
+        margin-bottom: 20px;
+    }
+}
