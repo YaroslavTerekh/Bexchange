@@ -11,6 +11,7 @@ import { AuthorsContentComponent } from './authors-content/authors-content.compo
 import { LibraryContentComponent } from './library-content/library-content.component';
 import { LibraryContentBookComponent } from './library-content-book/library-content-book.component';
 import { LibraryContentSearchbarComponent } from './library-content-searchbar/library-content-searchbar.component';
+import { BookContentComponent } from './book-content/book-content.component';
 
 @NgModule({
   declarations: [
@@ -21,7 +22,8 @@ import { LibraryContentSearchbarComponent } from './library-content-searchbar/li
     AuthorsContentComponent,
     LibraryContentComponent,
     LibraryContentBookComponent,
-    LibraryContentSearchbarComponent
+    LibraryContentSearchbarComponent,
+    BookContentComponent
   ],
   imports: [
     BrowserModule,

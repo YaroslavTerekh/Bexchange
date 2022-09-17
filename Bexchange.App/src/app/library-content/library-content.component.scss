@@ -19,4 +19,9 @@
     .book {
         margin-bottom: 20px;
     }
+    
+    .hide {
+        display: none;
+        transition: .4s;
+    }
 }
