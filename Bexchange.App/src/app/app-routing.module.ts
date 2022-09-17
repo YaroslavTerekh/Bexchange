@@ -1,3 +1,4 @@
+import { BookContentComponent } from './book-content/book-content.component';
 import { LibraryContentComponent } from './library-content/library-content.component';
 import { AuthorsContentComponent } from './authors-content/authors-content.component';
 import { MainPageComponent } from './main-page/main-page.component';
@@ -9,7 +10,8 @@ const routes: Routes = [
   { path: '', component: MainPageComponent },
   { path: 'genres', component: GenresContentComponent },
   { path: 'authors', component: AuthorsContentComponent },
-  { path: 'library', component: LibraryContentComponent }
+  { path: 'library', component: LibraryContentComponent },
+  { path: 'book/:id', component: BookContentComponent }
 ];
 
 @NgModule({

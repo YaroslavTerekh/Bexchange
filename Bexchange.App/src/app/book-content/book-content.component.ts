@@ -18,18 +18,20 @@ class Book{
   }
 }
 
-
 @Component({
-  selector: 'app-library-content',
-  templateUrl: './library-content.component.html',
-  styleUrls: ['./library-content.component.scss']
+  selector: 'app-book-content',
+  templateUrl: './book-content.component.html',
+  styleUrls: ['./book-content.component.scss']
 })
-export class LibraryContentComponent implements OnInit {
+export class BookContentComponent implements OnInit {
+
+  @Input() id!: number;
+  public book!: Book;
 
   books: Book[] = [
     new Book(1, 'TestBook', 'Lorem ipsum Lorem ipsum Lorem ipsum Lorem ipsum Lorem ipsum Lorem ipsum Lorem ipsum Lorem ipsum Lorem ipsum Lorem ipsum Lorem ipsum Lorem ipsum'
     , 'Tom Cruse', 'Action', '../assets/book1.png'),
-    new Book(2, 'Harry Potter 1', 'Lorem ipsum Lorem ipsum Lorem ipsum Lorem ipsum Lorem ipsum Lorem ipsum Lorem ipsum Lorem ipsum Lorem ipsum Lorem ipsum Lorem ipsum Lorem ipsum'
+    new Book(2, 'TestBook', 'Lorem ipsum Lorem ipsum Lorem ipsum Lorem ipsum Lorem ipsum Lorem ipsum Lorem ipsum Lorem ipsum Lorem ipsum Lorem ipsum Lorem ipsum Lorem ipsum'
     , 'Steaven King', 'Action2', '../assets/book2.png'),
     new Book(3, 'TestBook', 'Lorem ipsum Lorem ipsum Lorem ipsum Lorem ipsum Lorem ipsum Lorem ipsum Lorem ipsum Lorem ipsum Lorem ipsum Lorem ipsum Lorem ipsum Lorem ipsum'
     , 'Tom Cruse', 'Action', '../assets/book3.png'),
@@ -47,18 +49,19 @@ export class LibraryContentComponent implements OnInit {
     , 'Tom Cruse', 'Action', '../assets/book1.png'),
     new Book(10, 'TestBook', 'Lorem ipsum Lorem ipsum Lorem ipsum Lorem ipsum Lorem ipsum Lorem ipsum Lorem ipsum Lorem ipsum Lorem ipsum Lorem ipsum Lorem ipsum Lorem ipsum'
     , 'Tom Cruse', 'Action', '../assets/book2.png'),
-  ];
+  ];  
+  private _route: number | undefined;
 
-  bookEmit!: Array<Book>;
-  bookList!: Book[];
-
-  showResult(event: Book[]) {
-    console.log(this.bookEmit);
+  constructor() { 
+    
   }
 
-  constructor() { }
-
   ngOnInit(): void {
+    this.books.forEach(element => {
+      if(element.id == this._route) {
+        this.book = element;
+      }
+    });
   }
 
 }
