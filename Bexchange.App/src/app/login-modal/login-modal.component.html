@@ -1,0 +1,19 @@
+<div class="modal-bg" (click)="close.emit()"></div>
+
+<div class="modal">
+    <div class="modal-content">
+        <div class="login-options">
+            <h4>Увійти за допомогою:</h4>
+            <div class="options">
+                <button>E-mail</button>
+                <button>Username</button>
+            </div>
+        </div>
+        <div class="login-creds">
+            <input type="text" placeholder="Login..." br>
+            <input type="password" placeholder="Password...">
+            <button>Увійти</button>
+        </div>
+        <a (click)="openRegister.emit()" (click)="close.emit()">Не маєте акаунту? Зареєструватися</a>
+    </div>
+</div>

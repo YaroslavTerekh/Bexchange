@@ -1,3 +1,4 @@
+import { AllDataService } from './../all-data.service';
 import { Component, OnInit } from '@angular/core';
 import { MainBookComponent } from '../main-book/main-book.component';
 
@@ -30,7 +31,8 @@ export class MainPageComponent implements OnInit {
     autoplaySpeed: 5000,
   };
 
-  constructor() { }
+  constructor(dataSvc: AllDataService) {
+   }
 
   ngOnInit(): void {
   }

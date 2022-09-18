@@ -1,8 +1,16 @@
 <div class="main-content">
-    {{book.id}}
-    <img src="" alt="">
+  <div class="book">
+    <img src="{{book.image.path}}" alt="">
     <div class="book-descr">
-      <h3>{{book.title}}</h3>
+      <div class="main-info">
+        <h3>{{book.title}}</h3>
+        <div>
+          <p>- {{book.author}}</p>
+          <p>- {{book.genre}}</p>
+        </div>
+      </div>
       <p>{{book.description}}</p>
     </div>
   </div>
+</div>
+<app-book-content-functions></app-book-content-functions>

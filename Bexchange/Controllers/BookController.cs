@@ -45,7 +45,7 @@ namespace BexchangeAPI.Controllers
 
         }
 
-        [HttpGet("{id}")]
+        [HttpGet("{id}"), AllowAnonymous]
         public async Task<IActionResult> GetBook(int id)
         {
             var book = await _contentRepo.GetComponentAsync(id);
