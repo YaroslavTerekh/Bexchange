@@ -8,8 +8,9 @@
           <li><a routerLink="/library" routerLinkActive="active" style="cursor: pointer;">Бібліотека</a></li>
           <li><a routerLink="/genres" routerLinkActive="active" style="cursor: pointer;">Жанри</a></li>
           <li><a routerLink="/authors" routerLinkActive="active" style="cursor: pointer;">Автори</a></li>
-          <li class="nav-header_account">Увійти в акаунт</li>
+          <li class="nav-header_account" (click)="modal = true">Увійти в акаунт</li>
       </ul>
   </nav>
 </header>
+<app-login-modal *ngIf="modal" (close)="modal = false"></app-login-modal>
 <router-outlet></router-outlet>
