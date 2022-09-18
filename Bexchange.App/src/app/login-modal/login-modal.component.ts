@@ -7,7 +7,8 @@ import { Component, OnInit, Output, EventEmitter } from '@angular/core';
 })
 export class LoginModalComponent implements OnInit {
   @Output() close = new EventEmitter<void>();
-  
+  @Output() openRegister = new EventEmitter<void>();
+
   constructor() { }
 
   ngOnInit(): void {

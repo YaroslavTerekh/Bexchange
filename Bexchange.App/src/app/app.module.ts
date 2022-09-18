@@ -16,6 +16,7 @@ import { LibraryContentSearchbarComponent } from './library-content-searchbar/li
 import { BookContentComponent } from './book-content/book-content.component';
 import { BookContentFunctionsComponent } from './book-content-functions/book-content-functions.component';
 import { LoginModalComponent } from './login-modal/login-modal.component';
+import { RegisterModalComponent } from './register-modal/register-modal.component';
 
 @NgModule({
   declarations: [
@@ -30,6 +31,7 @@ import { LoginModalComponent } from './login-modal/login-modal.component';
     BookContentComponent,
     BookContentFunctionsComponent,
     LoginModalComponent,
+    RegisterModalComponent,
   ],
   imports: [
     BrowserModule,
