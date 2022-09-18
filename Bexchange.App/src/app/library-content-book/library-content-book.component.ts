@@ -1,22 +1,5 @@
 import { Component, OnInit, Input } from '@angular/core';
-
-class Book{
-  id: number | undefined;
-  title: string | undefined;
-  description: string | undefined;
-  genre: string | undefined;
-  author: string | undefined;
-  img: string | undefined;
-  
-  constructor(id: number, title: string, description: string, author: string, genre: string, img: string) {
-    this.id = id;
-    this.title = title;
-    this.description = description;
-    this.author = author;
-    this.img = img;
-    this.genre = genre;
-  }
-}
+import { Book } from '../all-data.service';
 
 @Component({
   selector: 'app-library-content-book',

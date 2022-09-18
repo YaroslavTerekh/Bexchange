@@ -1,14 +1,6 @@
+import { AllDataService } from './../all-data.service';
 import { Component, OnInit } from '@angular/core';
-
-class Author {
-  name!: string;
-  img!: string;
-
-  constructor(name: string, img: string) {
-    this.name = name;
-    this.img = img;
-  }
-}
+import { Author } from '../all-data.service';
 
 @Component({
   selector: 'app-authors-content',
@@ -17,14 +9,11 @@ class Author {
 })
 export class AuthorsContentComponent implements OnInit {
 
-  authors: Author[] | undefined = [
-    new Author('Petro Mostavchuk','../assets/book1.png'),
-    new Author('Petro Mostavchuk2','../assets/book2.png'),
-    new Author('Petro Mostavchuk3','../assets/book3.png'),
-    new Author('Petro Mostavchuk4','../assets/book4.png'),
-  ];
+  authors?: Author[];
 
-  constructor() { }
+  constructor(dataSvc: AllDataService) { 
+    this.authors = dataSvc.authors;
+  }
 
   ngOnInit(): void {
   }

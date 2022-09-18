@@ -1,13 +1,13 @@
 <div class="lib-book" [routerLink]="['/book', book.id]">
-    <img src="{{book.img}}" alt="">
+    <img src="{{book.image?.path}}" alt="">
     <div class="lib-book-content">
         <div class="lib-bg"></div>
         <div class="lib-book-info">
-            <h4>Title: {{book.title}}</h4> <br>
-            <p>Genre: {{book.genre}}</p>
-            <p>Author: {{book.author}}</p><br>   
-            <p class="sdesc">Short description:</p> 
-            <p>{{book.description}}</p>
+            <h4>Назва: {{book.title}}</h4> <br>
+            <p>Жанр: {{book.genre}}</p>
+            <p>Автор: {{book.author}}</p><br>   
+            <p class="sdesc">Короткий опис:</p> 
+            <p>{{book.description?.substring(0, 200)}}...</p>
         </div>
     </div>    
 </div>
