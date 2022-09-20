@@ -1,7 +1,8 @@
-import { AllDataService, Book } from './../all-data.service';
+import { AllDataService } from './../all-data.service';
 import { Component, Input, OnInit } from '@angular/core';
 import { ActivatedRoute } from '@angular/router';
-import { HttpClient } from '@angular/common/http';
+import { HttpClient, HttpHeaders } from '@angular/common/http';
+import { Book } from '../models/Book';
 
 @Component({
   selector: 'app-book-content',
@@ -15,13 +16,10 @@ export class BookContentComponent implements OnInit {
   }
 
   ngOnInit(): void {
-    this.http.get('https://localhost:7194/api/book/' + this.route.snapshot.params['id'])
+    this.http.get(`https://localhost:7194/api/Book/${this.route.snapshot.params['id']}`)
       .subscribe(res => {
         this.book = res; 
       })
-
-    console.log(this.book);
-    console.log(this.route.snapshot.params['id']);
   }
 
 }

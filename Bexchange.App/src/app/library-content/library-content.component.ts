@@ -1,5 +1,6 @@
 import { Component, Input, OnInit } from '@angular/core';
-import { AllDataService, Book } from '../all-data.service';
+import { AllDataService } from '../all-data.service';
+import { Book } from '../models/Book';
 
 @Component({
   selector: 'app-library-content',
@@ -12,9 +13,9 @@ export class LibraryContentComponent implements OnInit {
   books!: any;
 
   constructor(dataSvc: AllDataService) { 
-    setTimeout(() => {
-      this.books = dataSvc.books;
-    }, 1000)
+    dataSvc.books.subscribe((res: Book[]) => {
+      this.books = res;         
+    });
   }
 
   ngOnInit(): void {

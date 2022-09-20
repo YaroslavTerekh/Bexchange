@@ -9,10 +9,12 @@
                 <button>Username</button>
             </div>
         </div>
-        <div class="login-creds">
-            <input type="text" placeholder="Login..." br>
-            <input type="password" placeholder="Password...">
-            <button>Увійти</button>
+        <div class="login-creds"> 
+            <form [formGroup]="form">
+                <input formControlName="userName" type="text" placeholder="Login..." #login>
+                <input formControlName="password" type="password" placeholder="Password..." #password>
+                <button class="submit" (click)="logIn()" (click)="close.emit()" (click)="logged.emit()">Увійти</button>
+            </form>
         </div>
         <a (click)="openRegister.emit()" (click)="close.emit()">Не маєте акаунту? Зареєструватися</a>
     </div>
