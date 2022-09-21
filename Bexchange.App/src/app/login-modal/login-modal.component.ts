@@ -12,21 +12,18 @@ export class LoginModalComponent implements OnInit {
   @Output() close = new EventEmitter<void>();
   @Output() logged = new EventEmitter<void>();
   @Output() openRegister = new EventEmitter<void>();
-
   public form = new FormGroup({
       userName: this.fb.control(''),
       password: this.fb.control('')
   });
-
-  
 
   constructor(
     private authSvc: AuthorizationService,
     private fb: FormBuilder) { }
 
   ngOnInit(): void {
+    
   }
-
 
   loginName(user: LoginRequest) {
     this.authSvc.loginName(user)
@@ -36,7 +33,7 @@ export class LoginModalComponent implements OnInit {
   }
 
   public logIn(): void {
-    const user = {
+    const user: LoginRequest = {
       userName: this.form.get('userName')?.value,
       password: this.form.get('password')?.value
     }

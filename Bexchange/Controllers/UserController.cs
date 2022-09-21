@@ -68,7 +68,7 @@ namespace BexchangeAPI.Controllers
                 return Ok(mappedUser);
             }
 
-            return BadRequest(result.Errors);
+            return BadRequest(result.Errors.ToArray()[0].Description);
         }
 
         [HttpPost("login/email")]
