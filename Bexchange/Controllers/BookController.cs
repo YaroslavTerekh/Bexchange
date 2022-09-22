@@ -1,4 +1,5 @@
 ﻿using AutoMapper;
+using Bexchange.Domain.Models;
 using Bexchange.Infrastructure.Repositories.Interfaces;
 using Bexchange.Infrastructure.Services.Repositories;
 using BexchangeAPI.Domain.CustomExceptions;
@@ -19,12 +20,12 @@ namespace BexchangeAPI.Controllers
     [ApiController]
     public class BookController : ControllerBase
     {
-        private readonly IContentRepository<Book> _contentRepo;
+        private readonly IAdditionalContentRepository<Book> _contentRepo;
         private readonly IUsersRepository<User> _usersRepository;
         private readonly IMapper _mapper;
         private readonly IUserService _userService;
 
-        public BookController(IContentRepository<Book> contentRepo, IUsersRepository<User> usersRepository, 
+        public BookController(IAdditionalContentRepository<Book> contentRepo, IUsersRepository<User> usersRepository, 
             IMapper mapper, IUserService userService)
         {
             _mapper = mapper;
@@ -114,6 +115,20 @@ namespace BexchangeAPI.Controllers
             }
 
             return BadRequest("You can delete only your own book");
+        }
+
+        // GENRES, AUTHORS
+
+        [HttpGet("genres"), AllowAnonymous]
+        public async Task<IEnumerable<Genre>> Genres()
+        {
+            return await _contentRepo.GetGenresAsync();
+        }
+
+        [HttpGet("authors"), AllowAnonymous]
+        public async Task<IEnumerable<Author>> Authors()
+        {
+            return await _contentRepo.GetAuthorsAsync();
         }
     }
 }

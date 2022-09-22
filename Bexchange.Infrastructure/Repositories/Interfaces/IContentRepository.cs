@@ -1,4 +1,5 @@
-﻿using BexchangeAPI.Domain.Enum;
+﻿using Bexchange.Domain.Models;
+using BexchangeAPI.Domain.Enum;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -16,5 +17,6 @@ namespace BexchangeAPI.Infrastructure.Repositories.Interfaces
         public Task DeleteComponentAsync(int id);
         public Task ModifyComponentAsync(T component);
         public Task ModifyComponentStateAsync(int id, State state);
+        
     }
 }

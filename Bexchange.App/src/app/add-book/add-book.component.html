@@ -5,15 +5,10 @@
         <div>
             <span>Жанр</span>
             <select name="" id="">
-                <option value="asd">test</option>
+                <option *ngFor="let genre of genres" value="{{genre}}">{{genre.title}}</option>
             </select>
         </div>
-        <div>
-            <span>Автор</span>
-            <select name="" id="">
-
-            </select>
-        </div>
+        <div><span>Автор</span> <input type="text"></div>
         <div><span>Обкладинка</span> <input type="file"></div>
         <div><span>Опис</span> <textarea name="" id="" cols="100" rows="20"></textarea></div>
     </form>

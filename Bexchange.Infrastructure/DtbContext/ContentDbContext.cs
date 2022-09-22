@@ -1,4 +1,6 @@
 ﻿using Bexchange.Domain;
+using Bexchange.Domain.Models;
+using Bexchange.Infrastructure.Configurations;
 using BexchangeAPI.Domain.Models;
 using BexchangeAPI.Infrastructure.Configurations;
 using Microsoft.AspNetCore.Identity.EntityFrameworkCore;
@@ -19,6 +21,8 @@ namespace BexchangeAPI.Infrastructure.DtbContext
         public DbSet<ExchangeOrder> Orders { get; set; }
         public DbSet<Image> Images { get; set; }
         public DbSet<AddressInfo> Addresses { get; set; }
+        public DbSet<Author> Authors { get; set; }
+        public DbSet<Genre> Genres { get; set; }
 
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)
@@ -49,6 +53,8 @@ namespace BexchangeAPI.Infrastructure.DtbContext
             }
 
             base.OnModelCreating(modelBuilder);
+            modelBuilder.ApplyConfiguration(new AuthorConfiguration());
+            modelBuilder.ApplyConfiguration(new GenreConfiguration());
             modelBuilder.ApplyConfiguration(new BookConfiguration());
             modelBuilder.ApplyConfiguration(new ExchangeOrderConfiguration());
         }

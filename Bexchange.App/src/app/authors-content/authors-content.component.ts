@@ -1,6 +1,9 @@
 import { AllDataService } from './../all-data.service';
 import { Component, OnInit } from '@angular/core';
 import { Author } from '../models/Author';
+import { HttpClient } from '@angular/common/http';
+import { Router } from '@angular/router';
+import { environment } from 'src/environments/environment.prod';
 
 @Component({
   selector: 'app-authors-content',
@@ -9,13 +12,23 @@ import { Author } from '../models/Author';
 })
 export class AuthorsContentComponent implements OnInit {
 
-  authors?: Author[];
+  authors: any;
 
-  constructor(dataSvc: AllDataService) { 
-    this.authors = dataSvc.authors;
-  }
+  constructor(
+    private http: HttpClient,
+    private router: Router
+    ) { }
 
   ngOnInit(): void {
+    this.http.get(`${environment.bexchangeApi}Book/authors`)
+      .subscribe({
+        next: res => {
+          this.authors = res;
+        }, 
+        error: (err: any) => {
+          this.router.navigate(['/error', { error: JSON.stringify(err) }])
+        }
+      });
   }
 
 }

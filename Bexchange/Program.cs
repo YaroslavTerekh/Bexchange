@@ -101,6 +101,7 @@ builder.Services.AddTransient<IContentRepository<Book>, BooksRepository>();
 builder.Services.AddTransient<IContentRepository<ExchangeOrder>, OrdersRepository>();
 builder.Services.AddTransient<IUsersRepository<User>, UsersRepository>();
 builder.Services.AddTransient<IUserService, UserService>();
+builder.Services.AddTransient<IAdditionalContentRepository<Book>, BooksRepository>();
 
 builder.Services.AddHttpClient();
 
