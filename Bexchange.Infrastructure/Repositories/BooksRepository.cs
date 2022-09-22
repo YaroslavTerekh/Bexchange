@@ -1,4 +1,6 @@
-﻿using BexchangeAPI.Domain.Enum;
+﻿using Bexchange.Domain.Models;
+using Bexchange.Infrastructure.Repositories.Interfaces;
+using BexchangeAPI.Domain.Enum;
 using BexchangeAPI.Domain.Models;
 using BexchangeAPI.Infrastructure.DtbContext;
 using BexchangeAPI.Infrastructure.Repositories.Interfaces;
@@ -11,7 +13,7 @@ using System.Threading.Tasks;
 
 namespace BexchangeAPI.Infrastructure.Repositories
 {
-    public class BooksRepository : IContentRepository<Book>
+    public class BooksRepository : IAdditionalContentRepository<Book>
     {
         private readonly ContentDbContext _context;
         public BooksRepository(ContentDbContext context)
@@ -79,6 +81,16 @@ namespace BexchangeAPI.Infrastructure.Repositories
                 .Include(b => b.Image)
                 .Include(b => b.User)
                 .ToListAsync();
+        }
+
+        public async Task<IEnumerable<Genre>> GetGenresAsync()
+        {
+            return await _context.Genres.ToListAsync();
+        }
+
+        public async Task<IEnumerable<Author>> GetAuthorsAsync()
+        {
+            return await _context.Authors.ToListAsync();
         }
     }
 }

@@ -2,6 +2,8 @@ import { ActivatedRoute, Router } from '@angular/router';
 import { Component, Input, OnInit } from '@angular/core';
 import { AllDataService } from '../all-data.service';
 import { Book } from '../models/Book';
+import { HttpClient } from '@angular/common/http';
+import { environment } from 'src/environments/environment.prod';
 
 @Component({
   selector: 'app-library-content',
@@ -13,19 +15,21 @@ export class LibraryContentComponent implements OnInit {
   bookList!: Book[];
   books!: any;
 
-  constructor(dataSvc: AllDataService, private router: Router) { 
-    dataSvc.books.subscribe({
-      next: (res: Book[]) => {
-        this.books = res;         
-      },
-      error: (err: any) => {
-        this.router.navigate(['/error', { error: JSON.stringify(err) }])
-      }
-    });
-  }
+  constructor(
+    private http: HttpClient,
+    private router: Router
+    ) { }
   
   ngOnInit(): void {
-    
+    this.http.get(`${environment.bexchangeApi}Book/`)
+      .subscribe({
+        next: res => {
+          this.books = res;
+        }, 
+        error: (err: any) => {
+          this.router.navigate(['/error', { error: JSON.stringify(err) }])
+        }
+      });
   }
 
 }

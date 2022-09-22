@@ -1,22 +1,22 @@
 import { Router } from '@angular/router';
-import { HttpClient } from '@angular/common/http';
 import { AllDataService } from './../all-data.service';
-import { Component, OnInit, Input } from '@angular/core';
-import { Genre } from '../models/Genre';
+import { HttpClient } from '@angular/common/http';
+import { Component, OnInit } from '@angular/core';
 import { environment } from 'src/environments/environment.prod';
 
 @Component({
-  selector: 'app-genres-content',
-  templateUrl: './genres-content.component.html',
-  styleUrls: ['./genres-content.component.scss']
+  selector: 'app-add-book',
+  templateUrl: './add-book.component.html',
+  styleUrls: ['./add-book.component.scss']
 })
-export class GenresContentComponent implements OnInit {  
-  genres: any;
+export class AddBookComponent implements OnInit {
+  public genres: any;
 
   constructor(
-    private http: HttpClient,
-    private router: Router
-    ) { }
+    private dataService: AllDataService,
+    private router: Router,
+    private http: HttpClient
+  ) { }
 
   ngOnInit(): void {
     this.http.get(`${environment.bexchangeApi}Book/genres`)
