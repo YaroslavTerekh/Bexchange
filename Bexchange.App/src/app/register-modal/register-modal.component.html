@@ -1,16 +1,35 @@
 <div class="modal-bg" (click)="close.emit()"></div>
 
 <div class="modal">
-    <div class="modal-content">
+    <div class="modal-content" [formGroup]="form">
         <h4>Реєстрація</h4>
-        <input type="text" placeholder="Nickname..." #Nickname>
-        <input type="text" placeholder="E-mail..." #Email>
-        <input type="text" placeholder="First name..." #FirstName>
-        <input type="text" placeholder="Seconds name..." #SecondName>
-        <input type="text" placeholder="Country..." #Country>
-        <input type="text" placeholder="City..." #City>
-        <input type="text" placeholder="Post index..." #PostIndex>
-        <input type="password" placeholder="Password..." #Password>
-        <button>Реєстрація</button>
+        <input formControlName="userName" type="text" placeholder="Nickname..." #Nickname>
+        <input formControlName="email" type="text" placeholder="E-mail...">
+        <input formControlName="firstName" type="text" placeholder="First name..." #FirstName>
+        <input formControlName="lastName" type="text" placeholder="Seconds name..." #SecondName>
+        <input formControlName="country" type="text" placeholder="Country..." #Country>
+        <input formControlName="city" type="text" placeholder="City..." #City>
+        <input formControlName="postIndex" type="text" placeholder="Post index..." #PostIndex>
+        <input formControlName="password" type="password" placeholder="Password..." #Password>
+        <button *ngIf="form.valid" (click)="register()">Реєстрація</button>
+        <button *ngIf="form.invalid" style="opacity: .5; cursor: not-allowed;">Реєстрація</button>
+
+        <p *ngIf="form.invalid && (form.get('userName')?.invalid && form.get('userName')?.touched)"
+            class="error-message">UserName is wrong</p>
+        <p *ngIf="form.invalid && (form.get('email')?.invalid && form.get('email')?.touched)" class="error-message">
+            Email is wrong</p>
+        <p *ngIf="form.invalid && (form.get('firstName')?.invalid && form.get('firstName')?.touched)"
+            class="error-message">First name is required</p>
+        <p *ngIf="form.invalid && (form.get('lastName')?.invalid && form.get('lastName')?.touched)"
+            class="error-message">Last name is required</p>
+        <p *ngIf="form.invalid && (form.get('country')?.invalid && form.get('country')?.touched)" class="error-message">
+            Country is required</p>
+        <p *ngIf="form.invalid && (form.get('city')?.invalid && form.get('city')?.touched)" class="error-message">City
+            is required</p>
+        <p *ngIf="form.invalid && (form.get('postIndex')?.invalid && form.get('postIndex')?.touched)"
+            class="error-message">Post index is required</p>
+        <p *ngIf="form.invalid && (form.get('password')?.invalid && form.get('password')?.touched)"
+            class="error-message">Password is required</p>
+        <p class="error-message">{{errorMessage}}</p>
     </div>
 </div>

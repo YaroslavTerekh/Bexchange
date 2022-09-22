@@ -1,6 +1,6 @@
 import { AllDataService } from './../all-data.service';
 import { Component, OnInit, Input } from '@angular/core';
-import { Genre } from '../all-data.service';
+import { Genre } from '../models/Genre';
 
 @Component({
   selector: 'app-genres-content',

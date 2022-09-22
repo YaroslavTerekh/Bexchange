@@ -1,3 +1,4 @@
 export const environment = {
-  production: true
+  production: true,
+  bexchangeApi: 'https://localhost:7194/api/'
 };

@@ -5,14 +5,17 @@
         <div class="login-options">
             <h4>Увійти за допомогою:</h4>
             <div class="options">
-                <button>E-mail</button>
-                <button>Username</button>
+                <button (click)="loginMethod = 'email'" [ngClass]="{'active' : isValue == 1}" (click)="toggle1()">E-mail</button>
+                <button (click)="loginMethod = 'name'" [ngClass]="{'active' : isValue == 2}" (click)="toggle2()" >Username</button>
             </div>
         </div>
-        <div class="login-creds">
-            <input type="text" placeholder="Login..." br>
-            <input type="password" placeholder="Password...">
-            <button>Увійти</button>
+        <div class="login-creds"> 
+            <form [formGroup]="form">
+                <input formControlName="userName" type="text" placeholder="Login..." #login>
+                <input formControlName="password" type="password" placeholder="Password..." #password>
+                <button class="submit" *ngIf="isValue != 0" (click)="logIn()" (click)="close.emit()">Увійти</button>
+                <button class="submit" *ngIf="isValue === 0" style="opacity: .5; cursor: not-allowed;">Увійти</button>
+            </form>
         </div>
         <a (click)="openRegister.emit()" (click)="close.emit()">Не маєте акаунту? Зареєструватися</a>
     </div>

@@ -1,9 +1,10 @@
+import { AuthInterceptorService } from './auth-interceptor.service';
 import { AllDataService } from './all-data.service';
 import { MainPageComponent } from './main-page/main-page.component';
 import { NgModule } from '@angular/core';
 import { BrowserModule } from '@angular/platform-browser';
 import { SlickCarouselModule } from 'ngx-slick-carousel';
-import { HttpClientModule } from '@angular/common/http';
+import { HttpClientModule, HTTP_INTERCEPTORS } from '@angular/common/http';
 
 import { AppRoutingModule } from './app-routing.module';
 import { AppComponent } from './app.component';
@@ -17,6 +18,9 @@ import { BookContentComponent } from './book-content/book-content.component';
 import { BookContentFunctionsComponent } from './book-content-functions/book-content-functions.component';
 import { LoginModalComponent } from './login-modal/login-modal.component';
 import { RegisterModalComponent } from './register-modal/register-modal.component';
+import { FormsModule, ReactiveFormsModule } from '@angular/forms';
+import { TextTrimPipe } from './text-trim.pipe';
+import { ErrorPageComponent } from './error-page/error-page.component';
 
 @NgModule({
   declarations: [
@@ -32,14 +36,25 @@ import { RegisterModalComponent } from './register-modal/register-modal.componen
     BookContentFunctionsComponent,
     LoginModalComponent,
     RegisterModalComponent,
+    TextTrimPipe,
+    ErrorPageComponent,
   ],
   imports: [
     BrowserModule,
     AppRoutingModule,
     SlickCarouselModule,
-    HttpClientModule
+    HttpClientModule,
+    FormsModule,
+    ReactiveFormsModule
   ],
-  providers: [AllDataService],
+  providers: [
+    AllDataService,
+    {
+      provide: HTTP_INTERCEPTORS,
+      useClass: AuthInterceptorService,
+      multi: true,
+    }
+  ],
   bootstrap: [AppComponent]
 })
 export class AppModule { }

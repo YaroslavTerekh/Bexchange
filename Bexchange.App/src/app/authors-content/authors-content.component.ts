@@ -1,6 +1,6 @@
 import { AllDataService } from './../all-data.service';
 import { Component, OnInit } from '@angular/core';
-import { Author } from '../all-data.service';
+import { Author } from '../models/Author';
 
 @Component({
   selector: 'app-authors-content',
