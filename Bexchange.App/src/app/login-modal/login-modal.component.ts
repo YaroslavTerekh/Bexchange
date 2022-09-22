@@ -12,6 +12,8 @@ import { LoginRequest } from '../models/LoginRequest'
 export class LoginModalComponent implements OnInit {
   @Output() close = new EventEmitter<void>();
   @Output() openRegister = new EventEmitter<void>();
+  public loginMethod!: string;
+  public isValue: number = 0;
   public form = new FormGroup({
       userName: this.fb.control(''),
       password: this.fb.control('')
@@ -26,11 +28,12 @@ export class LoginModalComponent implements OnInit {
     
   }
 
-  loginName(user: LoginRequest) {
-    this.authSvc.loginName(user)
-      .subscribe((token: string) => {
-        localStorage.setItem('authToken', token);
-      });
+  toggle1() {
+    this.isValue = 1
+  }
+
+  toggle2() {
+    this.isValue = 2
   }
 
   public logIn(): void {
@@ -39,7 +42,7 @@ export class LoginModalComponent implements OnInit {
       password: this.form.get('password')?.value
     }
     
-    this.authSvc.loginUser(user)
+    this.authSvc.loginUser(user, this.loginMethod)
     .subscribe({
       next: token => {
         localStorage.setItem('authToken', token);   

@@ -16,16 +16,9 @@ export class AuthorizationService {
   public isLogged(): boolean {
     return localStorage.getItem('token') ? true : false; 
   }
- 
-  public loginName(user: LoginRequest) : Observable<string> {    
-    let resp = this.http.post(environment.bexchangeApi + 'User/login/name', user, {
-      responseType: "text",
-    });
-    return resp;
-  }
-
-  public loginUser(model: LoginRequest): Observable<any> {
-    return this.http.post(`${environment.bexchangeApi}User/login/name`, model, {
+  
+  public loginUser(model: LoginRequest, method: string): Observable<any> {
+    return this.http.post(`${environment.bexchangeApi}User/login/${method}`, model, {
       responseType: "text",
     })
   }

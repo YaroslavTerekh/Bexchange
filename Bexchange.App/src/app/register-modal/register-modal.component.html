@@ -12,7 +12,7 @@
         <input formControlName="postIndex" type="text" placeholder="Post index..." #PostIndex>
         <input formControlName="password" type="password" placeholder="Password..." #Password>
         <button *ngIf="form.valid" (click)="register()">Реєстрація</button>
-        <button *ngIf="form.invalid" style="opacity: .5;">Реєстрація</button>
+        <button *ngIf="form.invalid" style="opacity: .5; cursor: not-allowed;">Реєстрація</button>
 
         <p *ngIf="form.invalid && (form.get('userName')?.invalid && form.get('userName')?.touched)"
             class="error-message">UserName is wrong</p>
