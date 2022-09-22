@@ -1,3 +1,4 @@
+import { ActivatedRoute, Router } from '@angular/router';
 import { Component, Input, OnInit } from '@angular/core';
 import { AllDataService } from '../all-data.service';
 import { Book } from '../models/Book';
@@ -12,12 +13,17 @@ export class LibraryContentComponent implements OnInit {
   bookList!: Book[];
   books!: any;
 
-  constructor(dataSvc: AllDataService) { 
-    dataSvc.books.subscribe((res: Book[]) => {
-      this.books = res;         
+  constructor(dataSvc: AllDataService, private router: Router) { 
+    dataSvc.books.subscribe({
+      next: (res: Book[]) => {
+        this.books = res;         
+      },
+      error: (err: any) => {
+        this.router.navigate(['/error', { error: JSON.stringify(err) }])
+      }
     });
   }
-
+  
   ngOnInit(): void {
     
   }

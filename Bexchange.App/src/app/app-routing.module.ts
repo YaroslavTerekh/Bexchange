@@ -1,3 +1,4 @@
+import { ErrorPageComponent } from './error-page/error-page.component';
 import { BookContentComponent } from './book-content/book-content.component';
 import { LibraryContentComponent } from './library-content/library-content.component';
 import { AuthorsContentComponent } from './authors-content/authors-content.component';
@@ -11,7 +12,9 @@ const routes: Routes = [
   { path: 'genres', component: GenresContentComponent },
   { path: 'authors', component: AuthorsContentComponent },
   { path: 'library', component: LibraryContentComponent },
-  { path: 'book/:id', component: BookContentComponent }
+  { path: 'book/:id', component: BookContentComponent },
+  { path: 'error', component: ErrorPageComponent },
+  { path: '**', component: ErrorPageComponent },
 ];
 
 @NgModule({

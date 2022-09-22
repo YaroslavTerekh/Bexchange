@@ -12,6 +12,6 @@
       </ul>
   </nav>
 </header>
-<app-login-modal *ngIf="modal" (close)="modal = false" (openRegister)="registerModal = true" (logged)="loggedIn = true" (logged)="checkLoggedVal()"></app-login-modal>
+<app-login-modal *ngIf="modal" (close)="modal = false" (openRegister)="registerModal = true"></app-login-modal>
 <app-register-modal *ngIf="registerModal" (close)="registerModal = false"></app-register-modal>
 <router-outlet></router-outlet>

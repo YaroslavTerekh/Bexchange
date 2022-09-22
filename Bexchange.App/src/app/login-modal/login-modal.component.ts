@@ -1,3 +1,4 @@
+import { Router } from '@angular/router';
 import { FormBuilder, FormGroup, FormsModule } from '@angular/forms';
 import { AuthorizationService } from './../authorization.service';
 import { Component, OnInit, Output, EventEmitter } from '@angular/core';
@@ -10,7 +11,6 @@ import { LoginRequest } from '../models/LoginRequest'
 })
 export class LoginModalComponent implements OnInit {
   @Output() close = new EventEmitter<void>();
-  @Output() logged = new EventEmitter<void>();
   @Output() openRegister = new EventEmitter<void>();
   public form = new FormGroup({
       userName: this.fb.control(''),
@@ -19,7 +19,8 @@ export class LoginModalComponent implements OnInit {
 
   constructor(
     private authSvc: AuthorizationService,
-    private fb: FormBuilder) { }
+    private fb: FormBuilder,
+    private router: Router) { }
 
   ngOnInit(): void {
     
@@ -39,11 +40,13 @@ export class LoginModalComponent implements OnInit {
     }
     
     this.authSvc.loginUser(user)
-    .subscribe(token => {
-      localStorage.setItem('authToken', token);   
+    .subscribe({
+      next: token => {
+        localStorage.setItem('authToken', token);   
+      },
+      error: err => {
+        this.router.navigate(['/error', {error: err}]);
+      }
     });
-
-    console.log(user);
-    
   }
 }

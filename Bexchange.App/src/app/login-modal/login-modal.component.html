@@ -13,7 +13,7 @@
             <form [formGroup]="form">
                 <input formControlName="userName" type="text" placeholder="Login..." #login>
                 <input formControlName="password" type="password" placeholder="Password..." #password>
-                <button class="submit" (click)="logIn()" (click)="close.emit()" (click)="logged.emit()">Увійти</button>
+                <button class="submit" (click)="logIn()" (click)="close.emit()">Увійти</button>
             </form>
         </div>
         <a (click)="openRegister.emit()" (click)="close.emit()">Не маєте акаунту? Зареєструватися</a>

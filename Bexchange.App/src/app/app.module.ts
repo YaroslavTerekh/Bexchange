@@ -20,6 +20,7 @@ import { LoginModalComponent } from './login-modal/login-modal.component';
 import { RegisterModalComponent } from './register-modal/register-modal.component';
 import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { TextTrimPipe } from './text-trim.pipe';
+import { ErrorPageComponent } from './error-page/error-page.component';
 
 @NgModule({
   declarations: [
@@ -36,6 +37,7 @@ import { TextTrimPipe } from './text-trim.pipe';
     LoginModalComponent,
     RegisterModalComponent,
     TextTrimPipe,
+    ErrorPageComponent,
   ],
   imports: [
     BrowserModule,

@@ -19,7 +19,6 @@ export class AuthInterceptorService  {
       });
     }
 
-    console.log(token)
     return next.handle(req);
   }
 }

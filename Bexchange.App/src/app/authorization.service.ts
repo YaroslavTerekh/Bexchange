@@ -13,11 +13,14 @@ export class AuthorizationService {
     
   }
 
+  public isLogged(): boolean {
+    return localStorage.getItem('token') ? true : false; 
+  }
+ 
   public loginName(user: LoginRequest) : Observable<string> {    
     let resp = this.http.post(environment.bexchangeApi + 'User/login/name', user, {
       responseType: "text",
     });
-    console.log(resp);
     return resp;
   }
 
