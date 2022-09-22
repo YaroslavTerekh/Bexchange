@@ -1,0 +1,54 @@
+.add-book {
+    max-width: 940px;
+    margin: 0 auto;
+    margin-top: 50px;
+
+    h2{
+        font-size: 30px;
+        margin-bottom: 20px;
+    }
+
+    form {
+        display: flex;
+        flex-direction: column;
+        div {
+            margin-bottom: 10px;
+
+            span {
+                font-size: 18px;
+                margin-right: 20px;
+            }
+
+            input {
+                background-color: #D4AF94;
+                padding: 10px;
+                border-radius: 5px;
+            }
+
+            select {
+                background-color: #D4AF94;
+                padding: 10px;
+                border-radius: 5px;
+            }
+
+            textarea {
+                margin-top: 10px;
+                background-color: #D4AF94;
+                padding: 10px;
+                border-radius: 5px;
+            }
+        }
+    }
+
+    .submit {
+        padding: 10px;
+        background-color: #229620;
+        border-radius: 5px;
+        cursor: pointer;
+        margin-bottom: 5px;
+    }
+
+    p {
+        font-size: 14px;
+    }
+}

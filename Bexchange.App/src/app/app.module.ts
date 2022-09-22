@@ -21,6 +21,7 @@ import { RegisterModalComponent } from './register-modal/register-modal.componen
 import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { TextTrimPipe } from './text-trim.pipe';
 import { ErrorPageComponent } from './error-page/error-page.component';
+import { AddBookComponent } from './add-book/add-book.component';
 
 @NgModule({
   declarations: [
@@ -38,6 +39,7 @@ import { ErrorPageComponent } from './error-page/error-page.component';
     RegisterModalComponent,
     TextTrimPipe,
     ErrorPageComponent,
+    AddBookComponent,
   ],
   imports: [
     BrowserModule,
