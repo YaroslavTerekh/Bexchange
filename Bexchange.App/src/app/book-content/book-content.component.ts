@@ -1,3 +1,4 @@
+import { AllDataService } from './../all-data.service';
 import { Component, Input, OnInit } from '@angular/core';
 import { ActivatedRoute, Router } from '@angular/router';
 import { HttpClient, HttpHeaders } from '@angular/common/http';
@@ -13,11 +14,12 @@ export class BookContentComponent implements OnInit {
   constructor(
     private route: ActivatedRoute, 
     private http: HttpClient, 
-    private router: Router) {
+    private router: Router,
+    private dataService: AllDataService) {
   }
 
   ngOnInit(): void {
-    this.http.get(`https://localhost:7194/api/Book/${this.route.snapshot.params['id']}`)
+    this.dataService.getBook(this.route.snapshot.params['id'])
       .subscribe({
         next: res => {
           this.book = res; 

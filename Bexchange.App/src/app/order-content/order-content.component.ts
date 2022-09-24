@@ -3,7 +3,9 @@ import { Router } from '@angular/router';
 import { HttpClient } from '@angular/common/http';
 import { Component, OnInit } from '@angular/core';
 import { environment } from 'src/environments/environment.prod';
+import { UntilDestroy, untilDestroyed } from '@ngneat/until-destroy';
 
+@UntilDestroy()
 @Component({
   selector: 'app-order-content',
   templateUrl: './order-content.component.html',
@@ -22,6 +24,7 @@ export class OrderContentComponent implements OnInit {
   ngOnInit(): void {
     console.log('init');
     this.dataService.getAllOrders()
+      .pipe(untilDestroyed(this))
       .subscribe({
         next: res => {
           console.log(res);

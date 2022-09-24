@@ -19,7 +19,7 @@ const routes: Routes = [
   { path: 'error', component: ErrorPageComponent },
   { path: 'create-book', component: AddBookComponent },
   { path: 'orders', component: OrderContentComponent },
-  { path: 'create-order', component: CreateOrderComponent },
+  { path: 'create-order/:id', component: CreateOrderComponent },
   { path: '**', component: ErrorPageComponent },
 ];
 

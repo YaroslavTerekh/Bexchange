@@ -3,52 +3,29 @@
     <div class="create-order-settings">
         <div class="i-want">
             <h5>Хочу</h5>
-            <img src="../assets/book1.png" alt="">
+            <img src="{{book.image.path}}" alt="">
             <div>
-                <p>Назва: <span></span></p>
-                <p>Автор: <span></span></p>
-                <p>Жанр: <span></span></p>
+                <p>Назва: <span>{{book.title}}</span></p>
+                <p>Автор: <span>{{book.author?.name}}</span></p>
+                <p>Жанр: <span>{{book.genre?.title}}</span></p>
             </div>
         </div>
         <div class="i-give">
             <h5>Пропоную</h5>
             <input type="text" placeholder="Введіть назву книги...">
             <div class="input-books">
-                <div class="input-book">
-                    <img src="../assets/book2.png" alt="">
+                <div [ngStyle]="{'background-color' : books[i].id == activeBookId ? '#b67437' : ''}" 
+                class="input-book" *ngFor="let book of books; let i = index" (click)="activeBookIndex = i" (click)="activeBookId = book.id">
+                    <img src="{{book.image.path}}" alt="">
                     <div>
-                        <p>назва книги</p>
-                        <p>автор книги</p>
-                        <p>жанр книги</p>
-                    </div>
-                </div>  
-                <div class="input-book">
-                    <img src="../assets/book2.png" alt="">
-                    <div>
-                        <p>назва книги</p>
-                        <p>автор книги</p>
-                        <p>жанр книги</p>
-                    </div>
-                </div>  
-                <div class="input-book">
-                    <img src="../assets/book2.png" alt="">
-                    <div>
-                        <p>назва книги</p>
-                        <p>автор книги</p>
-                        <p>жанр книги</p>
-                    </div>
-                </div>  
-                <div class="input-book">
-                    <img src="../assets/book2.png" alt="">
-                    <div>
-                        <p>назва книги</p>
-                        <p>автор книги</p>
-                        <p>жанр книги</p>
+                        <p>назва: <span>{{book.title}}</span></p>
+                        <p>автор: <span>{{book.author.name}}</span></p>
+                        <p>жанр: <span>{{book.genre.title}}</span></p>
                     </div>
                 </div>                
             </div>
         </div>
         
     </div>
-    <button>Запропонувати</button>
+    <button (click)="createOrder()">Запропонувати</button>
 </div>

@@ -11,6 +11,10 @@
 
 input:focus, textarea:focus {
     outline: none;
+    ::placeholder {
+        color: #fff;
+        opacity: 1;
+    }
 }
 
 ul {
