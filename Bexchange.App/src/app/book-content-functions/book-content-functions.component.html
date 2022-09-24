@@ -3,13 +3,13 @@
         <div class="functions">
             <h3>Функції</h3>
             <br>
-            <button>Обмінятися</button>
+            <button [routerLink]="['/create-order', book.id]">Обмінятися</button>
             <button>Переглянути книги власника</button>
         </div>
         <div class="quick-access">
             <h3>Швидкий доступ</h3>
             <br>
-            <button>Книги з жанром book.genre</button>
+            <button >Книги з жанром book.genre</button>
             <button>Книги від автора book.author</button>
         </div>    
     </div>

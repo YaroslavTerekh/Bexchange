@@ -1,0 +1,31 @@
+<div class="create-order-content">
+    <h1>Запропонувати обмін</h1>
+    <div class="create-order-settings">
+        <div class="i-want">
+            <h5>Хочу</h5>
+            <img src="{{book.image.path}}" alt="">
+            <div>
+                <p>Назва: <span>{{book.title}}</span></p>
+                <p>Автор: <span>{{book.author?.name}}</span></p>
+                <p>Жанр: <span>{{book.genre?.title}}</span></p>
+            </div>
+        </div>
+        <div class="i-give">
+            <h5>Пропоную</h5>
+            <input type="text" placeholder="Введіть назву книги...">
+            <div class="input-books">
+                <div [ngStyle]="{'background-color' : books[i].id == activeBookId ? '#b67437' : ''}" 
+                class="input-book" *ngFor="let book of books; let i = index" (click)="activeBookIndex = i" (click)="activeBookId = book.id">
+                    <img src="{{book.image.path}}" alt="">
+                    <div>
+                        <p>назва: <span>{{book.title}}</span></p>
+                        <p>автор: <span>{{book.author.name}}</span></p>
+                        <p>жанр: <span>{{book.genre.title}}</span></p>
+                    </div>
+                </div>                
+            </div>
+        </div>
+        
+    </div>
+    <button (click)="createOrder()">Запропонувати</button>
+</div>
