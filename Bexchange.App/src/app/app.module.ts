@@ -26,6 +26,7 @@ import { AddBookComponent } from './add-book/add-book.component';
 import { OrderContentComponent } from './order-content/order-content.component';
 import { OrderContentItemComponent } from './order-content-item/order-content-item.component';
 import { OrderContentItemAdditionalComponent } from './order-content-item-additional/order-content-item-additional.component';
+import { RouterModule } from '@angular/router';
 
 @NgModule({
   declarations: [

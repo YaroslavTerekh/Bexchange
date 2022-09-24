@@ -1,8 +1,10 @@
 <div class="orders-content">
-    <h3>Мої ордери на обмін</h3>
+    <h3 *ngIf="orders > 0">Мої ордери на обмін</h3>
     <div class="orders-list">
-        <app-order-content-item (click)="toggle(i)" *ngFor="let order of orders; let i = index">
-            <app-order-content-item-additional [attr.id]="i" *ngIf="show == i"></app-order-content-item-additional>
+        <app-order-content-item (click)="toggle(i)" *ngFor="let order of orders; let i = index" [firstBook]="order.firstBook.title"
+         [secondBook]="order.secondBook.title" [state]="order.state" [index]="order.state">
+            <app-order-content-item-additional [attr.id]="i" *ngIf="show == i" [order]="order"></app-order-content-item-additional>
         </app-order-content-item>
+        <h3 *ngIf="orders < 1">No orders were added</h3>
     </div>
 </div>

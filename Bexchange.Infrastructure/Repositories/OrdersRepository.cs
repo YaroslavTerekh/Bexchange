@@ -1,4 +1,5 @@
-﻿using BexchangeAPI.Domain.Enum;
+﻿using Bexchange.Infrastructure.Repositories.Interfaces;
+using BexchangeAPI.Domain.Enum;
 using BexchangeAPI.Domain.Models;
 using BexchangeAPI.Infrastructure.DtbContext;
 using BexchangeAPI.Infrastructure.Repositories.Interfaces;
@@ -11,7 +12,7 @@ using System.Threading.Tasks;
 
 namespace BexchangeAPI.Infrastructure.Repositories
 {
-    public class OrdersRepository : IContentRepository<ExchangeOrder>
+    public class OrdersRepository : IOrderContentRepository<ExchangeOrder>
     {
         private readonly ContentDbContext _context;
         public OrdersRepository(ContentDbContext context)
@@ -69,6 +70,20 @@ namespace BexchangeAPI.Infrastructure.Repositories
         {
             return await _context.Orders
                 .Where(o => o.FirstBook.UserId == userId || o.SecondBook.UserId == userId).ToListAsync();
+        }
+
+        public async Task AcceptOrderAsync(int id)
+        {
+            var order = await GetComponentAsync(id);
+            order.State = State.Verified;
+            await _context.SaveChangesAsync();
+        }
+
+        public async Task DeclineOrderAsync(int id)
+        {
+            var order = await GetComponentAsync(id);
+            order.State = State.Cancelled;
+            await _context.SaveChangesAsync();
         }
     }
 }

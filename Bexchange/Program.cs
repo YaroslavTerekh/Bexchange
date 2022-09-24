@@ -97,11 +97,12 @@ builder.Services.Configure<CookiePolicyOptions>(options =>
 // Add SQL Server
 builder.Services.AddDbContextsCustom(builder.Configuration);
 //Depency Injection
-builder.Services.AddTransient<IContentRepository<Book>, BooksRepository>();
-builder.Services.AddTransient<IContentRepository<ExchangeOrder>, OrdersRepository>();
+//builder.Services.AddTransient<IContentRepository<Book>, BooksRepository>();
+//builder.Services.AddTransient<IContentRepository<ExchangeOrder>, OrdersRepository>();
 builder.Services.AddTransient<IUsersRepository<User>, UsersRepository>();
 builder.Services.AddTransient<IUserService, UserService>();
-builder.Services.AddTransient<IAdditionalContentRepository<Book>, BooksRepository>();
+builder.Services.AddTransient<IBookContentRepository<Book>, BooksRepository>();
+builder.Services.AddTransient<IOrderContentRepository<ExchangeOrder>, OrdersRepository>();
 
 builder.Services.AddHttpClient();
 

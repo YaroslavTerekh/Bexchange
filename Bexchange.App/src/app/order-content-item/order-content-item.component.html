@@ -1,9 +1,9 @@
 <div class="order-item">
     <div class="order-descr">
-        (Книга 1) обмін на (книга 2)
+        {{firstBook}} обмін на {{secondBook}}
     </div>
     <div class="order-state">
-        статус <p>очікування</p>
+        статус: <p [ngStyle]="stateColor">{{state}}</p>
     </div>
 </div>
 <ng-content class="additional"></ng-content>

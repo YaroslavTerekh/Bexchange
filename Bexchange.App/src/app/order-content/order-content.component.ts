@@ -1,3 +1,4 @@
+import { AllDataService } from './../all-data.service';
 import { Router } from '@angular/router';
 import { HttpClient } from '@angular/common/http';
 import { Component, OnInit } from '@angular/core';
@@ -14,13 +15,17 @@ export class OrderContentComponent implements OnInit {
 
   constructor(
     private http: HttpClient,
-    private router: Router
+    private router: Router,
+    private dataService: AllDataService
   ) { }
 
   ngOnInit(): void {
-    this.http.get(`${environment.bexchangeApi}Order`)
+    console.log('init');
+    this.dataService.getAllOrders()
       .subscribe({
         next: res => {
+          console.log(res);
+          
           this.orders = res; 
         },
         error: err => {
@@ -31,6 +36,5 @@ export class OrderContentComponent implements OnInit {
 
   toggle(num: number) {
     this.show = num;
-    
   }
 }

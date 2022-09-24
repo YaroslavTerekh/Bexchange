@@ -20,12 +20,12 @@ namespace BexchangeAPI.Controllers
     [ApiController]
     public class BookController : ControllerBase
     {
-        private readonly IAdditionalContentRepository<Book> _contentRepo;
+        private readonly IBookContentRepository<Book> _contentRepo;
         private readonly IUsersRepository<User> _usersRepository;
         private readonly IMapper _mapper;
         private readonly IUserService _userService;
 
-        public BookController(IAdditionalContentRepository<Book> contentRepo, IUsersRepository<User> usersRepository, 
+        public BookController(IBookContentRepository<Book> contentRepo, IUsersRepository<User> usersRepository, 
             IMapper mapper, IUserService userService)
         {
             _mapper = mapper;

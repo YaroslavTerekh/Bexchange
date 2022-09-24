@@ -1,4 +1,5 @@
 ﻿using AutoMapper;
+using Bexchange.Infrastructure.Repositories.Interfaces;
 using BexchangeAPI.Domain.CustomExceptions;
 using BexchangeAPI.Domain.Models;
 using BexchangeAPI.DTOs;
@@ -16,11 +17,11 @@ namespace BexchangeAPI.Controllers
     [ApiController]
     public class OrderController : ControllerBase
     {
-        private readonly IContentRepository<ExchangeOrder> _orderRepo;
-        private readonly IContentRepository<Book> _bookRepo;
+        private readonly IOrderContentRepository<ExchangeOrder> _orderRepo;
+        private readonly IBookContentRepository<Book> _bookRepo;
         private readonly IMapper _mapper;
 
-        public OrderController(IContentRepository<ExchangeOrder> contentRepo, IMapper mapper, IContentRepository<Book> bookRepo)
+        public OrderController(IOrderContentRepository<ExchangeOrder> contentRepo, IMapper mapper, IBookContentRepository<Book> bookRepo)
         {
             _orderRepo = contentRepo;
             _mapper = mapper;
@@ -35,7 +36,7 @@ namespace BexchangeAPI.Controllers
             if (orders == null) 
                 throw new NotFoundException("Orders not found", (int)HttpStatusCode.NotFound);
 
-            return Ok(_mapper.Map<IEnumerable<ExchangeOrderDto>>(orders));
+            return Ok(orders);
         }
 
         [HttpGet("{id}")]
@@ -103,6 +104,36 @@ namespace BexchangeAPI.Controllers
             }
 
             return BadRequest(ModelState.Values.First().Errors.First().ErrorMessage);
+        }
+
+        [HttpPatch("state/accept/{id}")]
+        public async Task<IActionResult> AcceptOrder(int id)
+        {
+            try
+            {
+                await _orderRepo.AcceptOrderAsync(id);
+                return Ok();
+            }
+            catch (Exception e)
+            {
+                return BadRequest(e);
+            }
+
+        }
+
+        [HttpPatch("state/decline/{id}")]
+        public async Task<IActionResult> DeclineOrder(int id)
+        {
+            try
+            {
+                await _orderRepo.DeclineOrderAsync(id);
+                return Ok();
+            }
+            catch (Exception e)
+            {
+                return BadRequest(e);
+            }
+
         }
 
         [HttpDelete("delete/{id}")]

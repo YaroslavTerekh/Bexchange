@@ -13,7 +13,7 @@ using System.Threading.Tasks;
 
 namespace BexchangeAPI.Infrastructure.Repositories
 {
-    public class BooksRepository : IAdditionalContentRepository<Book>
+    public class BooksRepository : IBookContentRepository<Book>
     {
         private readonly ContentDbContext _context;
         public BooksRepository(ContentDbContext context)
@@ -25,6 +25,8 @@ namespace BexchangeAPI.Infrastructure.Repositories
         {
             return await _context.Books
                 .Include(b => b.Image)
+                .Include(b => b.Author)
+                .Include(b => b.Genre)
                 .Include(b => b.User)
                     .ThenInclude(u => u.Address)
                 .Include(b => b.User)
@@ -42,6 +44,8 @@ namespace BexchangeAPI.Infrastructure.Repositories
         {
             return await _context.Books.Where(b => b.Id == id)
                 .Include(b => b.Image)
+                .Include(b => b.Author)
+                .Include(b => b.Genre)
                 .Include(b => b.User)
                     .ThenInclude(u => u.Address)
                 .Include(b => b.User)
@@ -79,6 +83,8 @@ namespace BexchangeAPI.Infrastructure.Repositories
             return await _context.Books
                 .Where(b => b.UserId == userId)
                 .Include(b => b.Image)
+                .Include(b => b.Author)
+                .Include(b => b.Genre)
                 .Include(b => b.User)
                 .ToListAsync();
         }
