@@ -27,6 +27,7 @@ import { OrderContentComponent } from './order-content/order-content.component';
 import { OrderContentItemComponent } from './order-content-item/order-content-item.component';
 import { OrderContentItemAdditionalComponent } from './order-content-item-additional/order-content-item-additional.component';
 import { RouterModule } from '@angular/router';
+import { CreateOrderComponent } from './create-order/create-order.component';
 
 @NgModule({
   declarations: [
@@ -48,6 +49,7 @@ import { RouterModule } from '@angular/router';
     OrderContentComponent,
     OrderContentItemComponent,
     OrderContentItemAdditionalComponent,
+    CreateOrderComponent,
   ],
   imports: [
     BrowserModule,

@@ -39,9 +39,7 @@ export class OrderContentItemAdditionalComponent implements OnInit {
     this.dataService.declineOrder(id)
     .subscribe(res => {
       this.refreshPage();
-    });    
-
-    
+    });     
   }
 
   private refreshPage() {

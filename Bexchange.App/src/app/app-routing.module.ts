@@ -1,3 +1,4 @@
+import { CreateOrderComponent } from './create-order/create-order.component';
 import { OrderContentComponent } from './order-content/order-content.component';
 import { AddBookComponent } from './add-book/add-book.component';
 import { ErrorPageComponent } from './error-page/error-page.component';
@@ -18,6 +19,7 @@ const routes: Routes = [
   { path: 'error', component: ErrorPageComponent },
   { path: 'create-book', component: AddBookComponent },
   { path: 'orders', component: OrderContentComponent },
+  { path: 'create-order', component: CreateOrderComponent },
   { path: '**', component: ErrorPageComponent },
 ];
 

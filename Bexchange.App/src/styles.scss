@@ -9,6 +9,10 @@
     color: #fff;
 }
 
+input:focus, textarea:focus {
+    outline: none;
+}
+
 ul {
     list-style-type: none;
 }
