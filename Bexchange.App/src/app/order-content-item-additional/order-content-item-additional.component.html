@@ -1,0 +1,15 @@
+<div class="additional-content">
+    <div class="info">
+        <p>{{order.firstBook.title}} обмін на {{order.secondBook.title}}</p>
+        <button [routerLink]="['/book', order.firstBook.id]">Переглянути книгу {{order.firstBook.title}}</button>
+        <button [routerLink]="['/book', order.secondBook.id]">Переглянути книгу {{order.secondBook.title}}</button>
+    </div>
+    <div class="func">
+        <p>Дії з ордером</p>
+        <div class="func-wrap">
+            <button class="accept" *ngIf="(order.state != 2 && order.state != 1) || order.state == 2" (click)="acceptOrder(order.id)">Прийняти</button>
+            <button class="decline" *ngIf="order.state != 2 || order.state == 1" (click)="declineOrder(order.id)">Відхилити</button> 
+            <button class="delete" *ngIf="order.state == 2 || order.state == 1" (click)="deleteOrder(order.id)">Видалити</button>            
+        </div>
+    </div>
+</div>

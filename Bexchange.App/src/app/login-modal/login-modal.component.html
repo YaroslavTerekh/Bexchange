@@ -11,8 +11,8 @@
         </div>
         <div class="login-creds"> 
             <form [formGroup]="form">
-                <input formControlName="userName" type="text" placeholder="Login..." #login>
-                <input formControlName="password" type="password" placeholder="Password..." #password>
+                <input formControlName="userName" type="text" placeholder="Login..." >
+                <input formControlName="password" type="password" placeholder="Password..." >
                 <button class="submit" *ngIf="isValue != 0" (click)="logIn()" (click)="close.emit()">Увійти</button>
                 <button class="submit" *ngIf="isValue === 0" style="opacity: .5; cursor: not-allowed;">Увійти</button>
             </form>

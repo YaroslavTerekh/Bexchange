@@ -21,6 +21,7 @@ export class BookContentComponent implements OnInit {
       .subscribe({
         next: res => {
           this.book = res; 
+          
         },
         error: err => {
           this.router.navigate(['/error', { error: JSON.stringify(err) }])

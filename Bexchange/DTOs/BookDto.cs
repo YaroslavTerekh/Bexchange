@@ -1,4 +1,5 @@
-﻿using BexchangeAPI.Domain.Annotations;
+﻿using Bexchange.Domain.Models;
+using BexchangeAPI.Domain.Annotations;
 using BexchangeAPI.Domain.Models;
 using System.ComponentModel.DataAnnotations;
 
@@ -17,9 +18,9 @@ namespace BexchangeAPI.DTOs
         [ValidBook(ErrorMessage = "Description must start with big letter")]
         public string Description { get; set; }
         [Required(ErrorMessage = "'Author' field is empty")]
-        public string Author { get; set; }
+        public Author Author { get; set; }
         [Required(ErrorMessage = "'Genre' field is empty")]
-        public string Genre { get; set; }
+        public Genre Genre { get; set; }
         [Required(ErrorMessage = "No photo uploaded")]
         public Image Image { get; set; }
         [Required(ErrorMessage = "No User applied")]

@@ -13,14 +13,22 @@ export class ErrorPageComponent implements OnInit {
   ) { }
 
   ngOnInit(): void {
-    this.response = JSON.parse(this.route.snapshot.params['error']);     
-    console.log(this.response);
+    this.response = JSON.parse(this.route.snapshot.params['error']);
     
-
-    if(this.response) {
+    if(this.response && this.response.status != 401 && this.response.status != 403) {
       this.code = this.response.error.code;
       this.description = this.response.error.response;
     }
+
+    if(this.response.status == '401') {        
+      this.code = this.response.status.toString();
+      this.description = 'Log in first'; 
+    }
+
+    if(this.response.status == '403') {
+      this.code = '403';
+      this.description = 'Access forbidden'
+    }    
   }
 
   response!: any;

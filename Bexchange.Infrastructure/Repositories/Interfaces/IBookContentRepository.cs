@@ -8,7 +8,7 @@ using System.Threading.Tasks;
 
 namespace Bexchange.Infrastructure.Repositories.Interfaces
 {
-    public interface IAdditionalContentRepository<T> : IContentRepository<T>
+    public interface IBookContentRepository<T> : IContentRepository<T>
     {
         public Task<IEnumerable<Genre>> GetGenresAsync();
         public Task<IEnumerable<Author>> GetAuthorsAsync();

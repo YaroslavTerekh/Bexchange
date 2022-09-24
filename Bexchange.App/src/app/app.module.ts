@@ -5,6 +5,7 @@ import { NgModule } from '@angular/core';
 import { BrowserModule } from '@angular/platform-browser';
 import { SlickCarouselModule } from 'ngx-slick-carousel';
 import { HttpClientModule, HTTP_INTERCEPTORS } from '@angular/common/http';
+import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 
 import { AppRoutingModule } from './app-routing.module';
 import { AppComponent } from './app.component';
@@ -22,6 +23,10 @@ import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { TextTrimPipe } from './text-trim.pipe';
 import { ErrorPageComponent } from './error-page/error-page.component';
 import { AddBookComponent } from './add-book/add-book.component';
+import { OrderContentComponent } from './order-content/order-content.component';
+import { OrderContentItemComponent } from './order-content-item/order-content-item.component';
+import { OrderContentItemAdditionalComponent } from './order-content-item-additional/order-content-item-additional.component';
+import { RouterModule } from '@angular/router';
 
 @NgModule({
   declarations: [
@@ -40,6 +45,9 @@ import { AddBookComponent } from './add-book/add-book.component';
     TextTrimPipe,
     ErrorPageComponent,
     AddBookComponent,
+    OrderContentComponent,
+    OrderContentItemComponent,
+    OrderContentItemAdditionalComponent,
   ],
   imports: [
     BrowserModule,
@@ -47,7 +55,8 @@ import { AddBookComponent } from './add-book/add-book.component';
     SlickCarouselModule,
     HttpClientModule,
     FormsModule,
-    ReactiveFormsModule
+    ReactiveFormsModule,
+    BrowserAnimationsModule
   ],
   providers: [
     AllDataService,

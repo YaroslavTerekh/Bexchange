@@ -4,7 +4,9 @@ import { Author } from '../models/Author';
 import { HttpClient } from '@angular/common/http';
 import { Router } from '@angular/router';
 import { environment } from 'src/environments/environment.prod';
+import { UntilDestroy, untilDestroyed } from '@ngneat/until-destroy';
 
+@UntilDestroy()
 @Component({
   selector: 'app-authors-content',
   templateUrl: './authors-content.component.html',
@@ -21,6 +23,7 @@ export class AuthorsContentComponent implements OnInit {
 
   ngOnInit(): void {
     this.http.get(`${environment.bexchangeApi}Book/authors`)
+      .pipe(untilDestroyed(this))
       .subscribe({
         next: res => {
           this.authors = res;

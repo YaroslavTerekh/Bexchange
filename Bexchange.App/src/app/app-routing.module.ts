@@ -1,3 +1,4 @@
+import { OrderContentComponent } from './order-content/order-content.component';
 import { AddBookComponent } from './add-book/add-book.component';
 import { ErrorPageComponent } from './error-page/error-page.component';
 import { BookContentComponent } from './book-content/book-content.component';
@@ -16,11 +17,12 @@ const routes: Routes = [
   { path: 'book/:id', component: BookContentComponent },
   { path: 'error', component: ErrorPageComponent },
   { path: 'create-book', component: AddBookComponent },
+  { path: 'orders', component: OrderContentComponent },
   { path: '**', component: ErrorPageComponent },
 ];
 
 @NgModule({
-  imports: [RouterModule.forRoot(routes)],
+  imports: [RouterModule.forRoot(routes, {onSameUrlNavigation: 'reload'})],
   exports: [RouterModule]
 })
 export class AppRoutingModule { }
