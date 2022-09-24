@@ -28,6 +28,7 @@ import { OrderContentItemComponent } from './order-content-item/order-content-it
 import { OrderContentItemAdditionalComponent } from './order-content-item-additional/order-content-item-additional.component';
 import { RouterModule } from '@angular/router';
 import { CreateOrderComponent } from './create-order/create-order.component';
+import { AccountModalComponent } from './account-modal/account-modal.component';
 
 @NgModule({
   declarations: [
@@ -50,6 +51,7 @@ import { CreateOrderComponent } from './create-order/create-order.component';
     OrderContentItemComponent,
     OrderContentItemAdditionalComponent,
     CreateOrderComponent,
+    AccountModalComponent,
   ],
   imports: [
     BrowserModule,

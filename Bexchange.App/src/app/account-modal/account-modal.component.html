@@ -1,0 +1,15 @@
+<div class="modal-bg" (click)="close.emit()"></div>
+
+<div class="modal">
+    <div class="modal-content">
+        <h5>Профіль</h5>
+        <div class="buttons">
+            <button (click)="close.emit()">Мої книги</button>
+            <button (click)="close.emit()">Мої ордери на обмін</button>
+            <button (click)="close.emit()">Змінити дані профілю</button>
+            <button (click)="exit()" (click)="close.emit()" class="exit">Вийти</button>
+            <button (click)="close.emit()" class="admin">Адмін-панель</button>
+        </div>
+    </div>
+
+</div>

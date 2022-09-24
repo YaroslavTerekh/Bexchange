@@ -4,6 +4,7 @@ import { environment } from './../environments/environment';
 import { Router } from '@angular/router';
 import { HttpClient } from '@angular/common/http';
 import { Injectable, OnInit } from '@angular/core';
+import { JwtHelperService } from '@auth0/angular-jwt';
 
 @Injectable({
   providedIn: 'root'
@@ -14,8 +15,26 @@ export class AllDataService implements OnInit {
   }
 
   ngOnInit(): void {
-      
-      
+  }
+
+  // Authorization
+
+  helper = new JwtHelperService();
+
+  public isAuthorized(): boolean {
+    let token = localStorage.getItem('authToken');
+    
+    if(token) {      
+      return !this.helper.isTokenExpired(token);
+    }
+    return false;
+  }
+
+  public exit():void {
+    console.log('removed');
+    localStorage.removeItem('authToken');
+    
+    
   }
 
   // get - all

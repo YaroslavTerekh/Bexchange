@@ -31,10 +31,11 @@ export class MainPageComponent implements OnInit {
     autoplaySpeed: 5000,
   };
 
-  constructor(dataSvc: AllDataService) {
+  constructor(private dataSvc: AllDataService) {
    }
 
   ngOnInit(): void {
+    console.log(this.dataSvc.isAuthorized());    
   }
 
 }

@@ -25,7 +25,6 @@ namespace Bexchange.Infrastructure.Services
             var id = identity.FindFirst("id").Value;
             return Int32.Parse(id);
         }
-
         public bool IsAdmin(HttpContext context)
         {
             var identity = context.User.Identity as ClaimsIdentity;
@@ -33,7 +32,6 @@ namespace Bexchange.Infrastructure.Services
 
             return role == Roles.Admin.ToString() | role == Roles.SuperAdmin.ToString() ? true : false;
         }
-
         public RefreshToken GenerateRefreshToken()
         {
             var refreshToken = new RefreshToken
@@ -118,7 +116,7 @@ namespace Bexchange.Infrastructure.Services
 
             var token = new JwtSecurityToken(
                 claims: claims,
-                expires: DateTime.Now.AddMinutes(15),
+                expires: DateTime.Now.AddDays(1),
                 signingCredentials: creds);
 
             var jwt = new JwtSecurityTokenHandler().WriteToken(token);
