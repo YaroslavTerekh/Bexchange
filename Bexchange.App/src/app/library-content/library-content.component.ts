@@ -17,6 +17,8 @@ export class LibraryContentComponent implements OnInit, OnDestroy {
   bookList!: Book[];
   books!: any;
   id: number | undefined;
+  genre: string | undefined;
+  author: string | undefined;
 
   constructor(
     private dataService: AllDataService,
@@ -26,8 +28,10 @@ export class LibraryContentComponent implements OnInit, OnDestroy {
 
   ngOnInit(): void {
     this.id = this.route.snapshot.params['id'];
+    this.genre = this.route.snapshot.params['genre'];
+    this.author = this.route.snapshot.params['author'];
 
-    if (this.id == undefined) {
+    if (this.id == undefined || this.author == undefined || this.genre == undefined) {
       this.dataService.getBooks(this.dataService.getUserId())
         .pipe(untilDestroyed(this))
         .subscribe({
@@ -38,8 +42,10 @@ export class LibraryContentComponent implements OnInit, OnDestroy {
             this.router.navigate(['/error', { error: JSON.stringify(err) }])
           }
         });
-    } else {
-      this.dataService.getUserBooks(this.id)
+    }
+
+    if (this.genre != undefined) {
+      this.dataService.getBooksByGenre(this.genre)
         .pipe(untilDestroyed(this))
         .subscribe({
           next: res => {
@@ -49,6 +55,32 @@ export class LibraryContentComponent implements OnInit, OnDestroy {
             this.router.navigate(['/error', { error: JSON.stringify(err) }])
           }
         });
+    }
+
+    if (this.author != undefined) {
+      this.dataService.getBooksByAuthor(this.author)
+        .pipe(untilDestroyed(this))
+        .subscribe({
+          next: res => {
+            this.books = res;
+          },
+          error: (err: any) => {
+            this.router.navigate(['/error', { error: JSON.stringify(err) }])
+          }
+        });
+    }
+
+    if (this.id != undefined) {
+      this.dataService.getUserBooks(this.id)
+      .pipe(untilDestroyed(this))
+      .subscribe({
+        next: res => {
+          this.books = res;
+        },
+        error: (err: any) => {
+          this.router.navigate(['/error', { error: JSON.stringify(err) }])
+        }
+      });
     }
   }
 

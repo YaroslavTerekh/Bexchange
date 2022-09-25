@@ -58,8 +58,7 @@ export class AccountModifyComponent implements OnInit {
           
         }, 
         error: (err) => {
-          this.router.navigate(['/error', JSON.stringify(err)]);
-          
+          this.router.navigate(['/error', JSON.stringify(err)]);          
         }
       });
   }

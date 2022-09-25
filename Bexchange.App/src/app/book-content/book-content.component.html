@@ -13,4 +13,5 @@
     </div>
   </div>
 </div>
-<app-book-content-functions [book]="book"></app-book-content-functions>
+<app-book-content-functions *ngIf="!isOwner" [book]="book"></app-book-content-functions>
+<app-book-content-owner-functions *ngIf="isOwner" [book]="book"></app-book-content-owner-functions>

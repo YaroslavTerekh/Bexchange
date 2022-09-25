@@ -62,8 +62,7 @@ export class AllDataService implements OnInit {
     localStorage.removeItem('authToken');
   }
 
-  // get - all
-  
+  // get - books
   public getBooks(id: number): Observable<object> {
     return this.http.get(`${environment.bexchangeApi}Book/user/ignore/${id}`);
   }
@@ -79,6 +78,16 @@ export class AllDataService implements OnInit {
   public getUserBooks(id: number): Observable<object> {
     return this.http.get(`${environment.bexchangeApi}Book/user/${id}`);
   }
+
+  public getBooksByGenre(title: string): Observable<object> {
+    return this.http.get(`${environment.bexchangeApi}Book/genre/${title}`);
+  }
+
+  public getBooksByAuthor(name: string): Observable<object> {
+    return this.http.get(`${environment.bexchangeApi}Book/author/${name}`);
+  }
+
+  //get - orders
 
   public getAllOrders(): Observable<object> {
     return this.http.get(`${environment.bexchangeApi}Order`);

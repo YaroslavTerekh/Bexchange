@@ -21,15 +21,8 @@ export class AccountModalComponent implements OnInit {
   }
 
   exit() {
+    this.router.navigate(['']);
     this.dataService.exit();
-  }
-
-  orders() {
-    this.router.navigate(['/orders', this.userId]);
-  }
-
-  books() {
-    this.router.navigate(['/library', this.userId]);
   }
 
   isAdmin(): boolean {
