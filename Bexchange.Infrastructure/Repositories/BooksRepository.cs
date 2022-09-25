@@ -109,5 +109,27 @@ namespace BexchangeAPI.Infrastructure.Repositories
                 .Include(b => b.User)
                 .ToListAsync();
         }
+
+        public async Task<IEnumerable<Book>> GetByGenreAsync(string genre)
+        {
+            return await _context.Books
+                .Where(b => b.Genre.Title == genre)
+                .Include(b => b.Image)
+                .Include(b => b.Author)
+                .Include(b => b.Genre)
+                .Include(b => b.User)
+                .ToListAsync();
+        }
+
+        public async Task<IEnumerable<Book>> GetByAuthorAsync(string author)
+        {
+            return await _context.Books
+                .Where(b => b.Author.Name == author)
+                .Include(b => b.Image)
+                .Include(b => b.Author)
+                .Include(b => b.Genre)
+                .Include(b => b.User)
+                .ToListAsync();
+        }
     }
 }

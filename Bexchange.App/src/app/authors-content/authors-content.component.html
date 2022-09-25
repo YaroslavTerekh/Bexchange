@@ -1,7 +1,7 @@
 <div class="content">
     <h1>Автори</h1>
     <div class="content__items">
-        <a href="" *ngFor="let author of authors">
+        <a [routerLink]="['/library/author', author.name]" *ngFor="let author of authors">
             <p>{{author.name}}</p> 
             <div class="item" style="background-image: url('{{author.img}}');">
                 <div class="item-bg"></div>

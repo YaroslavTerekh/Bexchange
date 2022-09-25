@@ -10,6 +10,7 @@ import { HttpClient, HttpHeaders } from '@angular/common/http';
 })
 export class BookContentComponent implements OnInit {
   book!: any;
+  isOwner!: boolean;
 
   constructor(
     private route: ActivatedRoute, 
@@ -24,6 +25,11 @@ export class BookContentComponent implements OnInit {
         next: res => {
           this.book = res; 
           
+          if(this.book.userId == this.dataService.getUserId()) {
+            this.isOwner = true;
+          } else {
+            this.isOwner = false;
+          }
         },
         error: err => {
           this.router.navigate(['/error', { error: JSON.stringify(err) }])
