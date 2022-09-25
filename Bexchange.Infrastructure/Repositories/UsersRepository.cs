@@ -1,4 +1,5 @@
-﻿using Bexchange.Infrastructure.Repositories.Interfaces;
+﻿using Bexchange.Domain.RequestModels;
+using Bexchange.Infrastructure.Repositories.Interfaces;
 using BexchangeAPI.Domain.CustomExceptions;
 using BexchangeAPI.Domain.Enum;
 using BexchangeAPI.Domain.Models;
@@ -84,7 +85,7 @@ namespace BexchangeAPI.Infrastructure.Repositories
                 .FirstOrDefaultAsync(); ;
         }
 
-        public async Task ModifyUserAsync(User user)
+        public async Task ModifyUserAsync(ChangeUserInfoRequest user)
         {
             var _user = await GetUserAsync(user.Id);
 
@@ -98,7 +99,6 @@ namespace BexchangeAPI.Infrastructure.Repositories
                 City = user.Address.City,
                 PostIndex = user.Address.PostIndex,
             };
-            _user.Role = user.Role;
 
             await _context.SaveChangesAsync();
         }

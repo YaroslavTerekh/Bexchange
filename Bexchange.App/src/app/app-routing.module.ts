@@ -15,10 +15,12 @@ const routes: Routes = [
   { path: 'genres', component: GenresContentComponent },
   { path: 'authors', component: AuthorsContentComponent },
   { path: 'library', component: LibraryContentComponent },
+  { path: 'library/:id', component: LibraryContentComponent },
   { path: 'book/:id', component: BookContentComponent },
   { path: 'error', component: ErrorPageComponent },
   { path: 'create-book', component: AddBookComponent },
   { path: 'orders', component: OrderContentComponent },
+  { path: 'orders/:id', component: OrderContentComponent },
   { path: 'create-order/:id', component: CreateOrderComponent },
   { path: '**', component: ErrorPageComponent },
 ];

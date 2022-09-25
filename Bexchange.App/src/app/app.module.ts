@@ -29,6 +29,7 @@ import { OrderContentItemAdditionalComponent } from './order-content-item-additi
 import { RouterModule } from '@angular/router';
 import { CreateOrderComponent } from './create-order/create-order.component';
 import { AccountModalComponent } from './account-modal/account-modal.component';
+import { AccountModifyComponent } from './account-modify/account-modify.component';
 
 @NgModule({
   declarations: [
@@ -52,6 +53,7 @@ import { AccountModalComponent } from './account-modal/account-modal.component';
     OrderContentItemAdditionalComponent,
     CreateOrderComponent,
     AccountModalComponent,
+    AccountModifyComponent,
   ],
   imports: [
     BrowserModule,

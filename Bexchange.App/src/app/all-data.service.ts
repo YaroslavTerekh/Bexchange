@@ -1,3 +1,4 @@
+import { ChangeUserInfoRequest } from './models/ChangeUserInfoRequest';
 import { Order } from './models/Order';
 import { Observable } from 'rxjs/internal/Observable';
 import { environment } from './../environments/environment';
@@ -30,14 +31,43 @@ export class AllDataService implements OnInit {
     return false;
   }
 
+  public isAdmin(): boolean {
+    let token = localStorage.getItem('authToken');
+
+    if(token) {
+      let decodeToken = this.helper.decodeToken(token);
+      
+      if(decodeToken.Role == 'Admin' || decodeToken.Role == 'SuperAdmin') {
+        return true;
+      }
+      return false;
+    }
+    return false;
+  }
+
+  public getUserId(): number {
+    let token = localStorage.getItem('authToken');
+
+    if(token) {
+      let decodeToken = this.helper.decodeToken(token);
+
+      return decodeToken.Id;
+    }
+
+    return 0;
+  }
+
   public exit():void {
     console.log('removed');
     localStorage.removeItem('authToken');
-    
-    
   }
 
   // get - all
+  
+  public getBooks(id: number): Observable<object> {
+    return this.http.get(`${environment.bexchangeApi}Book/user/ignore/${id}`);
+  }
+
   public getAllBooks(): Observable<object> {
     return this.http.get(`${environment.bexchangeApi}Book`);
   }
@@ -46,18 +76,30 @@ export class AllDataService implements OnInit {
     return this.http.get(`${environment.bexchangeApi}Book/${id}`);
   }
 
+  public getUserBooks(id: number): Observable<object> {
+    return this.http.get(`${environment.bexchangeApi}Book/user/${id}`);
+  }
+
   public getAllOrders(): Observable<object> {
     return this.http.get(`${environment.bexchangeApi}Order`);
+  }
+
+  public getUserOrders(id: number): Observable<object> {
+    return this.http.get(`${environment.bexchangeApi}Order/user/${id}`);
+  }
+
+  public getUserInfo(id: number): Observable<object> {
+    return this.http.get(`${environment.bexchangeApi}User/id/${id}`);
   }
 
   // logic - orders
 
   public deleteOrder(id: number): Observable<object> {
-    return this.http.delete(`${environment.bexchangeApi}Order/delete/${id}`)
+    return this.http.delete(`${environment.bexchangeApi}Order/delete/${id}`);
   }
 
   public acceptOrder(id: number): Observable<object> {
-    return this.http.patch(`${environment.bexchangeApi}Order/state/accept/${id}`, null)
+    return this.http.patch(`${environment.bexchangeApi}Order/state/accept/${id}`, null);
   }
 
   public declineOrder(id: number): Observable<object> {
@@ -66,5 +108,11 @@ export class AllDataService implements OnInit {
 
   public addOrder(order: Order): Observable<object> {
     return this.http.post(`${environment.bexchangeApi}Order/add`, order);
+  }
+
+  // logic - users
+
+  public changeUserInfo(user: ChangeUserInfoRequest): Observable<object> {
+    return this.http.post(`${environment.bexchangeApi}User/modify`, user);
   }
 }

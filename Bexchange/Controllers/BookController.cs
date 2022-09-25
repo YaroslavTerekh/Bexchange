@@ -34,8 +34,19 @@ namespace BexchangeAPI.Controllers
             _userService = userService;
         }
 
-        [HttpGet, AllowAnonymous]
-        public async Task<IActionResult> Books()
+        [HttpGet("user/ignore/{id}")]
+        public async Task<IActionResult> Books(int id)
+        {
+            var books = await _contentRepo.IgnoreUserBooksAsync(id);
+
+            if (books == null)
+                throw new NotFoundException("No books here", (int)HttpStatusCode.NotFound);
+
+            return Ok(_mapper.Map<IEnumerable<BookDto>>(books));
+        }
+
+        [HttpGet("all"), AllowAnonymous]
+        public async Task<IActionResult> AllBooks()
         {
             var books = await _contentRepo.GetAllComponentsAsync();
 

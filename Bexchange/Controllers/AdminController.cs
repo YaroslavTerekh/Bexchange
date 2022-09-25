@@ -1,4 +1,5 @@
 ﻿using Bexchange.Domain;
+using Bexchange.Domain.RequestModels;
 using Bexchange.Infrastructure.Repositories.Interfaces;
 using Bexchange.Infrastructure.Services.Repositories;
 using BexchangeAPI.Domain.CustomExceptions;
@@ -30,13 +31,6 @@ namespace Bexchange.API.Controllers
         public async Task<IActionResult> GetAllUsers()
         {
             return Ok(await _usersRepository.GetAllUsersAsync());
-        }
-
-        [HttpGet("id/{id}")]
-        public async Task<IActionResult> GetUser(int id)
-        {
-            var user = await _usersRepository.GetUserAsync(id);
-            return Ok(user);
         }
 
         [HttpGet("users/{name}")]
@@ -96,7 +90,7 @@ namespace Bexchange.API.Controllers
         }
 
         [HttpPut("modify/{id}"), Authorize(Policy = PoliciesConstants.SuperAdmins)]
-        public async Task<IActionResult> ModifyUser(User user)
+        public async Task<IActionResult> ModifyUser(ChangeUserInfoRequest user)
         {
             await _usersRepository.ModifyUserAsync(user);
             return Ok("Modified successfully");

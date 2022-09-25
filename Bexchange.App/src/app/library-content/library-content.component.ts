@@ -16,29 +16,44 @@ export class LibraryContentComponent implements OnInit, OnDestroy {
   bookEmit!: Array<Book>;
   bookList!: Book[];
   books!: any;
+  id: number | undefined;
 
   constructor(
-    private http: HttpClient,
-    private router: Router
-    ) { }
-  
+    private dataService: AllDataService,
+    private router: Router,
+    private route: ActivatedRoute
+  ) { }
+
   ngOnInit(): void {
-    this.http.get(`${environment.bexchangeApi}Book/`)
-      .pipe(untilDestroyed(this))
-      .subscribe({
-        next: res => {
-          console.log(res);
-          
-          this.books = res;
-        }, 
-        error: (err: any) => {
-          this.router.navigate(['/error', { error: JSON.stringify(err) }])
-        }
-      });
+    this.id = this.route.snapshot.params['id'];
+
+    if (this.id == undefined) {
+      this.dataService.getBooks(this.dataService.getUserId())
+        .pipe(untilDestroyed(this))
+        .subscribe({
+          next: res => {
+            this.books = res;
+          },
+          error: (err: any) => {
+            this.router.navigate(['/error', { error: JSON.stringify(err) }])
+          }
+        });
+    } else {
+      this.dataService.getUserBooks(this.id)
+        .pipe(untilDestroyed(this))
+        .subscribe({
+          next: res => {
+            this.books = res;
+          },
+          error: (err: any) => {
+            this.router.navigate(['/error', { error: JSON.stringify(err) }])
+          }
+        });
+    }
   }
 
   ngOnDestroy(): void {
-      
+
   }
 
 }

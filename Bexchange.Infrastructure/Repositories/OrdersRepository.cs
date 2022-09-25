@@ -69,7 +69,10 @@ namespace BexchangeAPI.Infrastructure.Repositories
         public async Task<IEnumerable<ExchangeOrder>> GetUserComponentsAsync(int userId)
         {
             return await _context.Orders
-                .Where(o => o.FirstBook.UserId == userId || o.SecondBook.UserId == userId).ToListAsync();
+                .Where(o => o.FirstBook.UserId == userId || o.SecondBook.UserId == userId)
+                .Include(b => b.FirstBook)
+                .Include(b => b.SecondBook)
+                .ToListAsync();
         }
 
         public async Task AcceptOrderAsync(int id)

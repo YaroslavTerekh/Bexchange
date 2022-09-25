@@ -1,4 +1,5 @@
 ﻿using Bexchange.Domain.Models;
+using BexchangeAPI.Domain.Models;
 using BexchangeAPI.Infrastructure.Repositories.Interfaces;
 using System;
 using System.Collections.Generic;
@@ -12,5 +13,6 @@ namespace Bexchange.Infrastructure.Repositories.Interfaces
     {
         public Task<IEnumerable<Genre>> GetGenresAsync();
         public Task<IEnumerable<Author>> GetAuthorsAsync();
+        public Task<IEnumerable<Book>> IgnoreUserBooksAsync(int userId);
     }
 }

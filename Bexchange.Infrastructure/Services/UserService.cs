@@ -104,10 +104,10 @@ namespace Bexchange.Infrastructure.Services
             {
                 new Claim(type: "Id", value: user.Id.ToString()),
                 new Claim(type: "AddressId", value: user.AddressId.ToString()),
-                new Claim(ClaimTypes.Name, user.FirstName),
-                new Claim(ClaimTypes.Surname, user.LastName),
-                new Claim(ClaimTypes.Email, user.Email),
-                new Claim(ClaimTypes.Role, user.Role.ToString())
+                new Claim(type: "Name", user.FirstName),
+                new Claim(type: "Surname", user.LastName),
+                new Claim(type: "Email", user.Email),
+                new Claim(type: "Role", user.Role.ToString())
             };
 
             var key = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(_configuration.GetSection("AppSettings:Token").Value));

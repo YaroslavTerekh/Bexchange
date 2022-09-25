@@ -2,13 +2,13 @@
 
 <div class="modal">
     <div class="modal-content">
-        <h5>Профіль</h5>
+        <h5>Профіль id:{{userId}}</h5>
         <div class="buttons">
-            <button (click)="close.emit()">Мої книги</button>
-            <button (click)="close.emit()">Мої ордери на обмін</button>
-            <button (click)="close.emit()">Змінити дані профілю</button>
+            <button (click)="books()" (click)="close.emit()">Мої книги</button>
+            <button (click)="orders()" (click)="close.emit()">Мої ордери на обмін</button>
+            <button (click)="modifyAccount.emit()" (click)="close.emit()">Змінити дані профілю</button>
             <button (click)="exit()" (click)="close.emit()" class="exit">Вийти</button>
-            <button (click)="close.emit()" class="admin">Адмін-панель</button>
+            <button *ngIf="isAdmin()" (click)="close.emit()" class="admin">Адмін-панель</button>
         </div>
     </div>
 

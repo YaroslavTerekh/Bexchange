@@ -1,5 +1,5 @@
 import { AllDataService } from './../all-data.service';
-import { Router } from '@angular/router';
+import { Router, ActivatedRoute } from '@angular/router';
 import { HttpClient } from '@angular/common/http';
 import { Component, OnInit } from '@angular/core';
 import { environment } from 'src/environments/environment.prod';
@@ -14,19 +14,22 @@ import { UntilDestroy, untilDestroyed } from '@ngneat/until-destroy';
 export class OrderContentComponent implements OnInit {
   show: number = -1;
   orders: any;
+  id: number | undefined;
 
   constructor(
-    private http: HttpClient,
+    private route: ActivatedRoute,
     private router: Router,
     private dataService: AllDataService
   ) { }
 
   ngOnInit(): void {
-    console.log('init');
-    this.dataService.getAllOrders()
+    this.id = this.route.snapshot.params['id']; 
+
+    if(this.id == undefined) {
+      this.dataService.getAllOrders()
       .pipe(untilDestroyed(this))
       .subscribe({
-        next: res => {
+        next: res => {          
           console.log(res);
           
           this.orders = res; 
@@ -35,6 +38,21 @@ export class OrderContentComponent implements OnInit {
           this.router.navigate(['/error', { error: JSON.stringify(err) }])
         }
       })
+    } else {
+      this.dataService.getUserOrders(this.id)
+        .pipe(untilDestroyed(this))
+        .subscribe({
+          next: res => { 
+            console.log(res);
+                     
+            this.orders = res; 
+          },
+          error: err => {
+            this.router.navigate(['/error', { error: JSON.stringify(err) }])
+          }
+        });          
+    }
+    
   }
 
   toggle(num: number) {

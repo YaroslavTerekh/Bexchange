@@ -16,5 +16,6 @@
 </header>
 <app-login-modal *ngIf="modal" (close)="modal = false" (openRegister)="registerModal = true"></app-login-modal>
 <app-register-modal *ngIf="registerModal" (close)="registerModal = false"></app-register-modal>
-<app-account-modal *ngIf="accountModal" (close)="accountModal = false"></app-account-modal>
+<app-account-modal *ngIf="accountModal" (modifyAccount)="accountModifyModal = true" (close)="accountModal = false"></app-account-modal>
+<app-account-modify *ngIf="accountModifyModal" (close)="accountModifyModal = false"></app-account-modify>
 <router-outlet></router-outlet>

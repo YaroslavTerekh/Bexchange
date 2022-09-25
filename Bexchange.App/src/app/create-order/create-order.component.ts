@@ -25,16 +25,12 @@ export class CreateOrderComponent implements OnInit {
   ) { }
 
   ngOnInit(): void {
-
-    
-    
-    
     this.dataService.getBook(this.route.snapshot.params['id'])
     .subscribe(res => {
       this.book = res;
     });     
 
-    this.dataService.getAllBooks()
+    this.dataService.getUserBooks(this.dataService.getUserId())
       .pipe(untilDestroyed(this))
       .subscribe(res => { 
         this.books = res

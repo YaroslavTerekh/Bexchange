@@ -35,7 +35,6 @@ export class MainPageComponent implements OnInit {
    }
 
   ngOnInit(): void {
-    console.log(this.dataSvc.isAuthorized());    
   }
 
 }

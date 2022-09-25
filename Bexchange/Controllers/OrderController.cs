@@ -47,7 +47,7 @@ namespace BexchangeAPI.Controllers
             if (order == null)
                 throw new NotFoundException("Orders not found", (int)HttpStatusCode.NotFound);
 
-            return Ok(_mapper.Map<ExchangeOrderDto>(order));
+            return Ok(order);
         }
 
         [HttpGet("user/{id}")]
@@ -58,7 +58,7 @@ namespace BexchangeAPI.Controllers
             if (order == null)
                 throw new NotFoundException("Orders not found", (int)HttpStatusCode.NotFound);
 
-            return Ok(_mapper.Map<IEnumerable<ExchangeOrderDto>>(order));
+            return Ok(order);
         }
 
         [HttpPost("add")]

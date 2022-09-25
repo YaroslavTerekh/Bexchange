@@ -1,4 +1,5 @@
-﻿using BexchangeAPI.Domain.Enum;
+﻿using Bexchange.Domain.RequestModels;
+using BexchangeAPI.Domain.Enum;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -16,8 +17,9 @@ namespace Bexchange.Infrastructure.Repositories.Interfaces
         public Task<T> GetUserByNameAsync(string name);
         public Task<T> GetUserByEmailAsync(string email);
         public Task BanUserAsync(int id);
-        public Task ModifyUserAsync(T user);
+        public Task ModifyUserAsync(ChangeUserInfoRequest user);
         public Task ChangeRoleAsync(Roles role, int id);
+        //public Task ChangePasswordAsync(int id);
         public Task SaveUser();
     }
 }

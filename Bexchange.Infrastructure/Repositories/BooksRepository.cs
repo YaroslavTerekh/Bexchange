@@ -98,5 +98,16 @@ namespace BexchangeAPI.Infrastructure.Repositories
         {
             return await _context.Authors.ToListAsync();
         }
+
+        public async Task<IEnumerable<Book>> IgnoreUserBooksAsync(int userId)
+        {
+            return await _context.Books
+                .Where(b => b.UserId != userId)
+                .Include(b => b.Image)
+                .Include(b => b.Author)
+                .Include(b => b.Genre)
+                .Include(b => b.User)
+                .ToListAsync();
+        }
     }
 }

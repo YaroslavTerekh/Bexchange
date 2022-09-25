@@ -11,6 +11,7 @@ export class AppComponent implements OnInit{
   modal: boolean = false;
   registerModal: boolean = false;
   accountModal: boolean = false;
+  accountModifyModal: boolean = false;
 
   constructor(
     private dataService: AllDataService,

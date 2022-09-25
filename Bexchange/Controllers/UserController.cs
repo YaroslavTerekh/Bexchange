@@ -1,9 +1,11 @@
 ﻿using AutoMapper;
+using Bexchange.Domain.RequestModels;
 using Bexchange.Infrastructure.Repositories.Interfaces;
 using Bexchange.Infrastructure.Services.Repositories;
 using BexchangeAPI.Domain.DtoModels;
 using BexchangeAPI.Domain.Enum;
 using BexchangeAPI.Domain.Models;
+using BexchangeAPI.DTOs;
 using BexchangeAPI.Infrastructure.Repositories.Interfaces;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Http;
@@ -35,6 +37,27 @@ namespace BexchangeAPI.Controllers
             _configuration = configuration;
             _userManager = userManager;
             _signInManager = signInManager;
+        }
+
+        [Authorize]
+        [HttpGet("id/{id}")]
+        public async Task<IActionResult> GetUser(int id)
+        {
+            if(_userService.GetUserId(HttpContext) == id || _userService.IsAdmin(HttpContext))
+            {
+                var user = await _usersRepository.GetUserAsync(id);
+                return Ok(user);
+            }
+
+            return BadRequest("Access forbidden");
+        }
+
+        [Authorize]
+        [HttpPost("modify")]
+        public async Task<IActionResult> ModifyUser(ChangeUserInfoRequest user)
+        {
+            await _usersRepository.ModifyUserAsync(user);
+            return Ok();
         }
 
         [HttpPost("register")]

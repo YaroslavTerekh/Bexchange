@@ -2,17 +2,16 @@
 
 <div class="modal">
     <div class="modal-content" [formGroup]="form">
-        <h4>Реєстрація</h4>
-        <input formControlName="userName" type="text" placeholder="Nickname..." #Nickname>
-        <input formControlName="email" type="text" placeholder="E-mail...">
-        <input formControlName="firstName" type="text" placeholder="First name..." #FirstName>
-        <input formControlName="lastName" type="text" placeholder="Last name..." #SecondName>
-        <input formControlName="country" type="text" placeholder="Country..." #Country>
-        <input formControlName="city" type="text" placeholder="City..." #City>
-        <input formControlName="postIndex" type="text" placeholder="Post index..." #PostIndex>
-        <input formControlName="password" type="password" placeholder="Password..." #Password>
-        <button *ngIf="form.valid" (click)="register()">Реєстрація</button>
-        <button *ngIf="form.invalid" style="opacity: .5; cursor: not-allowed;">Реєстрація</button>
+        <h4>Зміна даних профілю</h4>
+        <input formControlName="userName" type="text" placeholder="Nickname..." [(ngModel)]="user.userName">
+        <input formControlName="email" type="text" placeholder="E-mail..." [(ngModel)]="user.email">
+        <input formControlName="firstName" type="text" placeholder="First name..." [(ngModel)]="user.firstName">
+        <input formControlName="lastName" type="text" placeholder="Last name..." [(ngModel)]="user.lastName">
+        <input formControlName="country" type="text" placeholder="Country..." [(ngModel)]="user.address.country">
+        <input formControlName="city" type="text" placeholder="City..." [(ngModel)]="user.address.city">
+        <input formControlName="postIndex" type="text" placeholder="Post index..." [(ngModel)]="user.address.postIndex">
+        <button (click)="modify()" (click)="close.emit()">Підтвердити</button>
+        <!-- <button *ngIf="form.invalid" style="opacity: .5; cursor: not-allowed;">Реєстрація</button>
 
         <p *ngIf="form.invalid && (form.get('userName')?.invalid && form.get('userName')?.touched)"
             class="error-message">UserName is wrong</p>
@@ -30,6 +29,6 @@
             class="error-message">Post index is required</p>
         <p *ngIf="form.invalid && (form.get('password')?.invalid && form.get('password')?.touched)"
             class="error-message">Password is required</p>
-        <p class="error-message">{{errorMessage}}</p>
+        <p class="error-message">{{errorMessage}}</p> -->
     </div>
 </div>
