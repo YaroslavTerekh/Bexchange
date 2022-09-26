@@ -1,5 +1,6 @@
 ﻿using Bexchange.Domain.Models;
 using Bexchange.Infrastructure.Repositories.Interfaces;
+using Bexchange.Infrastructure.Services.Repositories;
 using BexchangeAPI.Domain.Enum;
 using BexchangeAPI.Domain.Models;
 using BexchangeAPI.Infrastructure.DtbContext;
@@ -31,6 +32,8 @@ namespace BexchangeAPI.Infrastructure.Repositories
                     .ThenInclude(u => u.Address)
                 .Include(b => b.User)
                     .ThenInclude(u => u.Books)
+                .Include(b => b.Comments)
+                    .ThenInclude(c => c.Author)
                 .ToListAsync();
         }
 
@@ -50,6 +53,8 @@ namespace BexchangeAPI.Infrastructure.Repositories
                     .ThenInclude(u => u.Address)
                 .Include(b => b.User)
                     .ThenInclude(u => u.Books)
+                .Include(b => b.Comments)
+                    .ThenInclude(c => c.Author)
                 .FirstOrDefaultAsync();
         }
 
@@ -86,7 +91,18 @@ namespace BexchangeAPI.Infrastructure.Repositories
                 .Include(b => b.Author)
                 .Include(b => b.Genre)
                 .Include(b => b.User)
+                .Include(b => b.Comments)
+                    .ThenInclude(c => c.Author)
                 .ToListAsync();
+        }
+
+        public async Task AddCommentAsync(Comment comment, int id, User user)
+        {
+            Book book = await GetComponentAsync(id);
+            comment.Author = user;
+            book.Comments?.Add(comment);
+
+            await _context.SaveChangesAsync();
         }
 
         public async Task<IEnumerable<Genre>> GetGenresAsync()
@@ -107,6 +123,34 @@ namespace BexchangeAPI.Infrastructure.Repositories
                 .Include(b => b.Author)
                 .Include(b => b.Genre)
                 .Include(b => b.User)
+                .Include(b => b.Comments)
+                    .ThenInclude(c => c.Author)
+                .ToListAsync();
+        }
+
+        public async Task<IEnumerable<Book>> GetByGenreAsync(string genre)
+        {
+            return await _context.Books
+                .Where(b => b.Genre.Title == genre)
+                .Include(b => b.Image)
+                .Include(b => b.Author)
+                .Include(b => b.Genre)
+                .Include(b => b.User)
+                .Include(b => b.Comments)
+                    .ThenInclude(c => c.Author)
+                .ToListAsync();
+        }
+
+        public async Task<IEnumerable<Book>> GetByAuthorAsync(string author)
+        {
+            return await _context.Books
+                .Where(b => b.Author.Name == author)
+                .Include(b => b.Image)
+                .Include(b => b.Author)
+                .Include(b => b.Genre)
+                .Include(b => b.User)
+                .Include(b => b.Comments)
+                    .ThenInclude(c => c.Author)
                 .ToListAsync();
         }
     }

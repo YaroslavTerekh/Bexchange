@@ -13,4 +13,6 @@
     </div>
   </div>
 </div>
-<app-book-content-functions [book]="book"></app-book-content-functions>
+<app-book-content-functions *ngIf="!isOwner" [book]="book" (comments)="openComments = true"></app-book-content-functions>
+<app-book-content-owner-functions *ngIf="isOwner" [book]="book" (comments)="openComments = true"></app-book-content-owner-functions>
+<app-comments-modal [book]="book" *ngIf="openComments == true" (close)="openComments = false"></app-comments-modal>

@@ -1,5 +1,6 @@
+import { Router } from '@angular/router';
 import { Book } from './../models/Book';
-import { Component, Input, OnInit } from '@angular/core';
+import { Component, EventEmitter, Input, OnInit, Output } from '@angular/core';
 
 @Component({
   selector: 'app-book-content-functions',
@@ -8,6 +9,7 @@ import { Component, Input, OnInit } from '@angular/core';
 })
 export class BookContentFunctionsComponent implements OnInit {
   @Input()book!: Book;
+  @Output()comments = new EventEmitter<void>();
 
   constructor() { }
 

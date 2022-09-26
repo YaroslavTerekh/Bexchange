@@ -1,4 +1,5 @@
 ﻿using AutoMapper;
+using Bexchange.API.DTOs;
 using Bexchange.Domain.Models;
 using Bexchange.Infrastructure.Repositories.Interfaces;
 using Bexchange.Infrastructure.Services.Repositories;
@@ -128,18 +129,61 @@ namespace BexchangeAPI.Controllers
             return BadRequest("You can delete only your own book");
         }
 
+        [HttpPatch("{id}/comments/add")]
+        public async Task<IActionResult> AddComment(CommentDto comment, int id)
+        {
+            var mappedComment = _mapper.Map<Comment>(comment);
+            var user = await _usersRepository.GetUserAsync(_userService.GetUserId(HttpContext));
+
+            await _contentRepo.AddCommentAsync(mappedComment, id, user);
+
+            return Created(Request.Path, new { comment });
+        }
+
         // GENRES, AUTHORS
 
         [HttpGet("genres"), AllowAnonymous]
-        public async Task<IEnumerable<Genre>> Genres()
+        public async Task<IActionResult> Genres()
         {
-            return await _contentRepo.GetGenresAsync();
+            var genres = await _contentRepo.GetGenresAsync();
+
+            if (genres == null)
+                throw new NotFoundException("No genres were added", (int)HttpStatusCode.NotFound);
+
+            return Ok(genres);
+        }
+
+        [HttpGet("genre/{genre}")]
+        public async Task<IActionResult> GetByGenre(string genre)
+        {
+            var books = await _contentRepo.GetByGenreAsync(genre);
+
+            if (books == null)
+                throw new NotFoundException("Books not found", (int)HttpStatusCode.NotFound);
+
+            return Ok(_mapper.Map<IEnumerable<BookDto>>(books));
         }
 
         [HttpGet("authors"), AllowAnonymous]
-        public async Task<IEnumerable<Author>> Authors()
+        public async Task<IActionResult> Authors()
         {
-            return await _contentRepo.GetAuthorsAsync();
+            var authors = await _contentRepo.GetAuthorsAsync();
+
+            if (authors == null)
+                throw new NotFoundException("No authors were added", (int)HttpStatusCode.NotFound);
+
+            return Ok(authors);
+        }
+
+        [HttpGet("author/{author}")]
+        public async Task<IActionResult> GetByAuthor(string author)
+        {
+            var books = await _contentRepo.GetByAuthorAsync(author);
+
+            if (books == null)
+                throw new NotFoundException("Books not found", (int)HttpStatusCode.NotFound);
+
+            return Ok(_mapper.Map<IEnumerable<BookDto>>(books));
         }
     }
 }

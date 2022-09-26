@@ -4,6 +4,7 @@ using BexchangeAPI.Infrastructure.DtbContext;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 
 #nullable disable
@@ -11,9 +12,10 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace Bexchange.API.Migrations
 {
     [DbContext(typeof(ContentDbContext))]
-    partial class ContentDbContextModelSnapshot : ModelSnapshot
+    [Migration("20220926100822_AddComments")]
+    partial class AddComments
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -75,7 +77,7 @@ namespace Bexchange.API.Migrations
 
                     b.HasKey("Id");
 
-                    b.ToTable("Authors", (string)null);
+                    b.ToTable("Authors");
                 });
 
             modelBuilder.Entity("Bexchange.Domain.Models.Comment", b =>
@@ -102,7 +104,7 @@ namespace Bexchange.API.Migrations
 
                     b.HasIndex("BookId");
 
-                    b.ToTable("Comment", (string)null);
+                    b.ToTable("Comment");
                 });
 
             modelBuilder.Entity("Bexchange.Domain.Models.Genre", b =>
@@ -129,7 +131,7 @@ namespace Bexchange.API.Migrations
 
                     b.HasKey("Id");
 
-                    b.ToTable("Genres", (string)null);
+                    b.ToTable("Genres");
                 });
 
             modelBuilder.Entity("BexchangeAPI.Domain.Models.AddressInfo", b =>
@@ -154,7 +156,7 @@ namespace Bexchange.API.Migrations
 
                     b.HasKey("Id");
 
-                    b.ToTable("Addresses", (string)null);
+                    b.ToTable("Addresses");
                 });
 
             modelBuilder.Entity("BexchangeAPI.Domain.Models.Book", b =>
@@ -198,7 +200,7 @@ namespace Bexchange.API.Migrations
 
                     b.HasIndex("UserId");
 
-                    b.ToTable("Books", (string)null);
+                    b.ToTable("Books");
                 });
 
             modelBuilder.Entity("BexchangeAPI.Domain.Models.ExchangeOrder", b =>
@@ -224,7 +226,7 @@ namespace Bexchange.API.Migrations
 
                     b.HasIndex("SecondBookId");
 
-                    b.ToTable("Orders", (string)null);
+                    b.ToTable("Orders");
                 });
 
             modelBuilder.Entity("BexchangeAPI.Domain.Models.Image", b =>
@@ -244,7 +246,7 @@ namespace Bexchange.API.Migrations
 
                     b.HasKey("Id");
 
-                    b.ToTable("Images", (string)null);
+                    b.ToTable("Images");
                 });
 
             modelBuilder.Entity("BexchangeAPI.Domain.Models.User", b =>

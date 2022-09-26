@@ -1,9 +1,11 @@
+import { UntilDestroy, untilDestroyed } from '@ngneat/until-destroy';
 import { AddressInfo } from './../models/AddressInfo';
 import { RegistrationService } from './../registration.service';
 import { AbstractControl, FormBuilder, FormGroup, ValidationErrors, Validators } from '@angular/forms';
 import { RegisterRequest } from './../models/RegisterRequest';
 import { Component, OnInit, Output, EventEmitter, ViewChild, ElementRef } from '@angular/core';
 
+@UntilDestroy()
 @Component({
   selector: 'app-register-modal',
   templateUrl: './register-modal.component.html',
@@ -46,6 +48,7 @@ export class RegisterModalComponent implements OnInit {
     }    
     
     this.registerService.register(user)
+      .pipe(untilDestroyed(this))
       .subscribe({
         next: res => {
           this.close.emit();

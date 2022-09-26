@@ -30,6 +30,9 @@ import { RouterModule } from '@angular/router';
 import { CreateOrderComponent } from './create-order/create-order.component';
 import { AccountModalComponent } from './account-modal/account-modal.component';
 import { AccountModifyComponent } from './account-modify/account-modify.component';
+import { BookContentOwnerFunctionsComponent } from './book-content-owner-functions/book-content-owner-functions.component';
+import { CommentsModalComponent } from './comments-modal/comments-modal.component';
+import { CommentsModalItemComponent } from './comments-modal-item/comments-modal-item.component';
 
 @NgModule({
   declarations: [
@@ -54,6 +57,9 @@ import { AccountModifyComponent } from './account-modify/account-modify.componen
     CreateOrderComponent,
     AccountModalComponent,
     AccountModifyComponent,
+    BookContentOwnerFunctionsComponent,
+    CommentsModalComponent,
+    CommentsModalItemComponent,
   ],
   imports: [
     BrowserModule,

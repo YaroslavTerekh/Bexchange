@@ -29,6 +29,10 @@ namespace BexchangeAPI.Infrastructure.Configurations
                 .WithMany(u => u.Books)
                 .HasForeignKey(b => b.UserId)
                 .OnDelete(DeleteBehavior.Restrict);
+
+            builder.HasMany(b => b.Comments)
+                .WithOne()                
+                .OnDelete(DeleteBehavior.Restrict);
         }
     }
 }

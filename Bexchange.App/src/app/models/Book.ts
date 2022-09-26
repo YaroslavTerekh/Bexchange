@@ -3,10 +3,12 @@ import { Author } from './Author';
 import { Image } from 'src/app/models/Image';
 
 export interface Book {
-    id: number | undefined;
+    userId: number;
+    id: number;
     title: string | undefined;
     description: string | undefined;
     genre: Genre | undefined;
     author: Author | undefined;
     image: Image | undefined;
+    comments: string[] | null | undefined;
 }
