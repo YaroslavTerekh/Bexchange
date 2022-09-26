@@ -23,6 +23,7 @@ namespace BexchangeAPI.DTOs
         public Genre Genre { get; set; }
         [Required(ErrorMessage = "No photo uploaded")]
         public Image Image { get; set; }
+        public ICollection<Comment>? Comments { get; set; }
         [Required(ErrorMessage = "No User applied")]
         public int UserId { get; set; }
     }

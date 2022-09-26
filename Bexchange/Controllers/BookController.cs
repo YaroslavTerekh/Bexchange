@@ -1,4 +1,5 @@
 ﻿using AutoMapper;
+using Bexchange.API.DTOs;
 using Bexchange.Domain.Models;
 using Bexchange.Infrastructure.Repositories.Interfaces;
 using Bexchange.Infrastructure.Services.Repositories;
@@ -126,6 +127,17 @@ namespace BexchangeAPI.Controllers
             }
 
             return BadRequest("You can delete only your own book");
+        }
+
+        [HttpPatch("{id}/comments/add")]
+        public async Task<IActionResult> AddComment(CommentDto comment, int id)
+        {
+            var mappedComment = _mapper.Map<Comment>(comment);
+            var user = await _usersRepository.GetUserAsync(_userService.GetUserId(HttpContext));
+
+            await _contentRepo.AddCommentAsync(mappedComment, id, user);
+
+            return Created(Request.Path, new { comment });
         }
 
         // GENRES, AUTHORS

@@ -1,4 +1,4 @@
-import { Router } from '@angular/router';
+import { Router, ActivatedRoute } from '@angular/router';
 import { AllDataService } from './../all-data.service';
 import { Component, EventEmitter, OnInit, Output } from '@angular/core';
 
@@ -14,10 +14,17 @@ export class AccountModalComponent implements OnInit {
   
   constructor(
     private dataService: AllDataService,
-    private router: Router
+    private router: Router,
+    private route: ActivatedRoute
   ) { }
 
   ngOnInit(): void {
+  }
+
+  books() {
+    this.router.routeReuseStrategy.shouldReuseRoute = () => false;
+    this.router.onSameUrlNavigation = 'reload';
+    this.router.navigate(['./library/user', this.userId])
   }
 
   exit() {

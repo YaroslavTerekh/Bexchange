@@ -11,6 +11,7 @@ import { HttpClient, HttpHeaders } from '@angular/common/http';
 export class BookContentComponent implements OnInit {
   book!: any;
   isOwner!: boolean;
+  openComments!: boolean;
 
   constructor(
     private route: ActivatedRoute, 

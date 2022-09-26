@@ -6,6 +6,7 @@ import { Router } from '@angular/router';
 import { HttpClient } from '@angular/common/http';
 import { Injectable, OnInit } from '@angular/core';
 import { JwtHelperService } from '@auth0/angular-jwt';
+import { CommentRequest } from './models/CommentRequest';
 
 @Injectable({
   providedIn: 'root'
@@ -85,6 +86,12 @@ export class AllDataService implements OnInit {
 
   public getBooksByAuthor(name: string): Observable<object> {
     return this.http.get(`${environment.bexchangeApi}Book/author/${name}`);
+  }
+
+  // post - books 
+
+  public AddComment(id: number, message: CommentRequest): Observable<object> {
+    return this.http.patch(`${environment.bexchangeApi}Book/${id}/comments/add`, message);
   }
 
   //get - orders

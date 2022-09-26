@@ -11,6 +11,7 @@ namespace Bexchange.Infrastructure.Repositories.Interfaces
 {
     public interface IBookContentRepository<T> : IContentRepository<T>
     {
+        public Task AddCommentAsync(Comment comment, int id, User user);
         public Task<IEnumerable<Genre>> GetGenresAsync();
         public Task<IEnumerable<Book>> GetByGenreAsync(string genre);
         public Task<IEnumerable<Author>> GetAuthorsAsync();

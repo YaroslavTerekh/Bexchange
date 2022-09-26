@@ -4,7 +4,7 @@
     <div class="modal-content">
         <h5>Профіль id:{{userId}}</h5>
         <div class="buttons">
-            <button [routerLink]="['/library/user', this.userId]" (click)="close.emit()">Мої книги</button>
+            <button (click)="books()" (click)="close.emit()">Мої книги</button>
             <button [routerLink]="['/orders/user', this.userId]" (click)="close.emit()">Мої ордери на обмін</button>
             <button (click)="modifyAccount.emit()" (click)="close.emit()">Змінити дані профілю</button>
             <button (click)="exit()" (click)="close.emit()" class="exit">Вийти</button>

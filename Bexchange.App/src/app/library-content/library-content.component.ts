@@ -1,5 +1,5 @@
 import { ActivatedRoute, Router } from '@angular/router';
-import { Component, Input, OnDestroy, OnInit } from '@angular/core';
+import { AfterViewInit, Component, Input, OnDestroy, OnInit } from '@angular/core';
 import { AllDataService } from '../all-data.service';
 import { Book } from '../models/Book';
 import { HttpClient } from '@angular/common/http';
@@ -12,7 +12,7 @@ import { UntilDestroy, untilDestroyed } from '@ngneat/until-destroy';
   templateUrl: './library-content.component.html',
   styleUrls: ['./library-content.component.scss']
 })
-export class LibraryContentComponent implements OnInit, OnDestroy {
+export class LibraryContentComponent implements OnInit {
   bookEmit!: Array<Book>;
   bookList!: Book[];
   books!: any;

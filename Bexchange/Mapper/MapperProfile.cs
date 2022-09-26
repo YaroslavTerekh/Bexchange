@@ -1,4 +1,6 @@
 ﻿using AutoMapper;
+using Bexchange.API.DTOs;
+using Bexchange.Domain.Models;
 using BexchangeAPI.Domain.Models;
 using BexchangeAPI.DTOs;
 
@@ -10,11 +12,13 @@ namespace BexchangeAPI.Mapper
         {
             CreateMap<AddressInfo, AddressInfoDto>();
             CreateMap<Book, BookDto>();
-            CreateMap<ExchangeOrder, ExchangeOrderDto>();
-            //CreateMap<Image, ImageDto>();
+            CreateMap<ExchangeOrder, ExchangeOrderDto>();            
             CreateMap<User, UserDto>();
 
-            //REVERSE
+            CreateMap<CommentDto, Comment>()
+                .ForMember(dest => dest.Message, opt => opt.MapFrom(c => c.Message))
+                .ForMember(dest => dest.Author, opt => opt.Ignore())
+                .ForMember(dest => dest.Id, opt => opt.Ignore());
 
             CreateMap<BookDto, Book>()
                 .ForMember(dest => dest.Id, opt => opt.MapFrom(b => b.Id))

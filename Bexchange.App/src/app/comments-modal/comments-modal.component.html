@@ -1,0 +1,17 @@
+<div class="modal-bg" (click)="close.emit()"></div>
+
+<div class="modal">
+    
+    <div class="modal-content">
+        <h5>Коментарі</h5>
+
+        <div class="scroll">
+            <app-comments-modal-item *ngFor="let comment of book.comments" [comment]="comment"></app-comments-modal-item>
+        </div>
+
+        <form [formGroup]="form" class="comm-input">
+            <textarea formControlName="message" name="" id="" cols="30" rows="2" #commentArea></textarea>
+            <img src="../../assets/send.png" (click)="addComment()" (click)="commentArea.value = ''">
+        </form>
+    </div>
+</div>

@@ -1,5 +1,4 @@
-
-body { 
+body {
     display: flex;
     flex-direction: column;
 }
@@ -17,20 +16,20 @@ header {
     width: 50%;
 }
 
-.nav-header > ul {
+.nav-header>ul {
     display: flex;
     justify-content: space-between;
     align-items: center;
 }
 
-.nav-header > ul > li > a {
+.nav-header>ul>li>a {
     position: relative;
     font-style: normal;
     font-weight: 300;
     font-size: 18px;
 }
 
-.nav-header > ul > li > a::before {
+.nav-header>ul>li>a::before {
     content: '';
     position: absolute;
     bottom: -2px;
@@ -45,7 +44,7 @@ header {
     border-bottom: 2px solid #fff;
 }
 
-.nav-header > ul > li > a:hover:before {
+.nav-header>ul>li>a:hover:before {
     width: 100%;
 }
 
@@ -54,8 +53,8 @@ header {
     display: flex;
     align-items: center;
     justify-content: center;
-    border-radius: 10px;    
-    
+    border-radius: 10px;
+
     cursor: pointer;
     background-color: #BA8B60;
     font-style: normal;
@@ -68,4 +67,27 @@ header {
 .nav-header_account:hover {
     background-color: #c4854b;
     transition: .2s;
+}
+
+* {
+
+    /* width */
+    ::-webkit-scrollbar {
+        width: 5px;
+    }
+
+    /* Track */
+    ::-webkit-scrollbar-track {
+        background: #be0000;
+    }
+
+    /* Handle */
+    ::-webkit-scrollbar-thumb {
+        background: #888;
+    }
+
+    /* Handle on hover */
+    ::-webkit-scrollbar-thumb:hover {
+        background: #555;
+    }
 }

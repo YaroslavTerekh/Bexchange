@@ -1,4 +1,4 @@
-import { Component, Input, OnInit } from '@angular/core';
+import { Component, Input, OnInit, Output, EventEmitter } from '@angular/core';
 import { Book } from '../models/Book';
 
 @Component({
@@ -8,6 +8,7 @@ import { Book } from '../models/Book';
 })
 export class BookContentOwnerFunctionsComponent implements OnInit {
   @Input()book!: Book;
+  @Output()comments = new EventEmitter<void>();
   
   constructor() { }
 
