@@ -27,7 +27,8 @@
             }
 
             button {
-                color: #fff;
+                color: #000;
+                background-color: transparent;                
                 height: 45px;
                 width: fit-content;
                 padding-left: 20px;
@@ -36,16 +37,39 @@
                 cursor: pointer;
             }
 
+            button:hover {
+                color: #fff;
+                transition: .2s;
+            }
+
             :nth-child(3n) {
-                background-color: #01A011;
+                border: 2px solid #01A011;
+                transition: .2s;
             }
 
             :nth-child(4n) {
-                background-color: #9b0bb8;
+                border: 2px solid #9b0bb8;
+                transition: .2s;
             }
 
             :nth-child(5n) {
+                border: 2px solid #096498;
+                transition: .2s;
+            }
+
+            :nth-child(3n):hover {
+                background-color: #01A011;
+                transition: .2s;
+            }
+
+            :nth-child(4n):hover {
+                background-color: #9b0bb8;
+                transition: .2s;
+            }
+
+            :nth-child(5n):hover {
                 background-color: #096498;
+                transition: .2s;
             }
         }
 
@@ -66,14 +90,22 @@
             }
 
             button {
-                color: #fff;
+                color: #000;
                 height: 45px;
                 width: fit-content;
                 padding-left: 20px;
                 padding-right: 20px;
                 margin-bottom: 20px;
-                background-color: #735C52;
+                background-color: #735c524d;
+                border: 2px solid #735C52;
                 cursor: pointer;
+                transition: .2s;
+            }
+
+            button:hover {
+                color: #fff;
+                background-color: #735C52;
+                transition: .2s;
             }
         }        
     }

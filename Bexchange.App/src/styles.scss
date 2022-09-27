@@ -9,7 +9,7 @@
     color: #fff;
 }
 
-input:focus, textarea:focus {
+input:focus, textarea:focus, select:focus {
     outline: none;
     ::placeholder {
         color: #fff;

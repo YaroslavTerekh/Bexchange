@@ -12,7 +12,7 @@ import { UntilDestroy, untilDestroyed } from '@ngneat/until-destroy';
   templateUrl: './library-content.component.html',
   styleUrls: ['./library-content.component.scss']
 })
-export class LibraryContentComponent implements OnInit {
+export class LibraryContentComponent implements OnInit, AfterViewInit {
   bookEmit!: Array<Book>;
   bookList!: Book[];
   books!: any;
@@ -31,6 +31,16 @@ export class LibraryContentComponent implements OnInit {
     this.genre = this.route.snapshot.params['genre'];
     this.author = this.route.snapshot.params['author'];
 
+    console.log(this.id);
+    console.log(this.genre);
+    console.log(this.author);
+    
+    console.log(this.books);
+    
+    
+  }
+
+  ngAfterViewInit(): void {
     if (this.id == undefined || this.author == undefined || this.genre == undefined) {
       this.dataService.getBooks(this.dataService.getUserId())
         .pipe(untilDestroyed(this))
@@ -75,6 +85,8 @@ export class LibraryContentComponent implements OnInit {
       .pipe(untilDestroyed(this))
       .subscribe({
         next: res => {
+          console.log(res);
+          
           this.books = res;
         },
         error: (err: any) => {
@@ -82,10 +94,8 @@ export class LibraryContentComponent implements OnInit {
         }
       });
     }
-  }
 
-  ngOnDestroy(): void {
-
+    console.log(this.books);
   }
 
 }
