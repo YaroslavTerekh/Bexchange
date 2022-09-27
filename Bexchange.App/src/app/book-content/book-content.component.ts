@@ -2,7 +2,9 @@ import { AllDataService } from './../all-data.service';
 import { Component, Input, OnInit } from '@angular/core';
 import { ActivatedRoute, Router } from '@angular/router';
 import { HttpClient, HttpHeaders } from '@angular/common/http';
+import { UntilDestroy, untilDestroyed } from '@ngneat/until-destroy';
 
+@UntilDestroy()
 @Component({
   selector: 'app-book-content',
   templateUrl: './book-content.component.html',
@@ -22,6 +24,7 @@ export class BookContentComponent implements OnInit {
 
   ngOnInit(): void {
     this.dataService.getBook(this.route.snapshot.params['id'])
+      .pipe(untilDestroyed(this))
       .subscribe({
         next: res => {
           this.book = res; 

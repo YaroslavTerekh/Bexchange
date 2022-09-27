@@ -2,6 +2,9 @@
     max-width: 940px;
     margin: 0 auto;
     margin-top: 50px;
+    padding: 20px;
+    background-color: transparent;
+    backdrop-filter: blur(100px);
 
     h2{
         font-size: 30px;
@@ -20,32 +23,62 @@
             }
 
             input {
-                background-color: #D4AF94;
-                padding: 10px;
-                border-radius: 5px;
+                background-color: transparent;
+                padding-left: 10px;
+                border-bottom: 1px solid #d4ab9523;
+                transition: .2s;
+            }
+            
+            input:hover, input:focus {
+                border-bottom: 1px solid #a76152;
+                transition: .2s;
             }
 
             select {
-                background-color: #D4AF94;
+                background-color: #d4ab9523;
                 padding: 10px;
                 border-radius: 5px;
+                transition: .2s;
+            }
+
+            select:hover, select:focus {
+                background-color: #d4ab9591;
+                transition: .2s;
+            }
+
+            option {
+                background-color: #57463d;
             }
 
             textarea {
                 margin-top: 10px;
-                background-color: #D4AF94;
+                background-color: #d4ab9523;
                 padding: 10px;
                 border-radius: 5px;
+                resize: none;
+                transition: .2s;
+            }
+
+            textarea:hover, textarea:focus {
+                background-color: #d4ab9591;
+                transition: .2s;
             }
         }
     }
 
     .submit {
         padding: 10px;
-        background-color: #229620;
+        border: 2px solid #229620;        
+        background-color: transparent;
         border-radius: 5px;
         cursor: pointer;
         margin-bottom: 5px;
+        transition: .2s;
+    }
+
+    .submit:hover {
+        background-color: #229620;
+        transition: .2s;
     }
 
     p {

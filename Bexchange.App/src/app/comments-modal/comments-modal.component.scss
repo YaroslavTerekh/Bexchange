@@ -5,6 +5,7 @@
     position: fixed;
     top: 0;
     z-index: 3;
+    backdrop-filter: blur(10px);
 }
 
 .modal {
@@ -20,7 +21,6 @@
 
     .modal-content {
         background-color: rgba(0, 0, 0, .7);
-        text-shadow: #000;
         margin: 0;
         position: fixed;
         top: 50%;
@@ -28,9 +28,7 @@
         margin-right: -50%;
         transform: translate(-50%, -50%);
         z-index: 4;
-        text-align: left;
-        
-        
+        text-align: left;        
         
         .scroll {
             max-height: 30em;

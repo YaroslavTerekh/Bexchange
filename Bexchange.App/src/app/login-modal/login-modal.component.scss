@@ -1,10 +1,11 @@
 .modal-bg {
-    background-color: rgba(0, 0, 0, .7);
+    background-color: rgba(255, 255, 255, .1);
     width: 100%;
     height: 100%;
     position: fixed;
     top: 0;
     z-index: 3;
+    backdrop-filter: blur(10px);
 }
 
 
@@ -12,7 +13,7 @@
     position: relative;
 
     .modal-content {
-        background-color: #fff;
+        background-color: rgba(0, 0, 0, .7);
         padding: 20px;
         margin: 0;
         position: fixed;
@@ -28,7 +29,7 @@
             align-items: center;
 
             h4 {
-                color: #000;
+                color: #fff;
                 margin-bottom: 10px;
             }
 
@@ -38,17 +39,18 @@
                 width: 200px;
 
                 button {
-                    color: #fff;
-                    background-color: #000;
+                    color: rgba(255, 255, 255, 0.555);
+                    background-color: transparent;
+                    border: 2px solid #d4ab9523;
                     padding: 10px;
                     cursor: pointer;
-                    border: none;
+                    transition: .5s;
                 }
 
                 .active {
-                    -webkit-box-shadow: inset 0px 0px 0px 2px #D4AF94;
-                    -moz-box-shadow: inset 0px 0px 0px 2px #D4AF94;
-                    box-shadow: inset 0px 0px 0px 2px #D4AF94;
+                    color: #fff;
+                    border: 2px solid #fff;
+                    transition: .2s;
                 }
             }
         }
@@ -65,13 +67,16 @@
                 align-items: center;
                 
                 input {
-                    background-color: #D4AF94;
+                    background-color: transparent;
                     padding: 15px;
                     margin-top: 20px;
+                    border-bottom: 1px solid #d4ab9523;                    
+                    transition: .2s;
+                }
 
-                    :focus {
-                        outline-color: #d4ab9523;
-                    }
+                input:hover {
+                    border-bottom: 1px solid #a76152;
+                    transition: .2s;
                 }
 
                 .submit {
@@ -80,6 +85,12 @@
                     padding: 10px;
                     background-color: #5B372F;
                     cursor: pointer;
+                    transition: .2s;
+                }
+
+                .submit:hover {
+                    background-color: #6e4238;
+                    transition: .2s;
                 }
             }
         }

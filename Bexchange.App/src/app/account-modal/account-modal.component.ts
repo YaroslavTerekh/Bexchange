@@ -24,7 +24,7 @@ export class AccountModalComponent implements OnInit {
   books() {
     this.router.routeReuseStrategy.shouldReuseRoute = () => false;
     this.router.onSameUrlNavigation = 'reload';
-    this.router.navigate(['./library/user', this.userId])
+    this.router.navigate(['/library/user', this.userId])
   }
 
   exit() {

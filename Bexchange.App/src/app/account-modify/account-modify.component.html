@@ -10,8 +10,7 @@
         <input formControlName="country" type="text" placeholder="Country..." [(ngModel)]="user.address.country">
         <input formControlName="city" type="text" placeholder="City..." [(ngModel)]="user.address.city">
         <input formControlName="postIndex" type="text" placeholder="Post index..." [(ngModel)]="user.address.postIndex">
-        <button (click)="modify()" (click)="close.emit()">Підтвердити</button>
-        <!-- <button *ngIf="form.invalid" style="opacity: .5; cursor: not-allowed;">Реєстрація</button>
+        <button (click)="modify()" (click)="close.emit()">Зберегти</button>
 
         <p *ngIf="form.invalid && (form.get('userName')?.invalid && form.get('userName')?.touched)"
             class="error-message">UserName is wrong</p>
@@ -29,6 +28,5 @@
             class="error-message">Post index is required</p>
         <p *ngIf="form.invalid && (form.get('password')?.invalid && form.get('password')?.touched)"
             class="error-message">Password is required</p>
-        <p class="error-message">{{errorMessage}}</p> -->
     </div>
 </div>
