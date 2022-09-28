@@ -88,5 +88,23 @@ namespace BexchangeAPI.Infrastructure.Repositories
             order.State = State.Cancelled;
             await _context.SaveChangesAsync();
         }
+
+        public async Task<IEnumerable<ExchangeOrder>> GetUserOutgoingOrdersAsync(int id)
+        {
+            return await _context.Orders
+                .Where(o => o.SecondBook.UserId == id && o.State == State.Verified)
+                .Include(b => b.FirstBook)
+                .Include(b => b.SecondBook)
+                .ToListAsync();
+        }
+
+        public async Task<IEnumerable<ExchangeOrder>> GetUserIncomingOrdersAsync(int id)
+        {
+            return await _context.Orders
+                .Where(o => o.FirstBook.UserId == id)
+                .Include(b => b.FirstBook)
+                .Include(b => b.SecondBook)
+                .ToListAsync();
+        }
     }
 }

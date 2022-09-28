@@ -10,6 +10,7 @@ import { Order } from '../models/Order';
 })
 export class OrderContentItemAdditionalComponent implements OnInit {
   @Input() order: any;
+  @Input() isIncoming!: boolean;
 
   constructor(
     private dataService: AllDataService,

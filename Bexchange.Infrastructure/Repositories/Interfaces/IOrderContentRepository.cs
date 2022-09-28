@@ -1,4 +1,5 @@
-﻿using BexchangeAPI.Infrastructure.Repositories.Interfaces;
+﻿using BexchangeAPI.Domain.Models;
+using BexchangeAPI.Infrastructure.Repositories.Interfaces;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -11,5 +12,7 @@ namespace Bexchange.Infrastructure.Repositories.Interfaces
     {
         public Task AcceptOrderAsync(int id);
         public Task DeclineOrderAsync(int id);
+        public Task<IEnumerable<ExchangeOrder>> GetUserOutgoingOrdersAsync(int id);
+        public Task<IEnumerable<ExchangeOrder>> GetUserIncomingOrdersAsync(int id);
     }
 }

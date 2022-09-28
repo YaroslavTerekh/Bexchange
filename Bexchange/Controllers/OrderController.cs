@@ -61,6 +61,29 @@ namespace BexchangeAPI.Controllers
             return Ok(order);
         }
 
+        [HttpGet("user/{id}/outgoing")]
+        public async Task<IActionResult> GetUserOutgoingOrders(int id)
+        {
+            var order = await _orderRepo.GetUserOutgoingOrdersAsync(id);
+
+            if (order == null)
+                throw new NotFoundException("Orders not found", (int)HttpStatusCode.NotFound);
+
+            return Ok(order);
+        }
+
+        [HttpGet("user/{id}/incoming")]
+        public async Task<IActionResult> GetUserImcomingOrders(int id)
+        {
+            var order = await _orderRepo.GetUserIncomingOrdersAsync(id);
+
+            if (order == null)
+                throw new NotFoundException("Orders not found", (int)HttpStatusCode.NotFound);
+
+            return Ok(order);
+        }
+
+
         [HttpPost("add")]
         public async Task<IActionResult> AddOrder(ExchangeOrderDto order)
         {

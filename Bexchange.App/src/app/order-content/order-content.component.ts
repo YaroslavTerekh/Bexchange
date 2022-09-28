@@ -13,8 +13,13 @@ import { UntilDestroy, untilDestroyed } from '@ngneat/until-destroy';
 })
 export class OrderContentComponent implements OnInit {
   show: number = -1;
-  orders: any;
+  orders: any = [];
+  incomingOrders: any;
+  outgoingOrders: any;
   id: number | undefined;
+  outActive!: boolean;
+  inActive: boolean = true;
+  isIncoming!: boolean;
 
   constructor(
     private route: ActivatedRoute,
@@ -23,15 +28,14 @@ export class OrderContentComponent implements OnInit {
   ) { }
 
   ngOnInit(): void {
-    this.id = this.route.snapshot.params['id']; 
+    this.id = this.route.snapshot.params['id'];  
+    
 
     if(this.id == undefined) {
       this.dataService.getAllOrders()
       .pipe(untilDestroyed(this))
       .subscribe({
-        next: res => {          
-          console.log(res);
-          
+        next: res => {                    
           this.orders = res; 
         },
         error: err => {
@@ -39,20 +43,29 @@ export class OrderContentComponent implements OnInit {
         }
       })
     } else {
-      this.dataService.getUserOrders(this.id)
-        .pipe(untilDestroyed(this))
-        .subscribe({
-          next: res => { 
-            console.log(res);
-                     
-            this.orders = res; 
-          },
-          error: err => {
-            this.router.navigate(['/error', { error: JSON.stringify(err) }])
-          }
-        });          
-    }
-    
+      this.dataService.getUserIncomingOrders(this.id)
+      .pipe(untilDestroyed(this))
+      .subscribe({
+        next: res => {
+          this.incomingOrders = res; 
+          this.orders = this.incomingOrders;
+        },
+        error: err => {
+          this.router.navigate(['/error', { error: JSON.stringify(err) }])
+        }
+      })
+      
+      this.dataService.getUserOutgoingOrders(this.id)
+      .pipe(untilDestroyed(this))
+      .subscribe({
+        next: res => {                 
+          this.outgoingOrders = res; 
+        },
+        error: err => {
+          this.router.navigate(['/error', { error: JSON.stringify(err) }])
+        }
+      })
+    }        
   }
 
   toggle(num: number) {
