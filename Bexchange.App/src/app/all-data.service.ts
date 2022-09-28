@@ -104,6 +104,14 @@ export class AllDataService implements OnInit {
     return this.http.get(`${environment.bexchangeApi}Order/user/${id}`);
   }
 
+  public getUserIncomingOrders(id: number): Observable<object> {
+    return this.http.get(`${environment.bexchangeApi}Order/user/${id}/incoming`);
+  }
+
+  public getUserOutgoingOrders(id: number): Observable<object> {
+    return this.http.get(`${environment.bexchangeApi}Order/user/${id}/outgoing`);
+  }
+
   public getUserInfo(id: number): Observable<object> {
     return this.http.get(`${environment.bexchangeApi}User/id/${id}`);
   }

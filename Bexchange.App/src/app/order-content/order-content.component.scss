@@ -7,6 +7,16 @@
         font-size: 30px;
     }
 
+    button {
+        margin-right: 10px;
+        width: fit-content;
+        padding: 15px;
+        border: 2px solid #b8ab01;
+        background: #b8ac017e;
+        cursor: pointer;
+        transition: .2s;
+    }
+
     .orders-list {
         width: 100%;
 

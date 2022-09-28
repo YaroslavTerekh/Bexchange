@@ -4,6 +4,7 @@
     display: flex;
     justify-content: space-between;
     padding: 20px;
+    backdrop-filter: blur(10px);
 
     .info {
         display: flex;
