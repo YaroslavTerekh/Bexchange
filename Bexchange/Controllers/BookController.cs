@@ -46,6 +46,17 @@ namespace BexchangeAPI.Controllers
             return Ok(_mapper.Map<IEnumerable<BookDto>>(books));
         }
 
+        [HttpGet("main-page/{amount}"), AllowAnonymous]
+        public async Task<IActionResult> FirstBooks(int amount)
+        {
+            var books = await _contentRepo.GetFirstBooksAsync(amount);
+
+            if (books == null)
+                throw new NotFoundException("No books here", (int)HttpStatusCode.NotFound);
+
+            return Ok(_mapper.Map<IEnumerable<BookDto>>(books));
+        }
+
         [HttpGet("all"), AllowAnonymous]
         public async Task<IActionResult> AllBooks()
         {

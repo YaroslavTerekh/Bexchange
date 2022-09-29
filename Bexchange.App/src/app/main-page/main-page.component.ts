@@ -1,7 +1,11 @@
+import { Router } from '@angular/router';
 import { AllDataService } from './../all-data.service';
 import { Component, OnInit } from '@angular/core';
 import { MainBookComponent } from '../main-book/main-book.component';
+import { Book } from '../models/Book';
+import { UntilDestroy, untilDestroyed } from '@ngneat/until-destroy';
 
+@UntilDestroy()
 @Component({
   selector: 'app-main-page',
   templateUrl: './main-page.component.html',
@@ -9,18 +13,7 @@ import { MainBookComponent } from '../main-book/main-book.component';
 })
 export class MainPageComponent implements OnInit {
 
-  slides = [
-    {img: '../assets/book1.png'},
-    {img: '../assets/book2.png'},
-    {img: '../assets/book3.png'},
-    {img: '../assets/book4.png'},
-    {img: '../assets/book1.png'},
-    {img: '../assets/book2.png'},
-    {img: '../assets/book3.png'},
-    {img: '../assets/book4.png'},
-    {img: '../assets/book1.png'},
-    {img: '../assets/book2.png'},
-  ];
+  books!: Book[];
 
   slideConfig = { 
     slidesToShow: 5, 
@@ -31,10 +24,23 @@ export class MainPageComponent implements OnInit {
     autoplaySpeed: 5000,
   };
 
-  constructor(private dataSvc: AllDataService) {
+  constructor(
+    private dataService: AllDataService,
+    private router: Router
+    ) {
    }
 
   ngOnInit(): void {
+    this.dataService.getFirstBooks(10)
+    .pipe(untilDestroyed(this))
+    .subscribe({
+      next: res => {        
+        this.books = res;
+      },
+      error: (err: any) => {
+        this.router.navigate(['/error', { error: JSON.stringify(err) }]);
+      }
+    });
   }
 
 }

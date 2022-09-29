@@ -1,3 +1,4 @@
+import { Book } from './models/Book';
 import { ChangeUserInfoRequest } from './models/ChangeUserInfoRequest';
 import { Order } from './models/Order';
 import { Observable } from 'rxjs/internal/Observable';
@@ -64,56 +65,60 @@ export class AllDataService implements OnInit {
   }
 
   // get - books
-  public getBooks(id: number): Observable<object> {
-    return this.http.get(`${environment.bexchangeApi}Book/user/ignore/${id}`);
+  public getBooks(id: number): Observable<Book> {
+    return this.http.get<Book>(`${environment.bexchangeApi}Book/user/ignore/${id}`);
   }
 
-  public getAllBooks(): Observable<object> {
-    return this.http.get(`${environment.bexchangeApi}Book`);
+  public getAllBooks(): Observable<Book> {
+    return this.http.get<Book>(`${environment.bexchangeApi}Book`);
   }
 
-  public getBook(id: number): Observable<object> {
-    return this.http.get(`${environment.bexchangeApi}Book/${id}`);
+  public getBook(id: number): Observable<Book> {
+    return this.http.get<Book>(`${environment.bexchangeApi}Book/${id}`);
   }
 
-  public getUserBooks(id: number): Observable<object> {
-    return this.http.get(`${environment.bexchangeApi}Book/user/${id}`);
+  public getUserBooks(id: number): Observable<Book> {
+    return this.http.get<Book>(`${environment.bexchangeApi}Book/user/${id}`);
   }
 
-  public getBooksByGenre(title: string): Observable<object> {
-    return this.http.get(`${environment.bexchangeApi}Book/genre/${title}`);
+  public getBooksByGenre(title: string): Observable<Book> {
+    return this.http.get<Book>(`${environment.bexchangeApi}Book/genre/${title}`);
   }
 
-  public getBooksByAuthor(name: string): Observable<object> {
-    return this.http.get(`${environment.bexchangeApi}Book/author/${name}`);
+  public getBooksByAuthor(name: string): Observable<Book> {
+    return this.http.get<Book>(`${environment.bexchangeApi}Book/author/${name}`);
+  }
+
+  public getFirstBooks(amount: number): Observable<Book[]> {
+    return this.http.get<Book[]>(`${environment.bexchangeApi}Book/main-page/${amount}`);
   }
 
   // post - books 
 
-  public AddComment(id: number, message: CommentRequest): Observable<object> {
-    return this.http.patch(`${environment.bexchangeApi}Book/${id}/comments/add`, message);
+  public AddComment(id: number, message: CommentRequest): Observable<string> {
+    return this.http.patch<string>(`${environment.bexchangeApi}Book/${id}/comments/add`, message);
   }
 
   //get - orders
 
-  public getAllOrders(): Observable<object> {
-    return this.http.get(`${environment.bexchangeApi}Order`);
+  public getAllOrders(): Observable<Order> {
+    return this.http.get<Order>(`${environment.bexchangeApi}Order`);
   }
 
-  public getUserOrders(id: number): Observable<object> {
-    return this.http.get(`${environment.bexchangeApi}Order/user/${id}`);
+  public getUserOrders(id: number): Observable<Order> {
+    return this.http.get<Order>(`${environment.bexchangeApi}Order/user/${id}`);
   }
 
-  public getUserIncomingOrders(id: number): Observable<object> {
-    return this.http.get(`${environment.bexchangeApi}Order/user/${id}/incoming`);
+  public getUserIncomingOrders(id: number): Observable<Order> {
+    return this.http.get<Order>(`${environment.bexchangeApi}Order/user/${id}/incoming`);
   }
 
-  public getUserOutgoingOrders(id: number): Observable<object> {
-    return this.http.get(`${environment.bexchangeApi}Order/user/${id}/outgoing`);
+  public getUserOutgoingOrders(id: number): Observable<Order> {
+    return this.http.get<Order>(`${environment.bexchangeApi}Order/user/${id}/outgoing`);
   }
 
-  public getUserInfo(id: number): Observable<object> {
-    return this.http.get(`${environment.bexchangeApi}User/id/${id}`);
+  public getUserInfo(id: number): Observable<Order> {
+    return this.http.get<Order>(`${environment.bexchangeApi}User/id/${id}`);
   }
 
   // logic - orders

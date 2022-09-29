@@ -22,6 +22,15 @@ namespace BexchangeAPI.Infrastructure.Repositories
             _context = context;
         }
 
+        public async Task<IEnumerable<Book>> GetFirstBooksAsync(int amount)
+        {
+            return await _context.Books                                
+                .Include(b => b.Image)
+                .OrderByDescending(b => b.Id)
+                .Take(amount)
+                .ToListAsync();
+        }
+
         public async Task<IEnumerable<Book>> GetAllComponentsAsync()
         {
             return await _context.Books

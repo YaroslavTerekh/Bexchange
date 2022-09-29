@@ -36,7 +36,7 @@ export class CommentsModalComponent implements OnInit {
     this.dataService.AddComment(this.book.id, comment)
       .pipe(untilDestroyed(this))
       .subscribe({
-        next: res => {
+        next: res => {          
           this.router.routeReuseStrategy.shouldReuseRoute = () => false;
           this.router.onSameUrlNavigation = 'reload';
           this.router.navigate([this.router.url])
