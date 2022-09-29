@@ -1,5 +1,5 @@
+import { BookService } from './../book.service';
 import { Router } from '@angular/router';
-import { AllDataService } from './../all-data.service';
 import { Component, OnInit, Input, Output, ViewChild, ElementRef, AfterViewInit } from '@angular/core';
 import { UntilDestroy, untilDestroyed } from '@ngneat/until-destroy';
 import { Book } from '../models/Book';
@@ -21,14 +21,14 @@ export class MainBookComponent implements OnInit, AfterViewInit {
   public title!: string | undefined;
 
   constructor(
-    private dataService: AllDataService,
+    private bookService: BookService,
     private router: Router
   ) {
 
   }
 
   ngOnInit(): void {
-    this.dataService.getFirstBooks(10)
+    this.bookService.getFirstBooks(10)
       .pipe(untilDestroyed(this))
       .subscribe({
         next: res => {

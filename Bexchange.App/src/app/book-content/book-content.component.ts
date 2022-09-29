@@ -1,3 +1,5 @@
+import { AuthorizationService } from './../authorization.service';
+import { BookService } from './../book.service';
 import { AllDataService } from './../all-data.service';
 import { Component, Input, OnInit } from '@angular/core';
 import { ActivatedRoute, Router } from '@angular/router';
@@ -19,17 +21,18 @@ export class BookContentComponent implements OnInit {
     private route: ActivatedRoute, 
     private http: HttpClient, 
     private router: Router,
-    private dataService: AllDataService) {
+    private bookService: BookService,
+    private authorizationService: AuthorizationService) {
   }
 
   ngOnInit(): void {
-    this.dataService.getBook(this.route.snapshot.params['id'])
+    this.bookService.getBook(this.route.snapshot.params['id'])
       .pipe(untilDestroyed(this))
       .subscribe({
         next: res => {
           this.book = res; 
           
-          if(this.book.userId == this.dataService.getUserId()) {
+          if(this.book.userId == this.authorizationService.getUserId()) {
             this.isOwner = true;
           } else {
             this.isOwner = false;

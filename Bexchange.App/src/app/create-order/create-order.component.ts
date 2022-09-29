@@ -1,3 +1,6 @@
+import { AuthorizationService } from './../authorization.service';
+import { BookService } from './../book.service';
+import { OrderService } from './../order.service';
 import { Order } from './../models/Order';
 import { ActivatedRoute, Router } from '@angular/router';
 import { AllDataService } from './../all-data.service';
@@ -19,18 +22,20 @@ export class CreateOrderComponent implements OnInit {
   activeBookId!: number;
 
   constructor(
-    private dataService: AllDataService,
+    private orderService: OrderService,
+    private bookService: BookService,
+    private authorizationService: AuthorizationService,
     private route: ActivatedRoute,
     private router: Router
   ) { }
 
   ngOnInit(): void {
-    this.dataService.getBook(this.route.snapshot.params['id'])
+    this.bookService.getBook(this.route.snapshot.params['id'])
     .subscribe(res => {
       this.book = res;
     });     
 
-    this.dataService.getUserBooks(this.dataService.getUserId())
+    this.bookService.getUserBooks(this.authorizationService.getUserId())
       .pipe(untilDestroyed(this))
       .subscribe(res => { 
         this.books = res
@@ -43,7 +48,7 @@ export class CreateOrderComponent implements OnInit {
       secondBookId: this.activeBookId, 
     }
 
-    this.dataService.addOrder(order)
+    this.orderService.addOrder(order)
       .subscribe(res => {
         this.router.navigate(['/orders'])
       })  

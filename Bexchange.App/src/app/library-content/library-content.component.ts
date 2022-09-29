@@ -1,3 +1,5 @@
+import { AuthorizationService } from './../authorization.service';
+import { BookService } from './../book.service';
 import { ActivatedRoute, Router } from '@angular/router';
 import { AfterViewInit, Component, Input, OnDestroy, OnInit } from '@angular/core';
 import { AllDataService } from '../all-data.service';
@@ -21,7 +23,8 @@ export class LibraryContentComponent implements OnInit, AfterViewInit {
   author: string | undefined;
 
   constructor(
-    private dataService: AllDataService,
+    private bookService: BookService,
+    private authorizationService: AuthorizationService,
     private router: Router,
     private route: ActivatedRoute
   ) { }
@@ -42,7 +45,7 @@ export class LibraryContentComponent implements OnInit, AfterViewInit {
 
   ngAfterViewInit(): void {
     if (this.id == undefined || this.author == undefined || this.genre == undefined) {
-      this.dataService.getBooks(this.dataService.getUserId())
+      this.bookService.getBooks(this.authorizationService.getUserId())
         .pipe(untilDestroyed(this))
         .subscribe({
           next: res => {
@@ -55,7 +58,7 @@ export class LibraryContentComponent implements OnInit, AfterViewInit {
     }
 
     if (this.genre != undefined) {
-      this.dataService.getBooksByGenre(this.genre)
+      this.bookService.getBooksByGenre(this.genre)
         .pipe(untilDestroyed(this))
         .subscribe({
           next: res => {
@@ -68,7 +71,7 @@ export class LibraryContentComponent implements OnInit, AfterViewInit {
     }
 
     if (this.author != undefined) {
-      this.dataService.getBooksByAuthor(this.author)
+      this.bookService.getBooksByAuthor(this.author)
         .pipe(untilDestroyed(this))
         .subscribe({
           next: res => {
@@ -81,7 +84,7 @@ export class LibraryContentComponent implements OnInit, AfterViewInit {
     }
 
     if (this.id != undefined) {
-      this.dataService.getUserBooks(this.id)
+      this.bookService.getUserBooks(this.id)
       .pipe(untilDestroyed(this))
       .subscribe({
         next: res => {

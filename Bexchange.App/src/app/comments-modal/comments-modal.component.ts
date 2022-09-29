@@ -1,7 +1,7 @@
+import { BookService } from './../book.service';
 import { Router } from '@angular/router';
 import { CommentRequest } from './../models/CommentRequest';
 import { FormBuilder, FormGroup } from '@angular/forms';
-import { AllDataService } from './../all-data.service';
 import { Component, OnInit, Output, EventEmitter, Input } from '@angular/core';
 import { Book } from '../models/Book';
 import { UntilDestroy, untilDestroyed } from '@ngneat/until-destroy';
@@ -20,7 +20,7 @@ export class CommentsModalComponent implements OnInit {
   });
 
   constructor(
-    private dataService: AllDataService,
+    private bookService: BookService,
     private fb: FormBuilder,
     private router: Router
   ) { }
@@ -33,7 +33,7 @@ export class CommentsModalComponent implements OnInit {
       message: this.form.get('message')?.value,
     }
 
-    this.dataService.AddComment(this.book.id, comment)
+    this.bookService.AddComment(this.book.id, comment)
       .pipe(untilDestroyed(this))
       .subscribe({
         next: res => {          

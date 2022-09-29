@@ -1,3 +1,4 @@
+import { BookService } from './../book.service';
 import { Router } from '@angular/router';
 import { AllDataService } from './../all-data.service';
 import { Component, OnInit } from '@angular/core';
@@ -25,13 +26,13 @@ export class MainPageComponent implements OnInit {
   };
 
   constructor(
-    private dataService: AllDataService,
+    private bookService: BookService,
     private router: Router
     ) {
    }
 
   ngOnInit(): void {
-    this.dataService.getFirstBooks(10)
+    this.bookService.getFirstBooks(10)
     .pipe(untilDestroyed(this))
     .subscribe({
       next: res => {        
