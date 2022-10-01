@@ -33,14 +33,6 @@ export class LibraryContentComponent implements OnInit, AfterViewInit {
     this.id = this.route.snapshot.params['id'];
     this.genre = this.route.snapshot.params['genre'];
     this.author = this.route.snapshot.params['author'];
-
-    console.log(this.id);
-    console.log(this.genre);
-    console.log(this.author);
-    
-    console.log(this.books);
-    
-    
   }
 
   ngAfterViewInit(): void {

@@ -1,3 +1,4 @@
+import { DomSanitizer } from '@angular/platform-browser';
 import { AuthorizationService } from './../authorization.service';
 import { BookService } from './../book.service';
 import { OrderService } from './../order.service';
@@ -16,23 +17,32 @@ import { Book } from '../models/Book';
 
 @UntilDestroy()
 export class CreateOrderComponent implements OnInit {
-  books: any;
+  books: any[] = [];
   book!: any;
   activeBookIndex!: number;
   activeBookId!: number;
+  bookImg: any;
 
   constructor(
     private orderService: OrderService,
     private bookService: BookService,
     private authorizationService: AuthorizationService,
     private route: ActivatedRoute,
-    private router: Router
+    private router: Router,
+    private sanitizer: DomSanitizer
   ) { }
 
   ngOnInit(): void {
     this.bookService.getBook(this.route.snapshot.params['id'])
+    .pipe(untilDestroyed(this))
     .subscribe(res => {
       this.book = res;
+
+      this.bookService.getImage(this.book.image?.id)
+        .pipe(untilDestroyed(this))
+        .subscribe(res => {
+          this.bookImg = this.sanitizer.bypassSecurityTrustResourceUrl('data:image/png;base64,' + res.base64ImageRepresentation)
+        })
     });     
 
     this.bookService.getUserBooks(this.authorizationService.getUserId())

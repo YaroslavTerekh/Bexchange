@@ -1,3 +1,4 @@
+import { DomSanitizer } from '@angular/platform-browser';
 import { BookService } from './../book.service';
 import { Router } from '@angular/router';
 import { AllDataService } from './../all-data.service';
@@ -15,6 +16,7 @@ import { UntilDestroy, untilDestroyed } from '@ngneat/until-destroy';
 export class MainPageComponent implements OnInit {
 
   books!: Book[];
+  testbooks: any[] = [];
 
   slideConfig = { 
     slidesToShow: 5, 
@@ -27,7 +29,8 @@ export class MainPageComponent implements OnInit {
 
   constructor(
     private bookService: BookService,
-    private router: Router
+    private router: Router,
+    private sanitizer: DomSanitizer
     ) {
    }
 
@@ -37,6 +40,15 @@ export class MainPageComponent implements OnInit {
     .subscribe({
       next: res => {        
         this.books = res;
+
+        this.books.forEach(item => {
+          this.bookService.getImage(item.image?.id)
+            .pipe(untilDestroyed(this))
+            .subscribe(res => {
+              let obj = { book: item, img: this.sanitizer.bypassSecurityTrustResourceUrl('data:image/png;base64,' + res.base64ImageRepresentation) }
+              this.testbooks.push(obj);
+            })
+        })
       },
       error: (err: any) => {
         this.router.navigate(['/error', { error: JSON.stringify(err) }]);

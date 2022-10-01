@@ -1,6 +1,10 @@
+import { BookService } from './../book.service';
 import { Component, OnInit, Input } from '@angular/core';
 import { Book } from '../models/Book';
+import { DomSanitizer } from '@angular/platform-browser';
+import { UntilDestroy, untilDestroyed } from '@ngneat/until-destroy';
 
+@UntilDestroy()
 @Component({
   selector: 'app-library-content-book',
   templateUrl: './library-content-book.component.html',
@@ -9,10 +13,23 @@ import { Book } from '../models/Book';
 export class LibraryContentBookComponent implements OnInit {
 
   @Input() book!: Book;
+  img: any;
 
-  constructor() { }
+  constructor(
+    private bookService: BookService,
+    private sanitizer: DomSanitizer
+  ) { }
 
   ngOnInit(): void {
+    this.bookService.getImage(this.book.image?.id)
+      .pipe(untilDestroyed(this))
+      .subscribe(res => {
+        this.img = this.sanitizer.bypassSecurityTrustResourceUrl('data:image/png;base64,' + res.base64ImageRepresentation);
+        console.log("THIS");
+        console.log(this.img);
+        console.log("THIS");
+      })
+
   }
 
 }

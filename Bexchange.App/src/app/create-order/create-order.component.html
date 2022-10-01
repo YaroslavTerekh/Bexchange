@@ -1,9 +1,9 @@
 <div class="create-order-content">
     <h1>Запропонувати обмін</h1>
-    <div class="create-order-settings">
+    <div class="create-order-settings" *ngIf="books.length > 0">
         <div class="i-want">
             <h5>Хочу</h5>
-            <img src="{{book.image.path}}" alt="">
+            <img [src]="bookImg" alt="">
             <div>
                 <p>Назва: <span>{{book.title}}</span></p>
                 <p>Автор: <span>{{book.author?.name}}</span></p>
@@ -27,5 +27,6 @@
         </div>
         
     </div>
-    <button (click)="createOrder()">Запропонувати</button>
+    <h2 *ngIf="books.length < 1">У вас немає власних книг</h2>
+    <button (click)="createOrder()" *ngIf="books.length > 0">Запропонувати</button>
 </div>

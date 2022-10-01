@@ -31,10 +31,6 @@ export class OrderService {
     return this.http.get<Order>(`${environment.bexchangeApi}Order/user/${id}/outgoing`);
   }
 
-  public getUserInfo(id: number): Observable<Order> {
-    return this.http.get<Order>(`${environment.bexchangeApi}User/id/${id}`);
-  }
-
   // logic - orders
 
   public deleteOrder(id: number): Observable<object> {

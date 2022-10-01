@@ -1,3 +1,4 @@
+import { OrderService } from './../order.service';
 import { AllDataService } from './../all-data.service';
 import { Router, ActivatedRoute } from '@angular/router';
 import { HttpClient } from '@angular/common/http';
@@ -24,7 +25,7 @@ export class OrderContentComponent implements OnInit {
   constructor(
     private route: ActivatedRoute,
     private router: Router,
-    private dataService: AllDataService
+    private orderService: OrderService
   ) { }
 
   ngOnInit(): void {
@@ -32,7 +33,7 @@ export class OrderContentComponent implements OnInit {
     
 
     if(this.id == undefined) {
-      this.dataService.getAllOrders()
+      this.orderService.getAllOrders()
       .pipe(untilDestroyed(this))
       .subscribe({
         next: res => {                    
@@ -43,7 +44,7 @@ export class OrderContentComponent implements OnInit {
         }
       })
     } else {
-      this.dataService.getUserIncomingOrders(this.id)
+      this.orderService.getUserIncomingOrders(this.id)
       .pipe(untilDestroyed(this))
       .subscribe({
         next: res => {
@@ -55,7 +56,7 @@ export class OrderContentComponent implements OnInit {
         }
       })
       
-      this.dataService.getUserOutgoingOrders(this.id)
+      this.orderService.getUserOutgoingOrders(this.id)
       .pipe(untilDestroyed(this))
       .subscribe({
         next: res => {                 

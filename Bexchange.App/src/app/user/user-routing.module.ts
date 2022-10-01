@@ -10,7 +10,7 @@ import { LibraryContentComponent } from "../library-content/library-content.comp
 import { OrderContentComponent } from "../order-content/order-content.component";
 
 const childRoutes: Routes = [
-    { path: 'genres', component: GenresContentComponent },
+  { path: 'genres', component: GenresContentComponent },
   { path: 'authors', component: AuthorsContentComponent },
   { path: 'library', component: LibraryContentComponent },
   { path: 'library/user/:id', component: LibraryContentComponent },
@@ -26,7 +26,7 @@ const childRoutes: Routes = [
 ];
 
 @NgModule({
-    imports: [RouterModule.forChild(childRoutes)],
-    exports: [RouterModule]
-  })
-  export class UserRoutingModule { }
+  imports: [RouterModule.forChild(childRoutes)],
+  exports: [RouterModule]
+})
+export class UserRoutingModule { }

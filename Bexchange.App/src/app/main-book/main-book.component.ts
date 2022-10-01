@@ -1,3 +1,4 @@
+import { DomSanitizer } from '@angular/platform-browser';
 import { BookService } from './../book.service';
 import { Router } from '@angular/router';
 import { Component, OnInit, Input, Output, ViewChild, ElementRef, AfterViewInit } from '@angular/core';
@@ -22,7 +23,8 @@ export class MainBookComponent implements OnInit, AfterViewInit {
 
   constructor(
     private bookService: BookService,
-    private router: Router
+    private router: Router,
+    private sanitizer: DomSanitizer
   ) {
 
   }
@@ -33,23 +35,32 @@ export class MainBookComponent implements OnInit, AfterViewInit {
       .subscribe({
         next: res => {
           this.slideList = res;
-
-          this.slideImg = this.slideList[this.i]?.image?.path;
+          this.bookService.getImage(this.slideList[this.i]?.image?.id)
+            .pipe(untilDestroyed(this))
+            .subscribe(res => {
+              this.slideImg = this.sanitizer.bypassSecurityTrustResourceUrl('data:image/png;base64,' + res.base64ImageRepresentation);
+            });
           this.description = this.slideList[this.i]?.description;
-          this.title = this.slideList[this.i]?.title;
+          this.title = this.slideList[this.i]?.title;          
           setInterval(() => {
             this.imgDIV?.nativeElement.classList.add('hide');
             this.descrDIV?.nativeElement.classList.add('hide');
             setTimeout(() => {
-              if (this.i == this.slideList.length - 1) this.i = 0;
               this.i++;
-              this.slideImg = this.slideList[this.i].image?.path;
+              if (this.slideList.length == this.i) this.i = 0;
+
+              this.bookService.getImage(this.slideList[this.i]?.image?.id)
+                .pipe(untilDestroyed(this))
+                .subscribe(res => {
+                  this.slideImg = this.sanitizer.bypassSecurityTrustResourceUrl('data:image/png;base64,' + res.base64ImageRepresentation);
+                });
+
               this.description = this.slideList[this.i]?.description;
               this.title = this.slideList[this.i]?.title;
               this.imgDIV?.nativeElement.classList.remove('hide');
               this.descrDIV?.nativeElement.classList.remove('hide');
             }, 400);
-          }, 1000)
+          }, 10000)
         },
         error: (err: any) => {
           this.router.navigate(['/error', { error: JSON.stringify(err) }]);

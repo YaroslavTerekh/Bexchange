@@ -9,7 +9,7 @@ namespace Bexchange.Domain.Models
     public class Author : BaseModel
     {
         public string Name { get; set; }
-        public string WikiLink { get; set; }
-        public string ImgPath { get; set; }
+        public string? WikiLink { get; set; }
+        public string? ImgPath { get; set; }
     }
 }

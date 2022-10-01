@@ -4,6 +4,7 @@ import { HttpClient } from '@angular/common/http';
 import { Injectable } from '@angular/core';
 import { Observable } from 'rxjs/internal/Observable';
 import { JwtHelperService } from '@auth0/angular-jwt';
+import { ChangeUserInfoRequest } from './models/ChangeUserInfoRequest';
 
 @Injectable({
   providedIn: 'root'
@@ -16,6 +17,14 @@ export class AuthorizationService {
 
   public isLogged(): boolean {
     return localStorage.getItem('token') ? true : false; 
+  }
+
+  public getUserInfo(id: number): Observable<object> {
+    return this.http.get(`${environment.bexchangeApi}User/id/${id}`);
+  }
+  
+  public changeUserInfo(user: ChangeUserInfoRequest): Observable<object> {
+    return this.http.post(`${environment.bexchangeApi}User/modify`, user);
   }
   
   public loginUser(model: LoginRequest, method: string): Observable<any> {

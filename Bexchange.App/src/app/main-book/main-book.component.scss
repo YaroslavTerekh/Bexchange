@@ -3,7 +3,6 @@
     margin: 0 auto;
     margin-top: 5%;
     margin-bottom: 5%;
-
     height: initial;
     display: flex;
     justify-content: space-between;
@@ -22,8 +21,7 @@
 
     .book-descr {    
         max-width: 60%;        
-        height: inherit;
-        backdrop-filter: blur(10px);
+        height: inherit;        
         padding: 20px;
         transition: .4s;
 

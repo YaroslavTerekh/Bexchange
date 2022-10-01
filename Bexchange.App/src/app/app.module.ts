@@ -1,3 +1,4 @@
+import { UserRoutingModule } from './user/user-routing.module';
 import { AuthInterceptorService } from './auth-interceptor.service';
 import { AllDataService } from './all-data.service';
 import { MainPageComponent } from './main-page/main-page.component';
@@ -33,45 +34,22 @@ import { AccountModifyComponent } from './account-modify/account-modify.componen
 import { BookContentOwnerFunctionsComponent } from './book-content-owner-functions/book-content-owner-functions.component';
 import { CommentsModalComponent } from './comments-modal/comments-modal.component';
 import { CommentsModalItemComponent } from './comments-modal-item/comments-modal-item.component';
+import { BookService } from './book.service';
+import { OrderService } from './order.service';
+import { AuthorizationService } from './authorization.service';
+import { AdminModule } from './admin-module/admin.module';
+import { UserModule } from './user/user.module';
 
 @NgModule({
   declarations: [
-    AppComponent,
-    MainBookComponent,
-    GenresContentComponent,
-    MainPageComponent,
-    AuthorsContentComponent,
-    LibraryContentComponent,
-    LibraryContentBookComponent,
-    LibraryContentSearchbarComponent,
-    BookContentComponent,
-    BookContentFunctionsComponent,
-    LoginModalComponent,
-    RegisterModalComponent,
-    TextTrimPipe,
-    ErrorPageComponent,
-    AddBookComponent,
-    OrderContentComponent,
-    OrderContentItemComponent,
-    OrderContentItemAdditionalComponent,
-    CreateOrderComponent,
-    AccountModalComponent,
-    AccountModifyComponent,
-    BookContentOwnerFunctionsComponent,
-    CommentsModalComponent,
-    CommentsModalItemComponent,
+    
   ],
   imports: [
-    BrowserModule,
     AppRoutingModule,
-    SlickCarouselModule,
-    HttpClientModule,
-    FormsModule,
-    ReactiveFormsModule,
-    BrowserAnimationsModule
+    AdminModule,
+    UserModule
   ],
-  providers: [
-    AllDataService,
+  providers: [    
     {
       provide: HTTP_INTERCEPTORS,
       useClass: AuthInterceptorService,

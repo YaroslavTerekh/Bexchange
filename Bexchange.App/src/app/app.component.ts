@@ -1,3 +1,4 @@
+import { AuthorizationService } from './authorization.service';
 import { Component, EventEmitter, Output, OnInit, ViewChild, ElementRef } from '@angular/core';
 import { AllDataService } from './all-data.service';
 
@@ -14,13 +15,13 @@ export class AppComponent implements OnInit{
   accountModifyModal: boolean = false;
 
   constructor(
-    private dataService: AllDataService,
+    private authorizationService: AuthorizationService,
   ) {}
 
   ngOnInit() {
   }
 
   isAuthorized(): boolean {
-    return this.dataService.isAuthorized();
+    return this.authorizationService.isAuthorized();
   }
 }

@@ -5,6 +5,8 @@ using BexchangeAPI.Domain.Enum;
 using BexchangeAPI.Domain.Models;
 using BexchangeAPI.Infrastructure.DtbContext;
 using BexchangeAPI.Infrastructure.Repositories.Interfaces;
+using Grpc.Core;
+using Microsoft.AspNetCore.Http;
 using Microsoft.EntityFrameworkCore;
 using System;
 using System.Collections.Generic;
@@ -24,7 +26,7 @@ namespace BexchangeAPI.Infrastructure.Repositories
 
         public async Task<IEnumerable<Book>> GetFirstBooksAsync(int amount)
         {
-            return await _context.Books                                
+            return await _context.Books
                 .Include(b => b.Image)
                 .OrderByDescending(b => b.Id)
                 .Take(amount)
@@ -48,6 +50,16 @@ namespace BexchangeAPI.Infrastructure.Repositories
 
         public async Task AddComponentAsync(Book book)
         {
+            book.Image = await GetImageAsync(book.ImageId);
+            book.Author = new Author
+            {
+                Name = book.Author.Name,
+                WikiLink = "",
+                ImgPath = ""
+            };
+
+            book.Genre = await GetGenreAsync(book.GenreId);
+
             await _context.Books.AddAsync(book);
             await _context.SaveChangesAsync();
         }
@@ -80,7 +92,7 @@ namespace BexchangeAPI.Infrastructure.Repositories
             originalBook.Title = book.Title;
             originalBook.Description = book.Description;
             originalBook.Image.Path = book.Image.Path;
-            originalBook.Image.Date = book.Image.Date; 
+            originalBook.Image.Date = book.Image.Date;
 
             await _context.SaveChangesAsync();
         }
@@ -112,6 +124,11 @@ namespace BexchangeAPI.Infrastructure.Repositories
             book.Comments?.Add(comment);
 
             await _context.SaveChangesAsync();
+        }
+
+        public async Task<Genre> GetGenreAsync(int id)
+        {
+            return await _context.Genres.Where(g => g.Id == id).FirstOrDefaultAsync();
         }
 
         public async Task<IEnumerable<Genre>> GetGenresAsync()
@@ -161,6 +178,43 @@ namespace BexchangeAPI.Infrastructure.Repositories
                 .Include(b => b.Comments)
                     .ThenInclude(c => c.Author)
                 .ToListAsync();
+        }
+
+        public async Task<int> AddImageAsync(HttpContext context, string path, IUserService service, string rootPath)
+        {
+            var file = context.Request.Form.Files[0];
+
+            if (file != null && file.ContentDisposition.Length > 0)
+            {
+                var fileName = Path.GetFileName(file.FileName);
+                var filePathName = DateTime.Now.Millisecond + service.GetUserId(context) + fileName;
+                var uploadPath = Path.Combine("",path + @"\uploads\images\" + filePathName);
+                var filePath = Path.Combine("", path + @"\uploads\images\" + filePathName);
+
+                using (FileStream stream = new FileStream(uploadPath, FileMode.CreateNew))
+                {
+                    await file.CopyToAsync(stream);
+                }
+
+                var image = new Image
+                {
+                    Id = 0,
+                    Path = filePath,
+                    Date = DateTime.UtcNow
+                };
+
+                var res = await _context.Images.AddAsync(image);
+                await _context.SaveChangesAsync();
+
+                return res.Entity.Id;
+            }
+
+            return 0;
+        }
+
+        public async Task<Image> GetImageAsync(int id)
+        {
+            return await _context.Images.Where(i => i.Id == id).FirstOrDefaultAsync();
         }
     }
 }

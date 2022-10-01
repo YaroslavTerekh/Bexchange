@@ -7,6 +7,14 @@
         font-weight: 300;
     }
 
+    h2 {
+        position: absolute;
+        top: 50%;
+        left: 50%;
+        transform: translate(-50%, -50%);
+        color: rgb(255, 151, 151);
+    }
+
     .create-order-settings {
         max-width: 100%;
         display: flex;

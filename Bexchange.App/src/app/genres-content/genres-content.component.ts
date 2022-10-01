@@ -1,3 +1,4 @@
+import { BookService } from './../book.service';
 import { Router } from '@angular/router';
 import { HttpClient } from '@angular/common/http';
 import { AllDataService } from './../all-data.service';
@@ -17,11 +18,12 @@ export class GenresContentComponent implements OnInit {
 
   constructor(
     private http: HttpClient,
-    private router: Router
+    private router: Router,
+    private bookService: BookService
     ) { }
 
   ngOnInit(): void {
-    this.http.get(`${environment.bexchangeApi}Book/genres`)
+    this.bookService.getAllGenres()
       .pipe(untilDestroyed(this))
       .subscribe({
         next: res => {

@@ -1,3 +1,4 @@
+<div class="page-blur"></div>
 <div class="main-content">
   <app-main-book></app-main-book>
 </div>
@@ -5,8 +6,8 @@
 <div class="content">
   <h1>Найновіші книги</h1>
   <ngx-slick-carousel class="slider three-item" #slickModal="slick-carousel" [config]="slideConfig">
-    <div ngxSlickItem *ngFor="let slide of books" class="slide">
-      <img [routerLink]="['/book', slide.id]" src="{{ slide.image?.path }}" alt="" width="100%">
+    <div ngxSlickItem *ngFor="let slide of testbooks" class="slide">
+      <img [routerLink]="['/book', slide.book.id]" [src]="slide.img" alt="" width="100%">
     </div>
   </ngx-slick-carousel>
 </div>
