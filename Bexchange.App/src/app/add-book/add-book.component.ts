@@ -63,9 +63,9 @@ export class AddBookComponent implements OnInit {
     let requestData = new FormData();
     requestData.append('image', this.selectedFile, this.selectedFile?.name);
 
-    this.bookService.AddImage(requestData)
+    this.bookService.addImage(requestData)
       .subscribe(res => {
-        this.bookService.AddBook(newBook, res)
+        this.bookService.addBook(newBook, res)
           .subscribe((res) => {
             console.log(res);            
           });

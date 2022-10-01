@@ -166,13 +166,14 @@ namespace BexchangeAPI.Controllers
         [HttpDelete("delete/{id}")]
         public async Task<IActionResult> DeleteBook(int id)
         {
-            if (await _contentRepo.GetComponentAsync(id) == null)
-                throw new NotFoundException("Book not found", (int)HttpStatusCode.NotFound);
-
             Book book = await _contentRepo.GetComponentAsync(id);
+
+            if (book == null)
+                throw new NotFoundException("Book not found", (int)HttpStatusCode.NotFound);
 
             if (_userService.GetUserId(HttpContext) == book.UserId || _userService.IsAdmin(HttpContext))
             {
+                await _contentRepo.DeleteImageAsync(book.ImageId);
                 await _contentRepo.DeleteComponentAsync(id);
                 return NoContent();
             }

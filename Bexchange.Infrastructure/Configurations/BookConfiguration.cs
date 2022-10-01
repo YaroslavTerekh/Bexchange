@@ -32,7 +32,7 @@ namespace BexchangeAPI.Infrastructure.Configurations
 
             builder.HasMany(b => b.Comments)
                 .WithOne()                
-                .OnDelete(DeleteBehavior.Restrict);
+                .OnDelete(DeleteBehavior.Cascade);
         }
     }
 }

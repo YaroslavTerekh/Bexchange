@@ -216,5 +216,14 @@ namespace BexchangeAPI.Infrastructure.Repositories
         {
             return await _context.Images.Where(i => i.Id == id).FirstOrDefaultAsync();
         }
+
+        public async Task DeleteImageAsync(int id)
+        {
+            var image = await GetImageAsync(id);
+            _context.Images.Remove(image);
+            await _context.SaveChangesAsync();
+
+            File.Delete(image.Path);
+        }
     }
 }

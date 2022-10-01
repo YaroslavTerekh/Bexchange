@@ -33,7 +33,7 @@ export class CommentsModalComponent implements OnInit {
       message: this.form.get('message')?.value,
     }
 
-    this.bookService.AddComment(this.book.id, comment)
+    this.bookService.addComment(this.book.id, comment)
       .pipe(untilDestroyed(this))
       .subscribe({
         next: res => {          
