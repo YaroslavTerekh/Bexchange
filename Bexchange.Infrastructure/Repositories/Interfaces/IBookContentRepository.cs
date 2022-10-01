@@ -16,6 +16,7 @@ namespace Bexchange.Infrastructure.Repositories.Interfaces
         public Task<Genre> GetGenreAsync(int id);
         public Task<int> AddImageAsync(HttpContext context, string path, IUserService service, string rootPath);
         public Task<Image> GetImageAsync(int id);
+        public Task DeleteImageAsync(int id);
         public Task<IEnumerable<Book>> GetFirstBooksAsync(int amount);
         public Task AddCommentAsync(Comment comment, int id, User user);
         public Task<IEnumerable<Genre>> GetGenresAsync();

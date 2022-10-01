@@ -27,27 +27,7 @@
   </ItemGroup>
 
   <ItemGroup>
-    <None Include="wwwroot\uploads\images\151step-3-9.png" />
-    <None Include="wwwroot\uploads\images\1752step-3-9.png" />
-    <None Include="wwwroot\uploads\images\2032step-3-9.png" />
-    <None Include="wwwroot\uploads\images\2122hqdefault.png" />
-    <None Include="wwwroot\uploads\images\2231step-3-9.png" />
-    <None Include="wwwroot\uploads\images\2551step-3-9.png" />
-    <None Include="wwwroot\uploads\images\2571step-3-9.png" />
-    <None Include="wwwroot\uploads\images\2591step-3-9.png" />
-    <None Include="wwwroot\uploads\images\3441step-3-9.png" />
-    <None Include="wwwroot\uploads\images\3572step-3-9.png" />
-    <None Include="wwwroot\uploads\images\3952step-3-9.png" />
-    <None Include="wwwroot\uploads\images\4012step-3-9.png" />
-    <None Include="wwwroot\uploads\images\4191step-3-9.png" />
-    <None Include="wwwroot\uploads\images\442hqdefault.png" />
-    <None Include="wwwroot\uploads\images\4831step-3-9.png" />
-    <None Include="wwwroot\uploads\images\7012step-3-9.png" />
-    <None Include="wwwroot\uploads\images\732hqdefault.png" />
-    <None Include="wwwroot\uploads\images\740hqdefault.png" />
-    <None Include="wwwroot\uploads\images\9022step-3-9.png" />
-    <None Include="wwwroot\uploads\images\9732hqdefault.jpg" />
-    <None Include="wwwroot\uploads\images\9921step-3-9.png" />
+    <Folder Include="wwwroot\uploads\images\" />
   </ItemGroup>
 
 </Project>

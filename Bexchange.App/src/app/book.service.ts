@@ -65,15 +65,19 @@ export class BookService {
 
   // post - books 
 
-  public AddComment(id: number, message: CommentRequest): Observable<string> {
+  public addComment(id: number, message: CommentRequest): Observable<string> {
     return this.http.patch<string>(`${environment.bexchangeApi}Book/${id}/comments/add`, message);
   }
 
-  public AddBook(data: any, img: string): Observable<string> {
+  public addBook(data: any, img: string): Observable<string> {
     return this.http.post<string>(`${environment.bexchangeApi}Book/add/book/${img}`, data);
   }
 
-  public AddImage(data: any): Observable<string> {
+  public addImage(data: any): Observable<string> {
     return this.http.post<string>(`${environment.bexchangeApi}Book/add/image`, data);
+  }
+
+  public deleteBook(id: number): Observable<string> {
+    return this.http.delete<string>(`${environment.bexchangeApi}Book/delete/${id}`);
   }
 }
