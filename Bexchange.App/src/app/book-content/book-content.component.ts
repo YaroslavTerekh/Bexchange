@@ -1,3 +1,6 @@
+import { DomSanitizer } from '@angular/platform-browser';
+import { AuthorizationService } from './../authorization.service';
+import { BookService } from './../book.service';
 import { AllDataService } from './../all-data.service';
 import { Component, Input, OnInit } from '@angular/core';
 import { ActivatedRoute, Router } from '@angular/router';
@@ -12,6 +15,7 @@ import { UntilDestroy, untilDestroyed } from '@ngneat/until-destroy';
 })
 export class BookContentComponent implements OnInit {
   book!: any;
+  bookImg: any;
   isOwner!: boolean;
   openComments!: boolean;
 
@@ -19,17 +23,29 @@ export class BookContentComponent implements OnInit {
     private route: ActivatedRoute, 
     private http: HttpClient, 
     private router: Router,
-    private dataService: AllDataService) {
+    private bookService: BookService,
+    private authorizationService: AuthorizationService,
+    private sanitizer: DomSanitizer
+    ) {
   }
 
   ngOnInit(): void {
-    this.dataService.getBook(this.route.snapshot.params['id'])
+    this.bookService.getBook(this.route.snapshot.params['id'])
       .pipe(untilDestroyed(this))
       .subscribe({
-        next: res => {
+        next: res => {       
+          this.bookService.getImage(res.image?.id)
+            .pipe(untilDestroyed(this))
+            .subscribe(res => {
+              this.bookImg = this.sanitizer.bypassSecurityTrustResourceUrl('data:image/png;base64,' + res.base64ImageRepresentation);
+            })
+
           this.book = res; 
           
-          if(this.book.userId == this.dataService.getUserId()) {
+          console.log(this.book);
+          
+
+          if(this.book.userId == this.authorizationService.getUserId()) {
             this.isOwner = true;
           } else {
             this.isOwner = false;

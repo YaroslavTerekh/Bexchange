@@ -1,3 +1,4 @@
+import { OrderService } from './../order.service';
 import { Router, ActivatedRoute } from '@angular/router';
 import { AllDataService } from './../all-data.service';
 import { Component, Input, OnInit } from '@angular/core';
@@ -13,7 +14,7 @@ export class OrderContentItemAdditionalComponent implements OnInit {
   @Input() isIncoming!: boolean;
 
   constructor(
-    private dataService: AllDataService,
+    private orderService: OrderService,
     private router: Router,
     private route: ActivatedRoute
   ) { }
@@ -23,21 +24,21 @@ export class OrderContentItemAdditionalComponent implements OnInit {
   }
 
   deleteOrder(id: number) {
-    this.dataService.deleteOrder(id)
+    this.orderService.deleteOrder(id)
     .subscribe(res => {
       this.refreshPage();
     });
   }
 
   acceptOrder(id: number) {
-    this.dataService.acceptOrder(id)
+    this.orderService.acceptOrder(id)
     .subscribe(res => {
       this.refreshPage();
     });
   }
 
   declineOrder(id: number) {
-    this.dataService.declineOrder(id)
+    this.orderService.declineOrder(id)
     .subscribe(res => {
       this.refreshPage();
     });     

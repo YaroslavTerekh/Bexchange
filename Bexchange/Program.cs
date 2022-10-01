@@ -18,6 +18,8 @@ using Bexchange.Infrastructure.Services;
 using Bexchange.Domain;
 using Microsoft.AspNetCore.Identity;
 using Bexchange.Infrastructure.Services.Repositories;
+using Microsoft.Extensions.Options;
+using Microsoft.Extensions.FileProviders;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -94,6 +96,13 @@ builder.Services.Configure<CookiePolicyOptions>(options =>
     options.MinimumSameSitePolicy = SameSiteMode.None;
 });
 
+IFileProvider GetFileProvider(IServiceProvider serviceProvider)
+{
+    var staticFileOptions = serviceProvider.GetService<IOptions<StaticFileOptions>>();
+    var staticFileProvider = staticFileOptions.Value.FileProvider;
+    return staticFileProvider;
+}
+
 // Add SQL Server
 builder.Services.AddDbContextsCustom(builder.Configuration);
 //Depency Injection
@@ -103,6 +112,7 @@ builder.Services.AddTransient<IUsersRepository<User>, UsersRepository>();
 builder.Services.AddTransient<IUserService, UserService>();
 builder.Services.AddTransient<IBookContentRepository<Book>, BooksRepository>();
 builder.Services.AddTransient<IOrderContentRepository<ExchangeOrder>, OrdersRepository>();
+builder.Services.AddSingleton(GetFileProvider);
 
 builder.Services.AddHttpClient();
 

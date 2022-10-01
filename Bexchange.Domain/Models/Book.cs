@@ -14,7 +14,9 @@ namespace BexchangeAPI.Domain.Models
     public class Book : BaseModel
     {
         public string Title { get; set; }
+        public int AuthorId { get; set; }
         public Author Author { get; set; }
+        public int GenreId { get; set; }
         public Genre Genre { get; set; }
         public string Description { get; set; }
         [ForeignKey(nameof(Image))]

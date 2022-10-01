@@ -1,46 +1,13 @@
-
+<div class="page-blur"></div>
 <div class="main-content">
-    <app-main-book [slideList]="slides"></app-main-book>
-    <div class="book-descr">
-      <h3>Title</h3>
-      <p>Lorem ipsum dolor sit amet consectetur adipisicing elit. Inventore ipsum reprehenderit earum quas fuga,
-        facere adipisci amet eius velit culpa non expedita temporibus asperiores, et odit! Consequatur expedita ducimus
-        porro!
-        Lorem ipsum dolor sit amet consectetur adipisicing elit. Inventore ipsum reprehenderit earum quas fuga,
-        facere adipisci amet eius velit culpa non expedita temporibus asperiores, et odit! Consequatur expedita ducimus
-        porro!
-        Lorem ipsum dolor sit amet consectetur adipisicing elit. Inventore ipsum reprehenderit earum quas fuga,
-        facere adipisci amet eius velit culpa non expedita temporibus asperiores, et odit! Consequatur expedita ducimus
-        porro!
-        Lorem ipsum dolor sit amet consectetur adipisicing elit. Inventore ipsum reprehenderit earum quas fuga,
-        facere adipisci amet eius velit culpa non expedita temporibus asperiores, et odit! Consequatur expedita ducimus
-        porro!
-        Lorem ipsum dolor sit amet consectetur adipisicing elit. Inventore ipsum reprehenderit earum quas fuga,
-        facere adipisci amet eius velit culpa non expedita temporibus asperiores, et odit! Consequatur expedita ducimus
-        porro!
-        Lorem ipsum dolor sit amet consectetur adipisicing elit. Inventore ipsum reprehenderit earum quas fuga,
-        facere adipisci amet eius velit culpa non expedita temporibus asperiores, et odit! Consequatur expedita ducimus
-        porro!
-        Lorem ipsum dolor sit amet consectetur adipisicing elit. Inventore ipsum reprehenderit earum quas fuga,
-        facere adipisci amet eius velit culpa non expedita temporibus asperiores, et odit! Consequatur expedita ducimus
-        porro!
-        Lorem ipsum dolor sit amet consectetur adipisicing elit. Inventore ipsum reprehenderit earum quas fuga,
-        facere adipisci amet eius velit culpa non expedita temporibus asperiores, et odit! Consequatur expedita ducimus
-        porro!
-        Lorem ipsum dolor sit amet consectetur adipisicing elit. Inventore ipsum reprehenderit earum quas fuga,
-        facere adipisci amet eius velit culpa non expedita temporibus asperiores, et odit! Consequatur expedita ducimus
-        porro!
-        Lorem ipsum dolor sit amet consectetur adipisicing elit. Inventore ipsum reprehenderit earum quas fuga,
-        facere adipisci amet eius velit culpa non expedita temporibus asperiores, et odit! Consequatur expedita ducimus
-        porro!</p>
+  <app-main-book></app-main-book>
+</div>
+<div class="content-bg"></div>
+<div class="content">
+  <h1>Найновіші книги</h1>
+  <ngx-slick-carousel class="slider three-item" #slickModal="slick-carousel" [config]="slideConfig">
+    <div ngxSlickItem *ngFor="let slide of testbooks" class="slide">
+      <img [routerLink]="['/book', slide.book.id]" [src]="slide.img" alt="" width="100%">
     </div>
-  </div>
-  <div class="content-bg"></div>
-  <div class="content">
-    <h1>Найновіші книги</h1>
-    <ngx-slick-carousel class="slider three-item" #slickModal="slick-carousel" [config]="slideConfig">
-      <div ngxSlickItem *ngFor="let slide of slides" class="slide">
-        <img src="{{ slide.img }}" alt="" width="100%">
-      </div>
-    </ngx-slick-carousel>
-  </div>
+  </ngx-slick-carousel>
+</div>

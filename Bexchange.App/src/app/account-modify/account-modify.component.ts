@@ -1,3 +1,4 @@
+import { AuthorizationService } from './../authorization.service';
 import { Router } from '@angular/router';
 import { AllDataService } from './../all-data.service';
 import { ChangeUserInfoRequest } from './../models/ChangeUserInfoRequest';
@@ -26,12 +27,12 @@ export class AccountModifyComponent implements OnInit {
 
   constructor(
     private fb: FormBuilder,
-    private dataService: AllDataService,
+    private authorizationService: AuthorizationService,
     private router: Router
   ) { }
 
   ngOnInit(): void {
-    this.dataService.getUserInfo(this.dataService.getUserId())
+    this.authorizationService.getUserInfo(this.authorizationService.getUserId())
       .subscribe(res => {
         this.user = res;
       })
@@ -51,7 +52,7 @@ export class AccountModifyComponent implements OnInit {
       } as unknown as AddressInfo,
     }     
 
-    this.dataService.changeUserInfo(user)
+    this.authorizationService.changeUserInfo(user)
       .subscribe({
         next: res => {
           

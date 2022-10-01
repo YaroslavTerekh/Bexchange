@@ -1,10 +1,17 @@
-
+.page-blur {
+    width: 100%;
+    height: 100%;
+    position: fixed;
+    top: 0px;
+    backdrop-filter: blur(10px);
+    z-index: -1;
+}
 
 .main-content {
     max-width: 1180px;
     margin: 0 auto;
     margin-top: 5%;
-    margin-bottom: 5%;
+    margin-bottom: 5%;    
 
     height: initial;
     display: flex;
@@ -12,10 +19,11 @@
 }
 
 .book-descr {    
-    width: 60%;
+    max-width: 60%;
+    width: 100%;
     height: inherit;
     backdrop-filter: blur(10px);
-    padding: 20px;
+    padding: 20px;    
 }
 
 .book-descr > h3 {
@@ -38,6 +46,7 @@
 }
 
 .slider {
+    
     width: 100%;
     height: 300px;
 }
@@ -49,6 +58,7 @@
 .slider img {
     border: 1px solid #fff;
     height: 300px;
+    cursor: pointer;
 }
 
 .content {

@@ -1,4 +1,5 @@
 export interface Genre {
-    title: string;
-    img: string;
+    id: number;
+    title: string | null;
+    img: string | null;
 }

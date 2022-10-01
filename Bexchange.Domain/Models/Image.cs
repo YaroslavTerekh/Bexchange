@@ -11,6 +11,6 @@ namespace BexchangeAPI.Domain.Models
     public class Image : BaseModel
     {
         public string Path { get; set; }
-        public DateTime Date { get; set; } = DateTime.Now;
+        public DateTime Date { get; set; } 
     }
 }

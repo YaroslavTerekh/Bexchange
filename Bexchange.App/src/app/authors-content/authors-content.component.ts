@@ -1,3 +1,4 @@
+import { BookService } from './../book.service';
 import { AllDataService } from './../all-data.service';
 import { Component, OnInit } from '@angular/core';
 import { Author } from '../models/Author';
@@ -18,11 +19,12 @@ export class AuthorsContentComponent implements OnInit {
 
   constructor(
     private http: HttpClient,
-    private router: Router
+    private router: Router,
+    private bookService: BookService
     ) { }
 
   ngOnInit(): void {
-    this.http.get(`${environment.bexchangeApi}Book/authors`)
+    this.bookService.getAllAuthors()
       .pipe(untilDestroyed(this))
       .subscribe({
         next: res => {
