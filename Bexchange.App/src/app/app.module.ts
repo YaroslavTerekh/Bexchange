@@ -1,44 +1,13 @@
-import { UserRoutingModule } from './user/user-routing.module';
-import { AuthInterceptorService } from './auth-interceptor.service';
-import { AllDataService } from './all-data.service';
-import { MainPageComponent } from './main-page/main-page.component';
-import { NgModule } from '@angular/core';
-import { BrowserModule } from '@angular/platform-browser';
-import { SlickCarouselModule } from 'ngx-slick-carousel';
-import { HttpClientModule, HTTP_INTERCEPTORS } from '@angular/common/http';
-import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 
+import { NgModule } from '@angular/core';
+import { HTTP_INTERCEPTORS } from '@angular/common/http';
 import { AppRoutingModule } from './app-routing.module';
+import { AdminModule } from './modules/admin-module/admin.module';
+import { UserModule } from './modules/user/user.module';
+
 import { AppComponent } from './app.component';
-import { MainBookComponent } from './main-book/main-book.component';
-import { GenresContentComponent } from './genres-content/genres-content.component';
-import { AuthorsContentComponent } from './authors-content/authors-content.component';
-import { LibraryContentComponent } from './library-content/library-content.component';
-import { LibraryContentBookComponent } from './library-content-book/library-content-book.component';
-import { LibraryContentSearchbarComponent } from './library-content-searchbar/library-content-searchbar.component';
-import { BookContentComponent } from './book-content/book-content.component';
-import { BookContentFunctionsComponent } from './book-content-functions/book-content-functions.component';
-import { LoginModalComponent } from './login-modal/login-modal.component';
-import { RegisterModalComponent } from './register-modal/register-modal.component';
-import { FormsModule, ReactiveFormsModule } from '@angular/forms';
-import { TextTrimPipe } from './text-trim.pipe';
-import { ErrorPageComponent } from './error-page/error-page.component';
-import { AddBookComponent } from './add-book/add-book.component';
-import { OrderContentComponent } from './order-content/order-content.component';
-import { OrderContentItemComponent } from './order-content-item/order-content-item.component';
-import { OrderContentItemAdditionalComponent } from './order-content-item-additional/order-content-item-additional.component';
-import { RouterModule } from '@angular/router';
-import { CreateOrderComponent } from './create-order/create-order.component';
-import { AccountModalComponent } from './account-modal/account-modal.component';
-import { AccountModifyComponent } from './account-modify/account-modify.component';
-import { BookContentOwnerFunctionsComponent } from './book-content-owner-functions/book-content-owner-functions.component';
-import { CommentsModalComponent } from './comments-modal/comments-modal.component';
-import { CommentsModalItemComponent } from './comments-modal-item/comments-modal-item.component';
-import { BookService } from './book.service';
-import { OrderService } from './order.service';
-import { AuthorizationService } from './authorization.service';
-import { AdminModule } from './admin-module/admin.module';
-import { UserModule } from './user/user.module';
+import { AuthInterceptorService } from './services/auth-interceptor.service';
+
 
 @NgModule({
   declarations: [

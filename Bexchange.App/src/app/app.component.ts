@@ -1,6 +1,5 @@
-import { AuthorizationService } from './authorization.service';
 import { Component, EventEmitter, Output, OnInit, ViewChild, ElementRef } from '@angular/core';
-import { AllDataService } from './all-data.service';
+import { AuthorizationService } from './services/authorization.service';
 
 @Component({
   selector: 'app-root',
