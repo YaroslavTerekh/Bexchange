@@ -10,6 +10,7 @@ namespace Bexchange.Infrastructure.Repositories.Interfaces
 {
     public interface IUsersRepository<T>
     {
+        public Task<object> GetLastUsersAsync();
         public Task<IEnumerable<T>> GetAdminsOnlyAsync();
         public Task<IEnumerable<T>> GetAllUsersAsync();
         public Task RegisterUserAsync(T user);

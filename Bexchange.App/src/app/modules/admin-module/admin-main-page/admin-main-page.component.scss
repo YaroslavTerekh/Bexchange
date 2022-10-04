@@ -1,0 +1,16 @@
+.admin-bg {
+    background-color: #000;
+    width: 100%;
+    height: 100%;
+    position: fixed;
+    top: 0px;
+    z-index: -1;
+}
+
+.content {
+    max-width: 940px;
+    margin: 0 auto;
+    display: flex;
+    justify-content: space-between;    
+    margin-top: 50px;
+}

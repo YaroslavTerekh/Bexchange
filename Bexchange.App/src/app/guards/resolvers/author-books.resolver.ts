@@ -14,8 +14,6 @@ import { BookService } from "src/app/services/book.service";
       ) { }
     
     resolve(route: ActivatedRouteSnapshot, state: RouterStateSnapshot): Observable<Book[]> {
-        console.log(this.bookService.getBooksByAuthor(route.params['author']));
-        
       return this.bookService.getBooksByAuthor(route.params['author']);
     }
   }

@@ -1,0 +1,17 @@
+<h3>Зареєстровані користувачі за останній тиждень</h3>
+
+<div id="main" style="width: 800px; height: 500px;"></div>
+
+<div class="user-item" *ngFor="let user of users">
+    <div>
+        <p><label>id:</label> {{user.id}}, <label>username:</label> {{user.userName}}</p>
+    </div>
+    <div *ngIf="user.id != userId">
+        <button [routerLink]="['/library/user/' + user.id]" class="check">Переглянути</button>
+        <button class="ban">Забанити</button>
+        <button class="change-role">Змінити роль</button>
+    </div>
+    <div *ngIf="user.id == userId">
+        Це ваш акаунт
+    </div>
+</div>

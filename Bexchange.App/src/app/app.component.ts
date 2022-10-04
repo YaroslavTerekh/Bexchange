@@ -12,15 +12,19 @@ export class AppComponent implements OnInit{
   registerModal: boolean = false;
   accountModal: boolean = false;
   accountModifyModal: boolean = false;
+  isAdmin: boolean = false;
 
   constructor(
     private authorizationService: AuthorizationService,
   ) {}
 
   ngOnInit() {
+    this.isAdmin = this.authorizationService.isAdmin();
   }
 
   isAuthorized(): boolean {
     return this.authorizationService.isAuthorized();
   }
+
+  
 }

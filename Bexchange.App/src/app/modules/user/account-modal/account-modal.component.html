@@ -9,7 +9,7 @@
             <button [routerLink]="['/orders/user', this.userId]" (click)="close.emit()">Мої ордери на обмін</button>
             <button (click)="modifyAccount.emit()" (click)="close.emit()">Змінити дані профілю</button>
             <button (click)="exit()" (click)="close.emit()" class="exit">Вийти</button>
-            <button *ngIf="isAdmin()" (click)="close.emit()" class="admin">Адмін-панель</button>
+            <button [routerLink]="['/admin/stats']" *ngIf="isAdmin()" (click)="close.emit()" class="admin">Адмін-панель</button>
         </div>
     </div>
 

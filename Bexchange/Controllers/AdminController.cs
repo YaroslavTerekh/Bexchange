@@ -11,16 +11,16 @@ using Microsoft.AspNetCore.Mvc;
 
 namespace Bexchange.API.Controllers
 {
-    [Authorize(Policy = PoliciesConstants.Admins)]
-    [Route("api/[controller]/[action]")]
+    [Authorize(Policy = "Admins")]
+    [Route("api/[controller]")]
     [ApiController]
     public class AdminController : ControllerBase
     {
         private readonly IUsersRepository<User> _usersRepository;
-        private readonly IContentRepository<Book> _contentRepository;
+        private readonly IBookContentRepository<Book> _contentRepository;
         private readonly IUserService _userService;
 
-        public AdminController(IUsersRepository<User> usersRepository, IContentRepository<Book> contentRepository, IUserService userService)
+        public AdminController(IUsersRepository<User> usersRepository, IBookContentRepository<Book> contentRepository, IUserService userService)
         {
             _usersRepository = usersRepository;
             _contentRepository = contentRepository;
@@ -31,6 +31,12 @@ namespace Bexchange.API.Controllers
         public async Task<IActionResult> GetAllUsers()
         {
             return Ok(await _usersRepository.GetAllUsersAsync());
+        }
+
+        [HttpGet("users/last")]
+        public async Task<IActionResult> GetLastDaysUsers()
+        {
+            return Ok(await _usersRepository.GetLastUsersAsync());
         }
 
         [HttpGet("users/{name}")]

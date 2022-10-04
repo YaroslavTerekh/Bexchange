@@ -30,7 +30,7 @@ import { ErrorPageComponent } from './error-page/error-page.component';
     HttpClientModule,
     FormsModule,
     ReactiveFormsModule,
-    BrowserAnimationsModule,
+    BrowserAnimationsModule,    
   ],
   providers: [
     BookService,

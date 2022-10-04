@@ -1,22 +1,31 @@
+import { AdminRoutingModule } from './admin-routing.module';
 import { NgModule } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { SharedModule } from '../shared-module/shared.module';
-import { AuthorizationService } from 'src/app/services/authorization.service';
-import { BookService } from 'src/app/services/book.service';
-import { OrderService } from 'src/app/services/order.service';
+import { AdminMainPageComponent } from './admin-main-page/admin-main-page.component';
+import { AdminStatsComponent } from './admin-stats/admin-stats.component';
+import { AdminSidebarComponent } from './admin-sidebar/admin-sidebar.component';
+import { AdminUsersComponent } from './admin-users/admin-users.component';
+import { AdminBooksComponent } from './admin-books/admin-books.component';
+import { AdminOrdersComponent } from './admin-orders/admin-orders.component';
+import { AdminAdminsComponent } from './admin-admins/admin-admins.component';
 
 
 
 @NgModule({
-  declarations: [],
+  declarations: [
+    AdminMainPageComponent,
+    AdminStatsComponent,
+    AdminSidebarComponent,
+    AdminUsersComponent,
+    AdminBooksComponent,
+    AdminOrdersComponent,
+    AdminAdminsComponent
+  ],
   imports: [
     CommonModule,
-    SharedModule
+    SharedModule,
+    AdminRoutingModule
   ],
-  providers: [
-    BookService,
-    OrderService,
-    AuthorizationService,
-  ]
 })
 export class AdminModule { }

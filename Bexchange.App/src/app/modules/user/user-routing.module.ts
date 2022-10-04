@@ -21,9 +21,6 @@ const childRoutes: Routes = [
   {
     path: 'library',
     component: LibraryContentComponent,
-    canActivate: [
-      IsAdminGuard,
-    ],
     resolve: {
       books: BookResolver,
     }

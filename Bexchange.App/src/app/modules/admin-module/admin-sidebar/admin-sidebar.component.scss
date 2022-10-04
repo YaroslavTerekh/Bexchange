@@ -1,0 +1,39 @@
+.content {
+    .content-body {
+        display: flex;
+        justify-content: space-between;
+
+        ul {            
+            font-size: 20px;
+            border-right: 2px solid #fff;
+            width: fit-content;
+            padding-right: 40px;
+
+            li {
+                margin-bottom: 10px;   
+                width: fit-content;
+                position: relative;     
+                cursor: pointer;  
+            }
+
+            li::before {
+                content: '';
+                position: absolute;
+                bottom: -2px;
+                left: 0;
+                width: 0%;
+                height: 2px;
+                background-color: rgb(13, 89, 139);
+                transition: .2s;
+            }
+
+            li:hover:before {
+                width: 100%;
+            }
+        }
+    }
+}
+
+.active {
+    border-bottom: 2px solid rgb(13, 89, 139);
+}
