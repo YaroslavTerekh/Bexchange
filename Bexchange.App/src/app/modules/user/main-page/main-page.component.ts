@@ -15,7 +15,7 @@ import { Book } from "src/app/models/Book";
 export class MainPageComponent implements OnInit {
 
   books!: Book[];
-  testbooks: any[] = [];
+  booksToShow: any[] = [];
 
   slideConfig = { 
     slidesToShow: 5, 
@@ -45,7 +45,7 @@ export class MainPageComponent implements OnInit {
             .pipe(untilDestroyed(this))
             .subscribe(res => {
               let obj = { book: item, img: this.sanitizer.bypassSecurityTrustResourceUrl('data:image/png;base64,' + res.base64ImageRepresentation) }
-              this.testbooks.push(obj);
+              this.booksToShow.push(obj);
             })
         })
       },

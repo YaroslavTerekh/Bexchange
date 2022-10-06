@@ -11,12 +11,15 @@ import { Router } from '@angular/router';
 export class AdminServiceService {
 
   constructor(
-    private http: HttpClient, 
-    private router: Router
+    private http: HttpClient
   ) { }
 
   getLastUsers(): Observable<User[]> {
     return this.http.get<User[]>(`${environment.bexchangeApi}Admin/users/last`);
+  }
+
+  getAllUsers(): Observable<User[]> {
+    return this.http.get<User[]>(`${environment.bexchangeApi}Admin/users`);
   }
 
   banUser(id: number): Observable<string> {

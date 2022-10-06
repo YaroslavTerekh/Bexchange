@@ -28,7 +28,9 @@ export class AdminStatsItemComponent implements OnInit {
         this.userRole = +res.role;
       });
 
-    this.loggedUserRole = localStorage.getItem('loggedUserId')?.toString();
+    this.loggedUserRole = localStorage.getItem('loggedUserRole')?.toString();
+    console.log(this.loggedUserRole);
+    
     
   }
 

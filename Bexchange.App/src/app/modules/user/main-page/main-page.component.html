@@ -6,7 +6,7 @@
 <div class="content">
   <h1>Найновіші книги</h1>
   <ngx-slick-carousel class="slider three-item" #slickModal="slick-carousel" [config]="slideConfig">
-    <div ngxSlickItem *ngFor="let slide of testbooks" class="slide">
+    <div ngxSlickItem *ngFor="let slide of booksToShow" class="slide">
       <img [routerLink]="['/book', slide.book.id]" [src]="slide.img" alt="" width="100%">
     </div>
   </ngx-slick-carousel>

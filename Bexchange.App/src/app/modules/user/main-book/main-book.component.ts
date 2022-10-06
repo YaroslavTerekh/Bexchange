@@ -42,7 +42,7 @@ export class MainBookComponent implements OnInit, AfterViewInit {
               this.slideImg = this.sanitizer.bypassSecurityTrustResourceUrl('data:image/png;base64,' + res.base64ImageRepresentation);
             });
           this.description = this.slideList[this.i]?.description;
-          this.title = this.slideList[this.i]?.title;          
+          this.title = this.slideList[this.i]?.title;
           setInterval(() => {
             this.imgDIV?.nativeElement.classList.add('hide');
             this.descrDIV?.nativeElement.classList.add('hide');
@@ -54,12 +54,11 @@ export class MainBookComponent implements OnInit, AfterViewInit {
                 .pipe(untilDestroyed(this))
                 .subscribe(res => {
                   this.slideImg = this.sanitizer.bypassSecurityTrustResourceUrl('data:image/png;base64,' + res.base64ImageRepresentation);
+                  this.description = this.slideList[this.i]?.description;
+                  this.title = this.slideList[this.i]?.title;
+                  this.imgDIV?.nativeElement.classList.remove('hide');
+                  this.descrDIV?.nativeElement.classList.remove('hide');
                 });
-
-              this.description = this.slideList[this.i]?.description;
-              this.title = this.slideList[this.i]?.title;
-              this.imgDIV?.nativeElement.classList.remove('hide');
-              this.descrDIV?.nativeElement.classList.remove('hide');
             }, 400);
           }, 10000)
         },
