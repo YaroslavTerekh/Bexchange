@@ -45,7 +45,6 @@ import { TextTrimPipe } from 'src/app/pipes/text-trim.pipe';
     BookContentFunctionsComponent,
     LoginModalComponent,
     RegisterModalComponent,
-    TextTrimPipe,
     AddBookComponent,
     OrderContentComponent,
     OrderContentItemComponent,

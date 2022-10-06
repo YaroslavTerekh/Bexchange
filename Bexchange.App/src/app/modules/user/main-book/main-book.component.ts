@@ -1,4 +1,4 @@
-import { Component, OnInit, AfterViewInit, ViewChild, ElementRef } from "@angular/core";
+import { Component, OnInit, AfterViewInit, ViewChild, ElementRef, OnDestroy } from "@angular/core";
 import { DomSanitizer } from "@angular/platform-browser";
 import { Router } from "@angular/router";
 import { UntilDestroy, untilDestroyed } from "@ngneat/until-destroy";
@@ -12,7 +12,7 @@ import { Book } from "src/app/models/Book";
   templateUrl: './main-book.component.html',
   styleUrls: ['./main-book.component.scss']
 })
-export class MainBookComponent implements OnInit, AfterViewInit {
+export class MainBookComponent implements OnInit, OnDestroy {
   @ViewChild("imgBlock", { static: false }) imgDIV: ElementRef | undefined;
   @ViewChild("descrBlock", { static: false }) descrDIV: ElementRef | undefined;
 
@@ -21,6 +21,7 @@ export class MainBookComponent implements OnInit, AfterViewInit {
   public i: number = 0;
   public description: string | undefined;
   public title!: string | undefined;
+  interval: any;
 
   constructor(
     private bookService: BookService,
@@ -35,32 +36,36 @@ export class MainBookComponent implements OnInit, AfterViewInit {
       .pipe(untilDestroyed(this))
       .subscribe({
         next: res => {
-          this.slideList = res;
-          this.bookService.getImage(this.slideList[this.i]?.image?.id)
-            .pipe(untilDestroyed(this))
-            .subscribe(res => {
-              this.slideImg = this.sanitizer.bypassSecurityTrustResourceUrl('data:image/png;base64,' + res.base64ImageRepresentation);
-            });
-          this.description = this.slideList[this.i]?.description;
-          this.title = this.slideList[this.i]?.title;
-          setInterval(() => {
-            this.imgDIV?.nativeElement.classList.add('hide');
-            this.descrDIV?.nativeElement.classList.add('hide');
-            setTimeout(() => {
-              this.i++;
-              if (this.slideList.length == this.i) this.i = 0;
+          if (res.length > 0) {
+            this.slideList = res;
+            this.bookService.getImage(this.slideList[this.i]?.image?.id)
+              .pipe(untilDestroyed(this))
+              .subscribe(res => {
+                this.slideImg = this.sanitizer.bypassSecurityTrustResourceUrl('data:image/png;base64,' + res.base64ImageRepresentation);
+              });
+            this.description = this.slideList[this.i]?.description;
+            this.title = this.slideList[this.i]?.title;
+            this.interval = setInterval(() => {
+              this.imgDIV?.nativeElement.classList.add('hide');
+              this.descrDIV?.nativeElement.classList.add('hide');
+              setTimeout(() => {
+                this.i++;
+                if (this.slideList.length == this.i) this.i = 0;
 
-              this.bookService.getImage(this.slideList[this.i]?.image?.id)
-                .pipe(untilDestroyed(this))
-                .subscribe(res => {
-                  this.slideImg = this.sanitizer.bypassSecurityTrustResourceUrl('data:image/png;base64,' + res.base64ImageRepresentation);
-                  this.description = this.slideList[this.i]?.description;
-                  this.title = this.slideList[this.i]?.title;
-                  this.imgDIV?.nativeElement.classList.remove('hide');
-                  this.descrDIV?.nativeElement.classList.remove('hide');
-                });
-            }, 400);
-          }, 10000)
+                this.bookService.getImage(this.slideList[this.i]?.image?.id)
+                  .pipe(untilDestroyed(this))
+                  .subscribe(res => {
+                    this.slideImg = this.sanitizer.bypassSecurityTrustResourceUrl('data:image/png;base64,' + res.base64ImageRepresentation);
+                    this.description = this.slideList[this.i]?.description;
+                    this.title = this.slideList[this.i]?.title;
+                    this.imgDIV?.nativeElement.classList.remove('hide');
+                    this.descrDIV?.nativeElement.classList.remove('hide');                    
+                  }, err => {
+                    clearInterval(this.interval);                    
+                  });
+              }, 400);
+            }, 1000)
+          }
         },
         error: (err: any) => {
           this.router.navigate(['/error', { error: JSON.stringify(err) }]);
@@ -68,8 +73,7 @@ export class MainBookComponent implements OnInit, AfterViewInit {
       });
   }
 
-  ngAfterViewInit(): void {
-
-
+  ngOnDestroy(): void {
+      clearInterval(this.interval)
   }
 }

@@ -1,13 +1,17 @@
 <div class="page-blur"></div>
-<div class="main-content">
+<div class="main-content" *ngIf="books.length > 0">
   <app-main-book></app-main-book>
 </div>
-<div class="content-bg"></div>
-<div class="content">
+<div class="content-bg" *ngIf="books.length > 0"></div>
+<div class="content" *ngIf="books.length > 0">
   <h1>Найновіші книги</h1>
   <ngx-slick-carousel class="slider three-item" #slickModal="slick-carousel" [config]="slideConfig">
     <div ngxSlickItem *ngFor="let slide of booksToShow" class="slide">
       <img [routerLink]="['/book', slide.book.id]" [src]="slide.img" alt="" width="100%">
     </div>
   </ngx-slick-carousel>
+</div>
+
+<div *ngIf="books.length < 1">
+  
 </div>

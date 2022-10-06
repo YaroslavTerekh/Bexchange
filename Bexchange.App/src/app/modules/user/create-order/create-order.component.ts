@@ -53,6 +53,7 @@ export class CreateOrderComponent implements OnInit {
 
   public createOrder() {
     let order: Order = {
+      id: 0,
       firstBookId: this.book.id,
       secondBookId: this.activeBookId, 
     }

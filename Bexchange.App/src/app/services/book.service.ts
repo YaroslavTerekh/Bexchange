@@ -23,7 +23,7 @@ export class BookService {
   }
 
   public getAllBooks(): Observable<Book[]> {
-    return this.http.get<Book[]>(`${environment.bexchangeApi}Book`);
+    return this.http.get<Book[]>(`${environment.bexchangeApi}Book/all`);
   }
 
   public getBook(id: number): Observable<Book> {

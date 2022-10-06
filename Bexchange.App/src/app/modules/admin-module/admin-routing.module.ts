@@ -1,3 +1,5 @@
+import { AdminBooksItemComponent } from './admin-books/admin-books-item/admin-books-item.component';
+import { BookAllResolver } from './../../guards/resolvers/booksAll.resolver';
 import { AdminBooksComponent } from './admin-books/admin-books.component';
 import { AdminAdminsComponent } from './admin-admins/admin-admins.component';
 import { AdminUsersComponent } from './admin-users/admin-users.component';
@@ -36,6 +38,15 @@ const routes: Routes = [
             {
                 path: 'books',
                 component: AdminBooksComponent,
+                resolve: {
+                    books : BookAllResolver
+                },
+                children: [
+                    {
+                        path: '',
+                        component: AdminBooksItemComponent,
+                    }
+                ]
             },
         ]
     },

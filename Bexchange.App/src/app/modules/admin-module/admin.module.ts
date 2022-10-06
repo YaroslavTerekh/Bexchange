@@ -10,6 +10,8 @@ import { AdminBooksComponent } from './admin-books/admin-books.component';
 import { AdminOrdersComponent } from './admin-orders/admin-orders.component';
 import { AdminAdminsComponent } from './admin-admins/admin-admins.component';
 import { AdminStatsItemComponent } from './admin-stats/admin-stats-item/admin-stats-item.component';
+import { AdminBooksItemComponent } from './admin-books/admin-books-item/admin-books-item.component';
+import { AdminOrdersItemComponent } from './admin-orders/admin-orders-item/admin-orders-item.component';
 
 
 
@@ -22,7 +24,9 @@ import { AdminStatsItemComponent } from './admin-stats/admin-stats-item/admin-st
     AdminBooksComponent,
     AdminOrdersComponent,
     AdminAdminsComponent,
-    AdminStatsItemComponent
+    AdminStatsItemComponent,
+    AdminBooksItemComponent,
+    AdminOrdersItemComponent
   ],
   imports: [
     CommonModule,

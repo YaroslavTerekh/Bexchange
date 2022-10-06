@@ -7,11 +7,12 @@ import { UserModule } from './modules/user/user.module';
 
 import { AppComponent } from './app.component';
 import { AuthInterceptorService } from './services/auth-interceptor.service';
+import { AdminBookTextTrimPipe } from './pipes/admin-book-text-trim.pipe';
 
 
 @NgModule({
-  declarations: [
-    
+  declarations: [  
+    AdminBookTextTrimPipe
   ],
   imports: [
     AppRoutingModule,

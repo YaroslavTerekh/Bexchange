@@ -1,1 +1,5 @@
-<p>admin-books works!</p>
+<div *ngFor="let book of books">
+    <app-admin-books-item (bookDeleted)="reloadPage()"></app-admin-books-item>
+</div>
+
+<router-outlet></router-outlet>

@@ -16,7 +16,7 @@ import { BookService } from "src/app/services/book.service";
         private route: ActivatedRoute
       ) { }
     
-    resolve(route: ActivatedRouteSnapshot, state: RouterStateSnapshot): Observable<Book[]> {
+    resolve(): Observable<Book[]> {
       return this.bookService.getBooks(this.authorizationService.getUserId());
     }
   }

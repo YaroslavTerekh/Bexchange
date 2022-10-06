@@ -1,0 +1,19 @@
+<div class="item" *ngFor="let book of books">
+    <div class="item-descr">
+        <div>
+            <p>id: </p> {{book?.id!}}
+            <p>title: </p> {{book?.title! | textTrim: 10}}
+        </div>
+        <div class="buttons">
+            <button [routerLink]="['/book/' + book.id]" class="check">Переглянути</button>
+            <button class="delete" (click)="deleteBook(book.id)">Видалити</button>
+            <div class="status">
+                <button (click)="toggleButton()">Змінити статус</button>
+                <div *ngIf="changeStatus">
+                    <button>Підтверджено</button>
+                    <button>Відхилено</button>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>

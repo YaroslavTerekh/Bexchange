@@ -174,11 +174,11 @@ namespace BexchangeAPI.Controllers
             if (_userService.GetUserId(HttpContext) == book.UserId || _userService.IsAdmin(HttpContext))
             {
                 await _contentRepo.DeleteImageAsync(book.ImageId);
-                await _contentRepo.DeleteComponentAsync(id);
-                return NoContent();
+    
+                return Ok();
             }
 
-            return BadRequest("You can delete only your own book");
+            return BadRequest("you can delete only your own book");
         }
 
         [HttpPatch("{id}/comments/add")]

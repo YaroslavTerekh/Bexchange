@@ -25,5 +25,6 @@ export class AdminUsersComponent implements OnInit {
 
     this.userId = this.authorizationsService.getUserId();
   }
+  
 
 }

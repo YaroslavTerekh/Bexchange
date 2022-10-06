@@ -9,11 +9,10 @@ import { BookService } from "src/app/services/book.service";
   })
   export class UserBookResolver implements Resolve<Book[]> {
     constructor(
-        private bookService: BookService,
-        private route: ActivatedRoute
+        private bookService: BookService
       ) { }
     
-    resolve(route: ActivatedRouteSnapshot, state: RouterStateSnapshot): Observable<Book[]> {
+    resolve(route: ActivatedRouteSnapshot): Observable<Book[]> {
       return this.bookService.getUserBooks(+route.params['id']);
     }
   }

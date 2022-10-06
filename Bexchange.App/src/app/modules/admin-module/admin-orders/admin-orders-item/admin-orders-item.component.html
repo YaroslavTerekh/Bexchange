@@ -1,0 +1,14 @@
+<div class="item" *ngFor="let order of orders">
+    <div class="item-descr">
+        <div>
+            <p>id: </p> {{order?.id}}
+            <p>first book: </p> {{order?.firstBookId}}
+            <p>second book: </p> {{order?.secondBookId}}
+        </div>
+        <div class="buttons">
+            <button [routerLink]="['/book/' + order?.firstBookId]" class="check">Переглянути id: {{order?.firstBookId}}</button>
+            <button [routerLink]="['/book/' + order?.secondBookId]" class="check">Переглянути id: {{order?.secondBookId}}</button>
+            <button class="delete" (click)="deleteOrder(order?.id!)">Видалити</button>
+        </div>
+    </div>
+</div>

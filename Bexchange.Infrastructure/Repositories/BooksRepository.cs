@@ -81,7 +81,9 @@ namespace BexchangeAPI.Infrastructure.Repositories
 
         public async Task DeleteComponentAsync(int id)
         {
-            _context.Books.Remove(await GetComponentAsync(id));
+            var book = await GetComponentAsync(id);
+
+            _context.Books.Remove(book);
             await _context.SaveChangesAsync();
         }
 

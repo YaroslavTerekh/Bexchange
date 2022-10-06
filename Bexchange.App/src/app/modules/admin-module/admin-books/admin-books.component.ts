@@ -1,4 +1,7 @@
+import { AfterViewInit } from '@angular/core';
+import { Router, ActivatedRoute } from '@angular/router';
 import { Component, OnInit } from '@angular/core';
+import { Book } from 'src/app/models/Book';
 
 @Component({
   selector: 'app-admin-books',
@@ -6,10 +9,23 @@ import { Component, OnInit } from '@angular/core';
   styleUrls: ['./admin-books.component.scss']
 })
 export class AdminBooksComponent implements OnInit {
+  books!: Book[];
 
-  constructor() { }
+  constructor(
+    private readonly route: ActivatedRoute,
+    private readonly router: Router
+  ) { }
 
   ngOnInit(): void {
+    this.books = this.route.snapshot.data['books'];    
+  }
+
+  reloadPage() {
+    console.log('done!');
+    
+    this.router.routeReuseStrategy.shouldReuseRoute = () => false;
+    this.router.onSameUrlNavigation = 'reload';
+    this.router.navigate([this.router.url]);
   }
 
 }
