@@ -18,6 +18,7 @@ namespace Bexchange.Infrastructure.Repositories.Interfaces
         public Task<T> GetUserByNameAsync(string name);
         public Task<T> GetUserByEmailAsync(string email);
         public Task BanUserAsync(int id);
+        public Task UnbanUserAsync(int id);
         public Task ModifyUserAsync(ChangeUserInfoRequest user);
         public Task ChangeRoleAsync(Roles role, int id);
         //public Task ChangePasswordAsync(int id);

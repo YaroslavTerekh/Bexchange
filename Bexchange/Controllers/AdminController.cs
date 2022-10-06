@@ -65,10 +65,17 @@ namespace Bexchange.API.Controllers
             if (id != _userService.GetUserId(HttpContext)) {
                 await _usersRepository.BanUserAsync(id);
 
-                return Ok($"User with id {id} has been banned");
+                return Ok();
             }
 
             return BadRequest("You can't ban yourself");
+        }
+
+        [HttpPatch("unban/{id}")]
+        public async Task<IActionResult> UnbanUser(int id)
+        {
+            await _usersRepository.UnbanUserAsync(id);
+            return Ok();
         }
 
         [HttpPatch("book/state/{id}/{state}")]
@@ -79,21 +86,21 @@ namespace Bexchange.API.Controllers
             return Ok("Successfully modified state");
         }
 
+        [HttpPatch("role/{id}/{role}")]
+        public async Task<IActionResult> ChangeUserRole(Roles role, int id)
+        {
+            await _usersRepository.ChangeRoleAsync(role, id);
+
+            return Ok();
+        }
+
         //SuperAdmin part
 
         [HttpGet("admins"), Authorize(Policy = PoliciesConstants.SuperAdmins)]
         public async Task<IActionResult> GetAdmins()
         {
             return Ok(await _usersRepository.GetAdminsOnlyAsync());
-        }
-
-        [HttpPut("role/{id}/{role}"), Authorize(Policy = PoliciesConstants.SuperAdmins)]
-        public async Task<IActionResult> ChangeUserRole(Roles role, int id)
-        {
-            await _usersRepository.ChangeRoleAsync(role, id);
-
-            return Ok("Successfully changed the role");
-        }
+        }        
 
         [HttpPut("modify/{id}"), Authorize(Policy = PoliciesConstants.SuperAdmins)]
         public async Task<IActionResult> ModifyUser(ChangeUserInfoRequest user)

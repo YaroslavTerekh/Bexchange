@@ -43,6 +43,14 @@ namespace BexchangeAPI.Infrastructure.Repositories
             }
         }
 
+        public async Task UnbanUserAsync(int id)
+        {
+            var user = await _context.Users.FirstOrDefaultAsync(x => x.Id == id);
+
+            user.IsBanned = false;
+            await _context.SaveChangesAsync();
+        }
+
         public async Task<IEnumerable<User>> GetAdminsOnlyAsync()
         {
             return await _context.Users.Where(u => u.Role == Roles.Admin).ToListAsync();

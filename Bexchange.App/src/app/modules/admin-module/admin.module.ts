@@ -9,6 +9,7 @@ import { AdminUsersComponent } from './admin-users/admin-users.component';
 import { AdminBooksComponent } from './admin-books/admin-books.component';
 import { AdminOrdersComponent } from './admin-orders/admin-orders.component';
 import { AdminAdminsComponent } from './admin-admins/admin-admins.component';
+import { AdminStatsItemComponent } from './admin-stats/admin-stats-item/admin-stats-item.component';
 
 
 
@@ -20,7 +21,8 @@ import { AdminAdminsComponent } from './admin-admins/admin-admins.component';
     AdminUsersComponent,
     AdminBooksComponent,
     AdminOrdersComponent,
-    AdminAdminsComponent
+    AdminAdminsComponent,
+    AdminStatsItemComponent
   ],
   imports: [
     CommonModule,

@@ -11,58 +11,31 @@ h3 {
     top: -60px;
 }
 
-.user-item {
+.stats {
     width: 100%;
-    height: 10%;
-    background-color: transparent;
-    border: 2px solid #3ba272;
-    margin-bottom: 20px;
-
     display: flex;
     justify-content: space-between;
-    align-items: center;
+    margin-bottom: 30px;
 
     div {
-        margin-right: 20px;
-
-        p {
-            margin-left: 20px;
-
-            label {
-                color: #7ffc9a;
-            }
-        }
-
-        button {
-            margin-left: 20px;
-            width: fit-content;
-            padding: 1em;
-            background-color: transparent;
-            cursor: pointer;
-        }
-
-        .check {
-            border: 1px solid #A77A07;
-        }
-
-        .check:hover {
-            background-color: #a77a073f;
-        }
-
-        .ban {
-            border: 1px solid #A80000;            
-        }
-
-        .ban:hover {
-            background-color: #a8000041;
-        }
-
-        .change-role {
-            border: 1px solid #00A82F;
-        }
-
-        .change-role:hover {
-            background-color: #00a83033;
+        display: flex;
+        div {
+            width: 20px;
+            height: 20px;  
+            margin-right: 5px;          
         }
     }
+
+    .green {
+        background-color: #3ba272;
+    }
+
+    .violet {
+        background-color: rgb(140, 51, 243);
+    }
+
+    .red {
+        background-color: red;
+    }
 }
+

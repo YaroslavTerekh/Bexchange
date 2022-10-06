@@ -107,7 +107,7 @@ namespace Bexchange.Infrastructure.Services
                 new Claim(type: "Name", user.FirstName),
                 new Claim(type: "Surname", user.LastName),
                 new Claim(type: "Email", user.Email),
-                new Claim(ClaimsIdentity.DefaultRoleClaimType, user.Role.ToString()),
+                new Claim(ClaimTypes.Role, user.Role.ToString()),
                 new Claim(type: "Role", user.Role.ToString())
             };
 

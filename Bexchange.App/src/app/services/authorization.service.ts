@@ -1,6 +1,7 @@
+import { User } from './../models/User';
 
 import { HttpClient } from '@angular/common/http';
-import { Injectable } from '@angular/core';
+import { Injectable, OnInit } from '@angular/core';
 import { Observable } from 'rxjs/internal/Observable';
 import { JwtHelperService } from '@auth0/angular-jwt';
 import { environment } from 'src/environments/environment';
@@ -11,17 +12,18 @@ import { LoginRequest } from '../models/LoginRequest';
   providedIn: 'root'
 })
 export class AuthorizationService {
+  private _loggedRole!: number;
 
   constructor(private http: HttpClient) {
-    
+  
   }
 
   public isLogged(): boolean {
     return localStorage.getItem('token') ? true : false; 
   }
 
-  public getUserInfo(id: number): Observable<object> {
-    return this.http.get(`${environment.bexchangeApi}User/id/${id}`);
+  public getUserInfo(id: number): Observable<User> {
+    return this.http.get<User>(`${environment.bexchangeApi}User/id/${id}`);
   }
   
   public changeUserInfo(user: ChangeUserInfoRequest): Observable<object> {
@@ -71,9 +73,19 @@ export class AuthorizationService {
     return 0;
   }
 
+  public getUserRole(token: string): string {
+    console.log(token);
+    
+    if(token) {
+      return this.helper.decodeToken(token).Role;          
+    }
+
+    return 'user';
+  }
+
   public exit():void {
-    console.log('removed');
     localStorage.removeItem('authToken');
+    localStorage.removeItem('loggedUserRole');
   }
 
   

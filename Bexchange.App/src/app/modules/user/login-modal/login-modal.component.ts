@@ -14,6 +14,8 @@ export class LoginModalComponent implements OnInit {
   @Output() openRegister = new EventEmitter<void>();
   public loginMethod!: string;
   public isValue: number = 0;
+  role!: number;
+
   public form = new FormGroup({
       userName: this.fb.control(''),
       password: this.fb.control('')
@@ -25,7 +27,6 @@ export class LoginModalComponent implements OnInit {
     private router: Router) { }
 
   ngOnInit(): void {
-    
   }
 
   toggle1() {
@@ -46,6 +47,7 @@ export class LoginModalComponent implements OnInit {
     .subscribe({
       next: token => {
         localStorage.setItem('authToken', token);   
+        localStorage.setItem('loggedUserRole', this.authSvc.getUserRole(token).toString());
       },
       error: err => {
         this.router.navigate(['/error', {error: err}]);

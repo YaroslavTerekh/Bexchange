@@ -1,3 +1,4 @@
+import { Router } from '@angular/router';
 import { AuthorizationService } from './../../../services/authorization.service';
 import { AdminServiceService } from './../../../services/admin-service.service';
 import { Component, OnInit } from '@angular/core';
@@ -13,10 +14,12 @@ export class AdminStatsComponent implements OnInit {
   resUsers: User[] = [];
   users: User[] = [];
   userId!: number;
+  userRole!: number;
 
   constructor(
     private adminService: AdminServiceService,
-    private authorizationService: AuthorizationService
+    private authorizationService: AuthorizationService,
+    private router: Router,
   ) { }
 
   ngOnInit(): void {
@@ -30,12 +33,11 @@ export class AdminStatsComponent implements OnInit {
         this.resUsers.forEach(item => {
           if (Array.isArray(item) && item.length > 0) {
             item.forEach(childItem => {
-              this.users.push(childItem);       
+              this.users.push(childItem);
             })
           }
-        });    
+        });
       });
-
   }
 
   createDate(num: number): string {
