@@ -1,3 +1,4 @@
+import { State } from './../../../../models/StateDictionary';
 import { BookService } from './../../../../services/book.service';
 import { ActivatedRoute, Router } from '@angular/router';
 import { AfterViewInit, OnInit, Output, EventEmitter } from '@angular/core';
@@ -11,7 +12,7 @@ import { Book } from 'src/app/models/Book';
 })
 export class AdminBooksItemComponent implements AfterViewInit {
   @Output() bookDeleted = new EventEmitter<void>();
-  books!: any | Book;
+  @Input() book!: Book;
   changeStatus!: boolean;
   
   constructor(
@@ -21,17 +22,18 @@ export class AdminBooksItemComponent implements AfterViewInit {
   ) { }
 
   ngAfterViewInit() {
-    this.route.parent?.data
-      .subscribe(res => {
-        this.books = res['books'];
-        console.log(this.books);
-      })
+    console.log(this.book);
+    
+    // this.route.parent?.data
+    //   .subscribe(res => {
+    //     this.books = res['books'];
+    //   })
   }
 
   deleteBook(id: number) {
     this.bookService.deleteBook(id)
       .subscribe(res => { 
-        this.router.navigate(['']);
+        this.router.navigate(['/admin/stats']);
       });
   }
 
@@ -41,6 +43,14 @@ export class AdminBooksItemComponent implements AfterViewInit {
     } else {
       this.changeStatus = true;
     }
+  }
+
+  modifyState(id: number, state: number) {
+    this.bookService.modifyBookState(id, state)
+      .subscribe(res => { 
+          this.router.navigate(['/admin/stats']);
+        
+      });
   }
 
 }

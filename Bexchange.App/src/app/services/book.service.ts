@@ -80,4 +80,10 @@ export class BookService {
   public deleteBook(id: number): Observable<string> {
     return this.http.delete<string>(`${environment.bexchangeApi}Book/delete/${id}`);
   }
+
+  // modify - books
+
+  public modifyBookState(id: number, state: number): Observable<string> {
+    return this.http.patch<string>(`${environment.bexchangeApi}Admin/book/state/${id}/${state}`, null);
+  }
 }

@@ -26,6 +26,7 @@ const routes: Routes = [
             {
                 path: 'orders',
                 component: AdminOrdersComponent,
+                // resolve: 
             },
             {
                 path: 'users',
@@ -40,13 +41,7 @@ const routes: Routes = [
                 component: AdminBooksComponent,
                 resolve: {
                     books : BookAllResolver
-                },
-                children: [
-                    {
-                        path: '',
-                        component: AdminBooksItemComponent,
-                    }
-                ]
+                }
             },
         ]
     },

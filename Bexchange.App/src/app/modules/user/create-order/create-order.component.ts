@@ -63,4 +63,12 @@ export class CreateOrderComponent implements OnInit {
         this.router.navigate(['/orders'])
       })  
   }
+
+  getImage(id: number) {
+    this.bookService.getImage(id)
+      .subscribe(res => {
+        console.log(res);
+        
+      });
+  }
 }

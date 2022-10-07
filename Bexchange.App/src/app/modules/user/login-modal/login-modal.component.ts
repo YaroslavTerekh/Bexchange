@@ -12,6 +12,7 @@ import { AuthorizationService } from "src/app/services/authorization.service";
 export class LoginModalComponent implements OnInit {
   @Output() close = new EventEmitter<void>();
   @Output() openRegister = new EventEmitter<void>();
+  @Output() login = new EventEmitter<void>();
   public loginMethod!: string;
   public isValue: number = 0;
   role!: number;
@@ -22,7 +23,7 @@ export class LoginModalComponent implements OnInit {
   });
 
   constructor(
-    private authSvc: AuthorizationService,
+    private authorizationService: AuthorizationService,
     private fb: FormBuilder,
     private router: Router) { }
 
@@ -43,11 +44,15 @@ export class LoginModalComponent implements OnInit {
       password: this.form.get('password')?.value
     }
     
-    this.authSvc.loginUser(user, this.loginMethod)
+    this.authorizationService.loginUser(user, this.loginMethod)
     .subscribe({
-      next: token => {
+      next: token => {      
+        
+        console.log('logged in');
+         
         localStorage.setItem('authToken', token);   
-        localStorage.setItem('loggedUserRole', this.authSvc.getUserRole(token).toString());
+        localStorage.setItem('loggedUserRole', this.authorizationService.getUserRole(token).toString());
+        this.authorizationService.setLoggedIn(); 
       },
       error: err => {
         this.router.navigate(['/error', {error: err}]);

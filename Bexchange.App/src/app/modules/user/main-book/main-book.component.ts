@@ -22,6 +22,7 @@ export class MainBookComponent implements OnInit, OnDestroy {
   public description: string | undefined;
   public title!: string | undefined;
   interval: any;
+  timeout: any;
 
   constructor(
     private bookService: BookService,
@@ -45,10 +46,12 @@ export class MainBookComponent implements OnInit, OnDestroy {
               });
             this.description = this.slideList[this.i]?.description;
             this.title = this.slideList[this.i]?.title;
+
             this.interval = setInterval(() => {
               this.imgDIV?.nativeElement.classList.add('hide');
               this.descrDIV?.nativeElement.classList.add('hide');
-              setTimeout(() => {
+
+              this.timeout = setTimeout(() => {
                 this.i++;
                 if (this.slideList.length == this.i) this.i = 0;
 
@@ -59,11 +62,13 @@ export class MainBookComponent implements OnInit, OnDestroy {
                     this.description = this.slideList[this.i]?.description;
                     this.title = this.slideList[this.i]?.title;
                     this.imgDIV?.nativeElement.classList.remove('hide');
-                    this.descrDIV?.nativeElement.classList.remove('hide');                    
+                    this.descrDIV?.nativeElement.classList.remove('hide');
                   }, err => {
-                    clearInterval(this.interval);                    
+                    clearInterval(this.interval);
+                    clearTimeout(this.timeout);
                   });
               }, 400);
+
             }, 1000)
           }
         },
@@ -74,6 +79,7 @@ export class MainBookComponent implements OnInit, OnDestroy {
   }
 
   ngOnDestroy(): void {
-      clearInterval(this.interval)
+    clearTimeout(this.timeout);
+    clearInterval(this.interval);
   }
 }

@@ -61,9 +61,9 @@ namespace BexchangeAPI.Controllers
         }
 
         [HttpGet("all"), AllowAnonymous]
-        public async Task<IActionResult> AllBooks()
+        public async Task<IActionResult> AllBooks(CancellationToken token)
         {
-            var books = await _contentRepo.GetAllComponentsAsync();
+            var books = await _contentRepo.GetAllComponentsAsync(token);
 
             if (books == null)
                 throw new NotFoundException("No books here", (int)HttpStatusCode.NotFound);
@@ -126,13 +126,6 @@ namespace BexchangeAPI.Controllers
             if (image == null)
                 throw new NotFoundException("Image not found", (int)HttpStatusCode.NotFound);
 
-            //IFileInfo file = _fileProvider.GetFileInfo(image.Path);
-
-            //await HttpContext.Response.SendFileAsync(file);
-
-            //var path = @"C:\Users\Home\source\repos\Bexchange\Bexchange\wwwroot\uploads\images\151step-3-9.png";
-
-
             byte[] imageArray = System.IO.File.ReadAllBytes(image.Path);
             string base64ImageRepresentation = Convert.ToBase64String(imageArray);
 
@@ -174,7 +167,7 @@ namespace BexchangeAPI.Controllers
             if (_userService.GetUserId(HttpContext) == book.UserId || _userService.IsAdmin(HttpContext))
             {
                 await _contentRepo.DeleteImageAsync(book.ImageId);
-    
+                
                 return Ok();
             }
 

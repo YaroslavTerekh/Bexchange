@@ -1,5 +1,3 @@
-<div *ngFor="let book of books">
-    <app-admin-books-item (bookDeleted)="reloadPage()"></app-admin-books-item>
+<div >
+    <app-admin-books-item *ngFor="let book of books" (bookDeleted)="reloadPage()" [book]="book"></app-admin-books-item>
 </div>
-
-<router-outlet></router-outlet>

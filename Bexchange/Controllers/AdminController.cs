@@ -79,11 +79,11 @@ namespace Bexchange.API.Controllers
         }
 
         [HttpPatch("book/state/{id}/{state}")]
-        public async Task<IActionResult> AcceptBook(int id, State state)
+        public async Task<IActionResult> ModifyStateBook(int id, State state)
         {
             await _contentRepository.ModifyComponentStateAsync(id, state);
 
-            return Ok("Successfully modified state");
+            return NoContent();
         }
 
         [HttpPatch("role/{id}/{role}")]

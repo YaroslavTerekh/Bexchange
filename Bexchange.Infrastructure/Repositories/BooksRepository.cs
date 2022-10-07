@@ -33,7 +33,7 @@ namespace BexchangeAPI.Infrastructure.Repositories
                 .ToListAsync();
         }
 
-        public async Task<IEnumerable<Book>> GetAllComponentsAsync()
+        public async Task<IEnumerable<Book>> GetAllComponentsAsync(CancellationToken token = default)
         {
             return await _context.Books
                 .Include(b => b.Image)
@@ -45,7 +45,7 @@ namespace BexchangeAPI.Infrastructure.Repositories
                     .ThenInclude(u => u.Books)
                 .Include(b => b.Comments)
                     .ThenInclude(c => c.Author)
-                .ToListAsync();
+                .ToListAsync(token);
         }
 
         public async Task AddComponentAsync(Book book)

@@ -12,6 +12,7 @@ export class AccountModalComponent implements OnInit {
   @Output() close = new EventEmitter<void>();
   @Output() modifyAccount = new EventEmitter<void>();
   userId: number = this.authorizationService.getUserId();
+  isAdmin!: boolean;
   
   constructor(
     private authorizationService: AuthorizationService,
@@ -20,21 +21,23 @@ export class AccountModalComponent implements OnInit {
   ) { }
 
   ngOnInit(): void {
+    this.authorizationService.isAdminSubject
+      .subscribe({
+        next: res => {
+          this.isAdmin = res;
+        }
+      });
   }
 
   books() {
     this.router.routeReuseStrategy.shouldReuseRoute = () => false;
     this.router.onSameUrlNavigation = 'reload';
-    this.router.navigate(['/library/user', this.userId])
+    this.router.navigate(['/library/user', this.userId]);
   }
 
   exit() {
-    this.router.navigate(['']);
-    this.authorizationService.exit();
-  }
-
-  isAdmin(): boolean {
-    return this.authorizationService.isAdmin();
+    this.authorizationService.setLoggedOut();
+    this.router.navigate(['']);    
   }
 
 }
