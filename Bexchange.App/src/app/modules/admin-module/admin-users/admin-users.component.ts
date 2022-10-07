@@ -9,7 +9,7 @@ import { User } from 'src/app/models/User';
   styleUrls: ['./admin-users.component.scss']
 })
 export class AdminUsersComponent implements OnInit {
-  users!: User[];
+  users: User[] = [];
   userId!: number;
 
   constructor(

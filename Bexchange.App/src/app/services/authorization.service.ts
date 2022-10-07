@@ -25,6 +25,7 @@ export class AuthorizationService {
 
   public setLoggedIn() {
     this.authorizationSubject.next(true);
+    this.isAdminSubject.next(this.checkAdmin());
   }
 
   public setLoggedOut() {

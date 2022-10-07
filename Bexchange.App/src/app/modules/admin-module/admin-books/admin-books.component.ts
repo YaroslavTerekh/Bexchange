@@ -9,7 +9,7 @@ import { Book } from 'src/app/models/Book';
   styleUrls: ['./admin-books.component.scss']
 })
 export class AdminBooksComponent implements OnInit {
-  books!: Book[];
+  books: Book[] = [];
 
   constructor(
     private readonly route: ActivatedRoute,

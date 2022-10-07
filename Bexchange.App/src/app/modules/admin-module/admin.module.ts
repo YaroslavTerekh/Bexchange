@@ -12,6 +12,9 @@ import { AdminAdminsComponent } from './admin-admins/admin-admins.component';
 import { AdminStatsItemComponent } from './admin-stats/admin-stats-item/admin-stats-item.component';
 import { AdminBooksItemComponent } from './admin-books/admin-books-item/admin-books-item.component';
 import { AdminOrdersItemComponent } from './admin-orders/admin-orders-item/admin-orders-item.component';
+import { AdminGenresComponent } from './admin-genres/admin-genres.component';
+import { AdminGenresCreateComponent } from './admin-genres/admin-genres-create/admin-genres-create.component';
+import { AdminGenresItemComponent } from './admin-genres/admin-genres-item/admin-genres-item.component';
 
 
 
@@ -26,7 +29,10 @@ import { AdminOrdersItemComponent } from './admin-orders/admin-orders-item/admin
     AdminAdminsComponent,
     AdminStatsItemComponent,
     AdminBooksItemComponent,
-    AdminOrdersItemComponent
+    AdminOrdersItemComponent,
+    AdminGenresComponent,
+    AdminGenresCreateComponent,
+    AdminGenresItemComponent
   ],
   imports: [
     CommonModule,

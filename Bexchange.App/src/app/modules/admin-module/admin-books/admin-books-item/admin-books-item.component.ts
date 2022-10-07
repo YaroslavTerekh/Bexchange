@@ -1,7 +1,6 @@
-import { State } from './../../../../models/StateDictionary';
 import { BookService } from './../../../../services/book.service';
-import { ActivatedRoute, Router } from '@angular/router';
-import { AfterViewInit, OnInit, Output, EventEmitter } from '@angular/core';
+import { Router } from '@angular/router';
+import { AfterViewInit, Output, EventEmitter } from '@angular/core';
 import { Component, Input } from '@angular/core';
 import { Book } from 'src/app/models/Book';
 
@@ -16,18 +15,12 @@ export class AdminBooksItemComponent implements AfterViewInit {
   changeStatus!: boolean;
   
   constructor(
-    private readonly route: ActivatedRoute,
     private readonly bookService: BookService,
     private readonly router: Router
   ) { }
 
   ngAfterViewInit() {
     console.log(this.book);
-    
-    // this.route.parent?.data
-    //   .subscribe(res => {
-    //     this.books = res['books'];
-    //   })
   }
 
   deleteBook(id: number) {
@@ -49,7 +42,6 @@ export class AdminBooksItemComponent implements AfterViewInit {
     this.bookService.modifyBookState(id, state)
       .subscribe(res => { 
           this.router.navigate(['/admin/stats']);
-        
       });
   }
 

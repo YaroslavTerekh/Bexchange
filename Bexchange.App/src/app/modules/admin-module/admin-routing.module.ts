@@ -1,3 +1,4 @@
+import { AdminGenresComponent } from './admin-genres/admin-genres.component';
 import { AdminBooksItemComponent } from './admin-books/admin-books-item/admin-books-item.component';
 import { BookAllResolver } from './../../guards/resolvers/booksAll.resolver';
 import { AdminBooksComponent } from './admin-books/admin-books.component';
@@ -43,6 +44,10 @@ const routes: Routes = [
                     books : BookAllResolver
                 }
             },
+            {
+                path: 'genres',
+                component: AdminGenresComponent
+            }
         ]
     },
     

@@ -57,6 +57,12 @@ export class BookService {
     return this.http.get<Genre[]>(`${environment.bexchangeApi}Book/genres`);
   }
 
+  // post - genres 
+
+  public addGenre(genre: Genre): Observable<string> {
+    return this.http.post<string>(`${environment.bexchangeApi}Book/genre/add`, genre);
+  }
+
   // get - authors
 
   public getAllAuthors(): Observable<Author[]> {

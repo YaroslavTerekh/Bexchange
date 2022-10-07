@@ -46,6 +46,7 @@ namespace Bexchange.API.Controllers
 
             if (user == null)
                 throw new NotFoundException("user not found", StatusCodes.Status404NotFound);
+
             return Ok(user);
         }
 

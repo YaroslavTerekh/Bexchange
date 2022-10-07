@@ -1,5 +1,6 @@
 ﻿using AutoMapper;
 using Bexchange.API.DTOs;
+using Bexchange.Domain;
 using Bexchange.Domain.Models;
 using Bexchange.Infrastructure.Repositories.Interfaces;
 using Bexchange.Infrastructure.Services.Repositories;
@@ -106,8 +107,6 @@ namespace BexchangeAPI.Controllers
             await _contentRepo.AddComponentAsync(newBook);
 
             return Created(Request.Path, new { Id = newBook.Id, Path = Request.Path + $"/{newBook.Id}" });
-
-            //return BadRequest(ModelState.Values.First().Errors.First().ErrorMessage);
         }
 
         [HttpPost("add/image")]
@@ -186,6 +185,14 @@ namespace BexchangeAPI.Controllers
         }
 
         // GENRES, AUTHORS
+
+        [HttpPost("genre/add"), Authorize(Policy = PoliciesConstants.Admins)]
+        public async Task<IActionResult> AddGenre(Genre genre)
+        {
+            await _contentRepo.AddGenreAsync(genre);
+
+            return Created(Request.Path, new { genre });
+        }
 
         [HttpGet("genres"), AllowAnonymous]
         public async Task<IActionResult> Genres()

@@ -10,7 +10,7 @@ import { Order } from 'src/app/models/Order';
   styleUrls: ['./admin-orders.component.scss']
 })
 export class AdminOrdersComponent implements OnInit {
-  orders!: Order[];
+  orders: Order[] = [];
 
   constructor(
     private readonly orderService: OrderService

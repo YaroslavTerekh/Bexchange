@@ -46,10 +46,7 @@ export class LoginModalComponent implements OnInit {
     
     this.authorizationService.loginUser(user, this.loginMethod)
     .subscribe({
-      next: token => {      
-        
-        console.log('logged in');
-         
+      next: token => {         
         localStorage.setItem('authToken', token);   
         localStorage.setItem('loggedUserRole', this.authorizationService.getUserRole(token).toString());
         this.authorizationService.setLoggedIn(); 

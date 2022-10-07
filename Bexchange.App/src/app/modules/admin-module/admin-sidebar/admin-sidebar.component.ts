@@ -6,10 +6,18 @@ import { Component, OnInit } from '@angular/core';
   styleUrls: ['./admin-sidebar.component.scss']
 })
 export class AdminSidebarComponent implements OnInit {
+  isSuperAdmin!: boolean;
 
   constructor() { }
 
   ngOnInit(): void {
+    let role = localStorage.getItem('loggedUserRole');
+
+    if(role == "SuperAdmin") {
+      this.isSuperAdmin = true;
+    } else {
+      this.isSuperAdmin = false;
+    }
   }
 
 }

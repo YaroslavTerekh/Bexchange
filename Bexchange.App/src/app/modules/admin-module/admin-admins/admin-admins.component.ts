@@ -10,7 +10,7 @@ import { AdminServiceService } from 'src/app/services/admin-service.service';
   styleUrls: ['./admin-admins.component.scss']
 })
 export class AdminAdminsComponent implements OnInit {
-  admins!: User[];
+  admins: User[] = [];
 
   constructor(
     private readonly adminService: AdminServiceService
@@ -21,7 +21,6 @@ export class AdminAdminsComponent implements OnInit {
       .subscribe({
         next: res => {
           this.admins = res;
-          console.log(this.admins);
         }
       })
   }

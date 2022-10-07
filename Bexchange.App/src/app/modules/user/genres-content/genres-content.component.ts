@@ -2,6 +2,7 @@ import { HttpClient } from "@angular/common/http";
 import { Component, OnInit } from "@angular/core";
 import { Router } from "@angular/router";
 import { UntilDestroy, untilDestroyed } from "@ngneat/until-destroy";
+import { Genre } from "src/app/models/Genre";
 import { BookService } from "src/app/services/book.service";
 
 
@@ -12,7 +13,7 @@ import { BookService } from "src/app/services/book.service";
   styleUrls: ['./genres-content.component.scss']
 })
 export class GenresContentComponent implements OnInit {  
-  genres: any;
+  genres!: Genre[];
 
   constructor(
     private http: HttpClient,

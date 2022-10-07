@@ -156,6 +156,12 @@ namespace BexchangeAPI.Infrastructure.Repositories
                 .ToListAsync();
         }
 
+        public async Task AddGenreAsync(Genre genre)
+        {
+            await _context.Genres.AddAsync(genre);
+            await _context.SaveChangesAsync();
+        }
+
         public async Task<IEnumerable<Book>> GetByGenreAsync(string genre)
         {
             return await _context.Books
