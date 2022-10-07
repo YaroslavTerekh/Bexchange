@@ -22,6 +22,10 @@ export class AdminServiceService {
     return this.http.get<User[]>(`${environment.bexchangeApi}Admin/users`);
   }
 
+  getAdmins(): Observable<User[]> {
+    return this.http.get<User[]>(`${environment.bexchangeApi}Admin/admins`);
+  }
+
   banUser(id: number): Observable<string> {
     return this.http.patch<string>(`${environment.bexchangeApi}Admin/ban/${id}`, null);
   }

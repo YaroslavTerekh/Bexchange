@@ -1,1 +1,2 @@
-<p>admin-admins works!</p>
+<app-admin-stats-item *ngFor="let user of admins" [user]="user" [userId]="1"></app-admin-stats-item>
+<p *ngIf="admins.length < 1">Поки немає жодного користувача з роллю "Адміністратор"</p>
