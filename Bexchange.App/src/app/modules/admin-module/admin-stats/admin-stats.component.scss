@@ -1,0 +1,41 @@
+h3 {
+    margin-left: 40px;
+    margin-bottom: 50px;
+    border-bottom: 1px solid rgb(11, 122, 173);
+    width: fit-content;
+    padding-bottom: 10px;
+}
+
+#main {
+    position: relative;
+    top: -60px;
+}
+
+.stats {
+    width: 100%;
+    display: flex;
+    justify-content: space-between;
+    margin-bottom: 30px;
+
+    div {
+        display: flex;
+        div {
+            width: 20px;
+            height: 20px;  
+            margin-right: 5px;          
+        }
+    }
+
+    .green {
+        background-color: #3ba272;
+    }
+
+    .violet {
+        background-color: rgb(140, 51, 243);
+    }
+
+    .red {
+        background-color: red;
+    }
+}
+

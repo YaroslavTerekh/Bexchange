@@ -7,7 +7,7 @@ header {
     height: 70px;
     display: flex;
     justify-content: space-between;
-    align-items: center;
+    align-items: flex-end;
     padding-left: 5%;
     padding-right: 5%;
 }
@@ -67,27 +67,4 @@ header {
 .nav-header_account:hover {
     background-color: #c4854b;
     transition: .2s;
-}
-
-* {
-
-    /* width */
-    ::-webkit-scrollbar {
-        width: 5px;
-    }
-
-    /* Track */
-    ::-webkit-scrollbar-track {
-        background: #be0000;
-    }
-
-    /* Handle */
-    ::-webkit-scrollbar-thumb {
-        background: #888;
-    }
-
-    /* Handle on hover */
-    ::-webkit-scrollbar-thumb:hover {
-        background: #555;
-    }
 }

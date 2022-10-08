@@ -1,5 +1,6 @@
 ﻿using Bexchange.Domain.Models;
 using BexchangeAPI.Domain.Annotations;
+using BexchangeAPI.Domain.Enum;
 using BexchangeAPI.Domain.Models;
 using System.ComponentModel.DataAnnotations;
 
@@ -27,5 +28,6 @@ namespace BexchangeAPI.DTOs
         public ICollection<Comment>? Comments { get; set; }
         //[Required(ErrorMessage = "No User applied")]
         public int UserId { get; set; }
+        public State state { get; set; }
     }
 }

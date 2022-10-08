@@ -33,7 +33,7 @@ namespace BexchangeAPI.Infrastructure.Repositories
                 .ToListAsync();
         }
 
-        public async Task<IEnumerable<Book>> GetAllComponentsAsync()
+        public async Task<IEnumerable<Book>> GetAllComponentsAsync(CancellationToken token = default)
         {
             return await _context.Books
                 .Include(b => b.Image)
@@ -45,7 +45,7 @@ namespace BexchangeAPI.Infrastructure.Repositories
                     .ThenInclude(u => u.Books)
                 .Include(b => b.Comments)
                     .ThenInclude(c => c.Author)
-                .ToListAsync();
+                .ToListAsync(token);
         }
 
         public async Task AddComponentAsync(Book book)
@@ -66,7 +66,7 @@ namespace BexchangeAPI.Infrastructure.Repositories
 
         public async Task<Book?> GetComponentAsync(int id)
         {
-            return await _context.Books.Where(b => b.Id == id)
+            return await _context.Books.Where(b => b.Id == id && b.State == State.Verified)
                 .Include(b => b.Image)
                 .Include(b => b.Author)
                 .Include(b => b.Genre)
@@ -81,7 +81,9 @@ namespace BexchangeAPI.Infrastructure.Repositories
 
         public async Task DeleteComponentAsync(int id)
         {
-            _context.Books.Remove(await GetComponentAsync(id));
+            var book = await GetComponentAsync(id);
+
+            _context.Books.Remove(book);
             await _context.SaveChangesAsync();
         }
 
@@ -99,7 +101,8 @@ namespace BexchangeAPI.Infrastructure.Repositories
 
         public async Task ModifyComponentStateAsync(int id, State state)
         {
-            Book book = await GetComponentAsync(id);
+            Book book = await _context.Books.Where(b => b.Id == id).FirstOrDefaultAsync();
+
             book.State = state;
             await _context.SaveChangesAsync();
         }
@@ -154,6 +157,12 @@ namespace BexchangeAPI.Infrastructure.Repositories
                 .ToListAsync();
         }
 
+        public async Task AddGenreAsync(Genre genre)
+        {
+            await _context.Genres.AddAsync(genre);
+            await _context.SaveChangesAsync();
+        }
+
         public async Task<IEnumerable<Book>> GetByGenreAsync(string genre)
         {
             return await _context.Books
@@ -178,6 +187,17 @@ namespace BexchangeAPI.Infrastructure.Repositories
                 .Include(b => b.Comments)
                     .ThenInclude(c => c.Author)
                 .ToListAsync();
+        }
+
+        public async Task ModifyAuthorAsync(Author author)
+        {
+            Author entity = await _context.Authors.Where(a => a.Id == author.Id).FirstOrDefaultAsync();
+
+            entity.Name = author.Name;
+            entity.ImgPath = author.ImgPath;
+            entity.WikiLink = author.WikiLink;
+
+            await _context.SaveChangesAsync();
         }
 
         public async Task<int> AddImageAsync(HttpContext context, string path, IUserService service, string rootPath)
@@ -224,6 +244,14 @@ namespace BexchangeAPI.Infrastructure.Repositories
             await _context.SaveChangesAsync();
 
             File.Delete(image.Path);
+        }
+
+        public async Task DeleteGenreAsync(int id)
+        {
+            var genre = await GetGenreAsync(id);
+
+            _context.Genres.Remove(genre);
+            await _context.SaveChangesAsync();
         }
     }
 }
