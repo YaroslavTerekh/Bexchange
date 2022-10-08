@@ -1,5 +1,6 @@
 export interface Author {
+    id: number;
     name: string;
     wikiLink: string | null;
-    img: string | null;
+    imgPath: string | null;
 }

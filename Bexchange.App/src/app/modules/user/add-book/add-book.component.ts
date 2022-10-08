@@ -56,9 +56,10 @@ export class AddBookComponent implements OnInit, OnDestroy {
       comments: null,
       genreId: this.form.get('genre')?.value,
       author: {
+        id: 0,
         name: this.form.get('author')?.value,
         wikiLink: null,
-        img: null
+        imgPath: null
       },
       image: null
     }

@@ -22,8 +22,10 @@ namespace Bexchange.Infrastructure.Repositories.Interfaces
         public Task AddGenreAsync(Genre genre);
         public Task<IEnumerable<Genre>> GetGenresAsync();
         public Task<IEnumerable<Book>> GetByGenreAsync(string genre);
+        public Task DeleteGenreAsync(int id);
         public Task<IEnumerable<Author>> GetAuthorsAsync();
         public Task<IEnumerable<Book>> GetByAuthorAsync(string author);
+        public Task ModifyAuthorAsync(Author author);
         public Task<IEnumerable<Book>> IgnoreUserBooksAsync(int userId);
     }
 }

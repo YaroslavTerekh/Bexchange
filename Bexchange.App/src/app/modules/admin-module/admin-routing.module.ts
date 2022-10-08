@@ -1,3 +1,4 @@
+import { AdminAuthorsComponent } from './admin-authors/admin-authors.component';
 import { AdminGenresComponent } from './admin-genres/admin-genres.component';
 import { AdminBooksItemComponent } from './admin-books/admin-books-item/admin-books-item.component';
 import { BookAllResolver } from './../../guards/resolvers/booksAll.resolver';
@@ -47,6 +48,10 @@ const routes: Routes = [
             {
                 path: 'genres',
                 component: AdminGenresComponent
+            },
+            {
+                path: 'authors',
+                component: AdminAuthorsComponent
             }
         ]
     },

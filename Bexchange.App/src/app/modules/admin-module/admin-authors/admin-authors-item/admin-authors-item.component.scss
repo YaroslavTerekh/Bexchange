@@ -1,0 +1,42 @@
+.item {
+    border: 2px solid rgb(112, 112, 112);
+    padding: 20px;
+    margin-bottom: 10px;
+
+    div {
+
+        form {
+            display: flex;
+            justify-content: space-between;
+
+            input {
+                background-color: transparent;
+                border-bottom: 1px solid #fff;
+                margin: 20px;
+                padding-bottom: 10px;
+            }
+
+            :nth-child(n) {
+                margin-left: 0px;
+            }
+        }
+    }
+
+    button {
+        width: fit-content;
+        height: fit-content;
+        padding: 20px;
+        border: 2px solid rgb(42, 143, 55);
+        background-color: transparent;
+        cursor: pointer;
+    }
+
+    button:hover {
+        background-color: rgba(42, 143, 56, 0.219);
+        ;
+    }
+}
+
+.active {
+    border: 2px solid rgb(72, 163, 110);
+}

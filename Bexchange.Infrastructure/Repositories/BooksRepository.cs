@@ -66,7 +66,7 @@ namespace BexchangeAPI.Infrastructure.Repositories
 
         public async Task<Book?> GetComponentAsync(int id)
         {
-            return await _context.Books.Where(b => b.Id == id)
+            return await _context.Books.Where(b => b.Id == id && b.State == State.Verified)
                 .Include(b => b.Image)
                 .Include(b => b.Author)
                 .Include(b => b.Genre)
@@ -101,7 +101,8 @@ namespace BexchangeAPI.Infrastructure.Repositories
 
         public async Task ModifyComponentStateAsync(int id, State state)
         {
-            Book book = await GetComponentAsync(id);
+            Book book = await _context.Books.Where(b => b.Id == id).FirstOrDefaultAsync();
+
             book.State = state;
             await _context.SaveChangesAsync();
         }
@@ -188,6 +189,17 @@ namespace BexchangeAPI.Infrastructure.Repositories
                 .ToListAsync();
         }
 
+        public async Task ModifyAuthorAsync(Author author)
+        {
+            Author entity = await _context.Authors.Where(a => a.Id == author.Id).FirstOrDefaultAsync();
+
+            entity.Name = author.Name;
+            entity.ImgPath = author.ImgPath;
+            entity.WikiLink = author.WikiLink;
+
+            await _context.SaveChangesAsync();
+        }
+
         public async Task<int> AddImageAsync(HttpContext context, string path, IUserService service, string rootPath)
         {
             var file = context.Request.Form.Files[0];
@@ -232,6 +244,14 @@ namespace BexchangeAPI.Infrastructure.Repositories
             await _context.SaveChangesAsync();
 
             File.Delete(image.Path);
+        }
+
+        public async Task DeleteGenreAsync(int id)
+        {
+            var genre = await GetGenreAsync(id);
+
+            _context.Genres.Remove(genre);
+            await _context.SaveChangesAsync();
         }
     }
 }

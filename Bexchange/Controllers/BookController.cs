@@ -237,5 +237,13 @@ namespace BexchangeAPI.Controllers
 
             return Ok(_mapper.Map<IEnumerable<BookDto>>(books));
         }
+
+        [HttpDelete("genre/delete/{id}")]
+        public async Task<IActionResult> DeleteGenre(int id)
+        {
+            await _contentRepo.DeleteGenreAsync(id);
+
+            return NoContent();
+        }
     }
 }

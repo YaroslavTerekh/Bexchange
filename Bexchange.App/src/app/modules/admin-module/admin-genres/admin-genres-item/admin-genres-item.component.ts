@@ -1,7 +1,9 @@
+import { untilDestroyed } from '@ngneat/until-destroy';
 import { BookService } from 'src/app/services/book.service';
 import { Component, Input, OnInit } from '@angular/core';
 import { UntilDestroy } from '@ngneat/until-destroy';
 import { Genre } from 'src/app/models/Genre';
+import { Router } from '@angular/router';
 
 @UntilDestroy()
 @Component({
@@ -11,19 +13,25 @@ import { Genre } from 'src/app/models/Genre';
 })
 export class AdminGenresItemComponent implements OnInit {
   @Input() genre!: Genre;
-  // genreImg!: string;
 
   constructor(
-    private readonly bookService: BookService
+    private readonly bookService: BookService,
+    private readonly router: Router,
   ) { }
 
   ngOnInit(): void {
-    // this.bookService.getImage(this.genre.img?.id)
-    //   .subscribe({
-    //     next: res => {
-    //       this.genreImg = res;
-    //     },
-    //   });
+  }
+
+  deleteGenre(id: number) {
+    console.log('try');
+    
+    this.bookService.deleteGenre(id)
+      .pipe(untilDestroyed(this))
+      .subscribe({
+        next: res => {
+          this.router.navigate(['/admin/stats']);
+        }
+      });
   }
 
 }

@@ -63,6 +63,10 @@ export class BookService {
     return this.http.post<string>(`${environment.bexchangeApi}Book/genre/add`, genre);
   }
 
+  public deleteGenre(id: number): Observable<string> {
+    return this.http.delete<string>(`${environment.bexchangeApi}Book/genre/delete/${id}`);
+  }
+
   // get - authors
 
   public getAllAuthors(): Observable<Author[]> {
@@ -91,5 +95,9 @@ export class BookService {
 
   public modifyBookState(id: number, state: number): Observable<string> {
     return this.http.patch<string>(`${environment.bexchangeApi}Admin/book/state/${id}/${state}`, null);
+  }
+
+  public modifyAuthor(author: Author): Observable<string> {
+    return this.http.post<string>(`${environment.bexchangeApi}Admin/authors/modify`, author);
   }
 }

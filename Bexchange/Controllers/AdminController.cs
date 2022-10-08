@@ -1,4 +1,5 @@
 ﻿using Bexchange.Domain;
+using Bexchange.Domain.Models;
 using Bexchange.Domain.RequestModels;
 using Bexchange.Infrastructure.Repositories.Interfaces;
 using Bexchange.Infrastructure.Services.Repositories;
@@ -92,6 +93,13 @@ namespace Bexchange.API.Controllers
         {
             await _usersRepository.ChangeRoleAsync(role, id);
 
+            return Ok();
+        }
+
+        [HttpPost("authors/modify")]
+        public async Task<IActionResult> ModifyAuthor(Author author)
+        {
+            await _contentRepository.ModifyAuthorAsync(author);
             return Ok();
         }
 
