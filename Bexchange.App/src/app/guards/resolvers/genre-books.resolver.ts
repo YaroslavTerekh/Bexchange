@@ -10,10 +10,9 @@ import { BookService } from "src/app/services/book.service";
   export class GenreBookResolver implements Resolve<Book[]> {
     constructor(
         private bookService: BookService,
-        private route: ActivatedRoute
       ) { }
     
-    resolve(route: ActivatedRouteSnapshot, state: RouterStateSnapshot): Observable<Book[]> {
+    resolve(route: ActivatedRouteSnapshot): Observable<Book[]> {
       return this.bookService.getBooksByGenre(route.params['genre']);
     }
   }

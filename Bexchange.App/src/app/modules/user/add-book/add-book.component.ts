@@ -1,15 +1,16 @@
-import { Component, OnInit } from "@angular/core";
+import { Component, OnDestroy, OnInit } from "@angular/core";
 import { FormGroup, Validators, FormBuilder } from "@angular/forms";
 import { Router } from "@angular/router";
 import { BookService } from "src/app/services/book.service";
 import { BookRequest } from "src/app/models/BookRequest";
+import { Subscription } from "rxjs";
 
 @Component({
   selector: 'app-add-book',
   templateUrl: './add-book.component.html',
   styleUrls: ['./add-book.component.scss']
 })
-export class AddBookComponent implements OnInit {
+export class AddBookComponent implements OnInit, OnDestroy {
   public genres: any;
   public selectedFile!: File;
   public form: FormGroup = new FormGroup({
@@ -38,6 +39,10 @@ export class AddBookComponent implements OnInit {
       });
   }
 
+  ngOnDestroy(): void {
+      
+  }
+
   onFileSelected(event: any) {
     this.selectedFile = <File>event.target.files[0];
   }
@@ -51,9 +56,10 @@ export class AddBookComponent implements OnInit {
       comments: null,
       genreId: this.form.get('genre')?.value,
       author: {
+        id: 0,
         name: this.form.get('author')?.value,
         wikiLink: null,
-        img: null
+        imgPath: null
       },
       image: null
     }
@@ -61,11 +67,12 @@ export class AddBookComponent implements OnInit {
     let requestData = new FormData();
     requestData.append('image', this.selectedFile, this.selectedFile?.name);
 
+    
     this.bookService.addImage(requestData)
       .subscribe(res => {
         this.bookService.addBook(newBook, res)
           .subscribe((res) => {
-            console.log(res);            
+            this.router.navigate(['']);         
           });
       });
   }

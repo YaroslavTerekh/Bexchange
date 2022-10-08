@@ -10,12 +10,9 @@ import { BookService } from "src/app/services/book.service";
   export class AuthorBookResolver implements Resolve<Book[]> {
     constructor(
         private bookService: BookService,
-        private route: ActivatedRoute
       ) { }
     
     resolve(route: ActivatedRouteSnapshot, state: RouterStateSnapshot): Observable<Book[]> {
-        console.log(this.bookService.getBooksByAuthor(route.params['author']));
-        
       return this.bookService.getBooksByAuthor(route.params['author']);
     }
   }

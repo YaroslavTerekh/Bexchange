@@ -1,3 +1,4 @@
+import { State } from './StateDictionary';
 import { Genre } from './Genre';
 import { Author } from './Author';
 import { Image } from 'src/app/models/Image';
@@ -5,6 +6,7 @@ import { Image } from 'src/app/models/Image';
 export interface Book {
     userId: number;
     id: number;
+    state: State | undefined;
     title: string | undefined;
     description: string | undefined;
     genre: Genre | undefined;

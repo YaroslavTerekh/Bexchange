@@ -10,7 +10,7 @@ namespace BexchangeAPI.Infrastructure.Repositories.Interfaces
 {
     public interface IContentRepository<T>
     {
-        public Task<IEnumerable<T>> GetAllComponentsAsync();
+        public Task<IEnumerable<T>> GetAllComponentsAsync(CancellationToken token);
         public Task<IEnumerable<T>> GetUserComponentsAsync(int userId);
         public Task AddComponentAsync(T component);
         public Task<T> GetComponentAsync(int id);

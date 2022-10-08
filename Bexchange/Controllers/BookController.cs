@@ -1,5 +1,6 @@
 ﻿using AutoMapper;
 using Bexchange.API.DTOs;
+using Bexchange.Domain;
 using Bexchange.Domain.Models;
 using Bexchange.Infrastructure.Repositories.Interfaces;
 using Bexchange.Infrastructure.Services.Repositories;
@@ -61,9 +62,9 @@ namespace BexchangeAPI.Controllers
         }
 
         [HttpGet("all"), AllowAnonymous]
-        public async Task<IActionResult> AllBooks()
+        public async Task<IActionResult> AllBooks(CancellationToken token)
         {
-            var books = await _contentRepo.GetAllComponentsAsync();
+            var books = await _contentRepo.GetAllComponentsAsync(token);
 
             if (books == null)
                 throw new NotFoundException("No books here", (int)HttpStatusCode.NotFound);
@@ -106,8 +107,6 @@ namespace BexchangeAPI.Controllers
             await _contentRepo.AddComponentAsync(newBook);
 
             return Created(Request.Path, new { Id = newBook.Id, Path = Request.Path + $"/{newBook.Id}" });
-
-            //return BadRequest(ModelState.Values.First().Errors.First().ErrorMessage);
         }
 
         [HttpPost("add/image")]
@@ -125,13 +124,6 @@ namespace BexchangeAPI.Controllers
 
             if (image == null)
                 throw new NotFoundException("Image not found", (int)HttpStatusCode.NotFound);
-
-            //IFileInfo file = _fileProvider.GetFileInfo(image.Path);
-
-            //await HttpContext.Response.SendFileAsync(file);
-
-            //var path = @"C:\Users\Home\source\repos\Bexchange\Bexchange\wwwroot\uploads\images\151step-3-9.png";
-
 
             byte[] imageArray = System.IO.File.ReadAllBytes(image.Path);
             string base64ImageRepresentation = Convert.ToBase64String(imageArray);
@@ -174,11 +166,11 @@ namespace BexchangeAPI.Controllers
             if (_userService.GetUserId(HttpContext) == book.UserId || _userService.IsAdmin(HttpContext))
             {
                 await _contentRepo.DeleteImageAsync(book.ImageId);
-                await _contentRepo.DeleteComponentAsync(id);
-                return NoContent();
+                
+                return Ok();
             }
 
-            return BadRequest("You can delete only your own book");
+            return BadRequest("you can delete only your own book");
         }
 
         [HttpPatch("{id}/comments/add")]
@@ -193,6 +185,14 @@ namespace BexchangeAPI.Controllers
         }
 
         // GENRES, AUTHORS
+
+        [HttpPost("genre/add"), Authorize(Policy = PoliciesConstants.Admins)]
+        public async Task<IActionResult> AddGenre(Genre genre)
+        {
+            await _contentRepo.AddGenreAsync(genre);
+
+            return Created(Request.Path, new { genre });
+        }
 
         [HttpGet("genres"), AllowAnonymous]
         public async Task<IActionResult> Genres()
@@ -236,6 +236,14 @@ namespace BexchangeAPI.Controllers
                 throw new NotFoundException("Books not found", (int)HttpStatusCode.NotFound);
 
             return Ok(_mapper.Map<IEnumerable<BookDto>>(books));
+        }
+
+        [HttpDelete("genre/delete/{id}")]
+        public async Task<IActionResult> DeleteGenre(int id)
+        {
+            await _contentRepo.DeleteGenreAsync(id);
+
+            return NoContent();
         }
     }
 }

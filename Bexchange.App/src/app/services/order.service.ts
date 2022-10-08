@@ -15,20 +15,20 @@ export class OrderService {
 
   //get - orders
 
-  public getAllOrders(): Observable<Order> {
-    return this.http.get<Order>(`${environment.bexchangeApi}Order`);
+  public getAllOrders(): Observable<Order[]> {
+    return this.http.get<Order[]>(`${environment.bexchangeApi}Order`);
   }
 
-  public getUserOrders(id: number): Observable<Order> {
-    return this.http.get<Order>(`${environment.bexchangeApi}Order/user/${id}`);
+  public getUserOrders(id: number): Observable<Order[]> {
+    return this.http.get<Order[]>(`${environment.bexchangeApi}Order/user/${id}`);
   }
 
-  public getUserIncomingOrders(id: number): Observable<Order> {
-    return this.http.get<Order>(`${environment.bexchangeApi}Order/user/${id}/incoming`);
+  public getUserIncomingOrders(id: number): Observable<Order[]> {
+    return this.http.get<Order[]>(`${environment.bexchangeApi}Order/user/${id}/incoming`);
   }
 
-  public getUserOutgoingOrders(id: number): Observable<Order> {
-    return this.http.get<Order>(`${environment.bexchangeApi}Order/user/${id}/outgoing`);
+  public getUserOutgoingOrders(id: number): Observable<Order[]> {
+    return this.http.get<Order[]>(`${environment.bexchangeApi}Order/user/${id}/outgoing`);
   }
 
   // logic - orders

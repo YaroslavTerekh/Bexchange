@@ -5,3 +5,9 @@ export class StateDictionary {
         'Відхилено'
     ]
 }
+
+export enum State {
+    'Очікування',
+    'Прийнято',
+    'Відхилено'
+}

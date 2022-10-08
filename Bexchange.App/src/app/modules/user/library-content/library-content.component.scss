@@ -16,13 +16,21 @@
         flex-wrap: wrap;
         justify-content: space-between;
     }
-    
+
     .book {
         margin-bottom: 20px;
     }
-    
+
     .hide {
         display: none;
         transition: .4s;
     }
+}
+
+h2 {
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    color: #ffd900;
 }

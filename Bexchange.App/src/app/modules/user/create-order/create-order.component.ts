@@ -53,6 +53,7 @@ export class CreateOrderComponent implements OnInit {
 
   public createOrder() {
     let order: Order = {
+      id: 0,
       firstBookId: this.book.id,
       secondBookId: this.activeBookId, 
     }
@@ -61,5 +62,13 @@ export class CreateOrderComponent implements OnInit {
       .subscribe(res => {
         this.router.navigate(['/orders'])
       })  
+  }
+
+  getImage(id: number) {
+    this.bookService.getImage(id)
+      .subscribe(res => {
+        console.log(res);
+        
+      });
   }
 }

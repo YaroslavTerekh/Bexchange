@@ -7,7 +7,7 @@
             <p>Жанр: {{book.genre?.title}}</p>
             <p>Автор: {{book.author?.name}}</p><br>   
             <p class="sdesc">Короткий опис:</p> 
-            <p>{{book.description! | textTrim}}</p>
+            <p>{{book.description! | textTrim: 200}}</p>
         </div>
     </div>    
 </div>

@@ -20,12 +20,12 @@ namespace BexchangeAPI.Infrastructure.Repositories
             _context = context;
         }
 
-        public async Task<IEnumerable<ExchangeOrder>> GetAllComponentsAsync()
+        public async Task<IEnumerable<ExchangeOrder>> GetAllComponentsAsync(CancellationToken token = default)
         {
             return await _context.Orders
                 .Include(o => o.FirstBook).ThenInclude(b => b.Image)
                 .Include(o => o.SecondBook).ThenInclude(b => b.Image)
-                .ToListAsync();
+                .ToListAsync(token);
         }
 
         public async Task AddComponentAsync(ExchangeOrder order)

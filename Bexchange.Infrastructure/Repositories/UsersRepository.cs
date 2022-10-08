@@ -43,6 +43,14 @@ namespace BexchangeAPI.Infrastructure.Repositories
             }
         }
 
+        public async Task UnbanUserAsync(int id)
+        {
+            var user = await _context.Users.FirstOrDefaultAsync(x => x.Id == id);
+
+            user.IsBanned = false;
+            await _context.SaveChangesAsync();
+        }
+
         public async Task<IEnumerable<User>> GetAdminsOnlyAsync()
         {
             return await _context.Users.Where(u => u.Role == Roles.Admin).ToListAsync();
@@ -113,6 +121,24 @@ namespace BexchangeAPI.Infrastructure.Repositories
         public async Task SaveUser()
         {
             await _context.SaveChangesAsync();
+        }
+
+        public async Task<object> GetLastUsersAsync()
+        {
+            var users = await GetAllUsersAsync();
+            var last7DaysUsers = users.Where(u => u.RegisteredDate > DateTime.UtcNow.AddDays(-7));
+
+            var result = new {
+                day7 = last7DaysUsers.Where(u => u.RegisteredDate.Day == DateTime.UtcNow.Day),
+                day6 = last7DaysUsers.Where(u => u.RegisteredDate.Day == DateTime.UtcNow.AddDays(-1).Day),
+                day5 = last7DaysUsers.Where(u => u.RegisteredDate.Day == DateTime.UtcNow.AddDays(-2).Day),
+                day4 = last7DaysUsers.Where(u => u.RegisteredDate.Day == DateTime.UtcNow.AddDays(-3).Day),
+                day3 = last7DaysUsers.Where(u => u.RegisteredDate.Day == DateTime.UtcNow.AddDays(-4).Day),
+                day2 = last7DaysUsers.Where(u => u.RegisteredDate.Day == DateTime.UtcNow.AddDays(-5).Day),
+                day1 = last7DaysUsers.Where(u => u.RegisteredDate.Day == DateTime.UtcNow.AddDays(-6).Day),
+            };
+            
+            return result;
         }
     }
 }

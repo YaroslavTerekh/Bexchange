@@ -7,6 +7,7 @@ import { BrowserModule } from '@angular/platform-browser';
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 import { SlickCarouselModule } from 'ngx-slick-carousel';
 import { AppRoutingModule } from 'src/app/app-routing.module';
+import { TextTrimPipe } from 'src/app/pipes/text-trim.pipe';
 import { AuthInterceptorService } from 'src/app/services/auth-interceptor.service';
 import { AuthorizationService } from 'src/app/services/authorization.service';
 import { BookService } from 'src/app/services/book.service';
@@ -18,10 +19,11 @@ import { ErrorPageComponent } from './error-page/error-page.component';
 
 @NgModule({
   declarations: [
-    ErrorPageComponent
+    ErrorPageComponent,
+    TextTrimPipe
   ],
   imports: [    
-    CommonModule
+    CommonModule,
   ],
   exports: [
     BrowserModule,
@@ -30,7 +32,8 @@ import { ErrorPageComponent } from './error-page/error-page.component';
     HttpClientModule,
     FormsModule,
     ReactiveFormsModule,
-    BrowserAnimationsModule,
+    BrowserAnimationsModule,    
+    TextTrimPipe
   ],
   providers: [
     BookService,

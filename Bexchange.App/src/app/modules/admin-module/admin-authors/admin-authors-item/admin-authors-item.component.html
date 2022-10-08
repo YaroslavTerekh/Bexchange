@@ -1,0 +1,11 @@
+<div class="item"
+    [ngClass]="{'active': author.name.length > 0 && author.wikiLink!.length > 0 && author.imgPath!.length > 0 }">
+    <div>
+        <form [formGroup]="form">
+            <input formControlName="name" type="text" placeholder="Ім'я" [(ngModel)]="author.name!">
+            <input formControlName="wikiLink" type="text" placeholder="Посилання на біо" [(ngModel)]="author.wikiLink!">
+            <input formControlName="imgPath" type="text" placeholder="URL картинки" [(ngModel)]="author.imgPath!">
+        </form>
+    </div>
+    <button (click)="modifyAuthor()">Зберегти</button>
+</div>

@@ -23,7 +23,7 @@ export class BookService {
   }
 
   public getAllBooks(): Observable<Book[]> {
-    return this.http.get<Book[]>(`${environment.bexchangeApi}Book`);
+    return this.http.get<Book[]>(`${environment.bexchangeApi}Book/all`);
   }
 
   public getBook(id: number): Observable<Book> {
@@ -57,6 +57,16 @@ export class BookService {
     return this.http.get<Genre[]>(`${environment.bexchangeApi}Book/genres`);
   }
 
+  // post - genres 
+
+  public addGenre(genre: Genre): Observable<string> {
+    return this.http.post<string>(`${environment.bexchangeApi}Book/genre/add`, genre);
+  }
+
+  public deleteGenre(id: number): Observable<string> {
+    return this.http.delete<string>(`${environment.bexchangeApi}Book/genre/delete/${id}`);
+  }
+
   // get - authors
 
   public getAllAuthors(): Observable<Author[]> {
@@ -79,5 +89,15 @@ export class BookService {
 
   public deleteBook(id: number): Observable<string> {
     return this.http.delete<string>(`${environment.bexchangeApi}Book/delete/${id}`);
+  }
+
+  // modify - books
+
+  public modifyBookState(id: number, state: number): Observable<string> {
+    return this.http.patch<string>(`${environment.bexchangeApi}Admin/book/state/${id}/${state}`, null);
+  }
+
+  public modifyAuthor(author: Author): Observable<string> {
+    return this.http.post<string>(`${environment.bexchangeApi}Admin/authors/modify`, author);
   }
 }

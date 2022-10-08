@@ -29,9 +29,9 @@ namespace BexchangeAPI.Controllers
         }
 
         [HttpGet]
-        public async Task<IActionResult> Orders()
+        public async Task<IActionResult> Orders(CancellationToken token)
         {
-            var orders = await _orderRepo.GetAllComponentsAsync();
+            var orders = await _orderRepo.GetAllComponentsAsync(token);
 
             if (orders == null) 
                 throw new NotFoundException("Orders not found", (int)HttpStatusCode.NotFound);

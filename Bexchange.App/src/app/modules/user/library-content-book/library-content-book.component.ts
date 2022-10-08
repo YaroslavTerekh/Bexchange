@@ -25,9 +25,6 @@ export class LibraryContentBookComponent implements OnInit {
       .pipe(untilDestroyed(this))
       .subscribe(res => {
         this.img = this.sanitizer.bypassSecurityTrustResourceUrl('data:image/png;base64,' + res.base64ImageRepresentation);
-        console.log("THIS");
-        console.log(this.img);
-        console.log("THIS");
       })
 
   }

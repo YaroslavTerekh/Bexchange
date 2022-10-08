@@ -5,11 +5,11 @@ import { Pipe, PipeTransform } from '@angular/core';
 })
 export class TextTrimPipe implements PipeTransform {
 
-  transform(value: string): string {
-    if(!value)
+  transform(text: string, value: number): string {
+    if(!text)
       return '';
       
-    return value.substring(0, 200) + '...';
+    return text.substring(0, value) + '...';
   }
 
 }

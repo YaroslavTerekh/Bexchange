@@ -12,20 +12,22 @@ import { AuthorizationService } from "src/app/services/authorization.service";
 export class LoginModalComponent implements OnInit {
   @Output() close = new EventEmitter<void>();
   @Output() openRegister = new EventEmitter<void>();
+  @Output() login = new EventEmitter<void>();
   public loginMethod!: string;
   public isValue: number = 0;
+  role!: number;
+
   public form = new FormGroup({
       userName: this.fb.control(''),
       password: this.fb.control('')
   });
 
   constructor(
-    private authSvc: AuthorizationService,
+    private authorizationService: AuthorizationService,
     private fb: FormBuilder,
     private router: Router) { }
 
   ngOnInit(): void {
-    
   }
 
   toggle1() {
@@ -42,10 +44,12 @@ export class LoginModalComponent implements OnInit {
       password: this.form.get('password')?.value
     }
     
-    this.authSvc.loginUser(user, this.loginMethod)
+    this.authorizationService.loginUser(user, this.loginMethod)
     .subscribe({
-      next: token => {
+      next: token => {         
         localStorage.setItem('authToken', token);   
+        localStorage.setItem('loggedUserRole', this.authorizationService.getUserRole(token).toString());
+        this.authorizationService.setLoggedIn(); 
       },
       error: err => {
         this.router.navigate(['/error', {error: err}]);

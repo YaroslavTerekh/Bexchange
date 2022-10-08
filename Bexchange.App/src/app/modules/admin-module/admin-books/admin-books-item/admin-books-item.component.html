@@ -1,0 +1,19 @@
+<div class="item" [ngClass]="{'accepted' : book.state == 1, 'cancelled' : book.state == 2}">
+    <div class="item-descr">
+        <div>
+            <p>id: </p> {{book.id}}
+            <p>title: </p> {{book.title! | textTrim: 10}}
+        </div>
+        <div class="buttons">
+            <button [routerLink]="['/book/' + book.id]" class="check">Переглянути</button>
+            <button class="delete" (click)="deleteBook(book.id)">Видалити</button>
+            <div class="status">
+                <button (click)="toggleButton()">Змінити статус</button>
+                <div *ngIf="changeStatus">
+                    <button (click)="modifyState(book.id, 1)">Підтверджено</button>
+                    <button (click)="modifyState(book.id, 2)">Відхилено</button>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>

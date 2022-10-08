@@ -20,6 +20,7 @@
     "@angular/router": "^14.1.0",
     "@auth0/angular-jwt": "^5.0.2",
     "@ngneat/until-destroy": "^9.2.2",
+    "echarts": "^5.4.0",
     "jquery": "^3.6.1",
     "json-stringify": "^1.0.0",
     "ngx-slick-carousel": "^0.6.0",

@@ -14,12 +14,12 @@ import { Book } from "src/app/models/Book";
 })
 export class MainPageComponent implements OnInit {
 
-  books!: Book[];
-  testbooks: any[] = [];
+  books: Book[] = [];
+  booksToShow: any[] = [];
 
-  slideConfig = { 
-    slidesToShow: 5, 
-    slidesToScroll: 5, 
+  slideConfig = {
+    slidesToShow: 5,
+    slidesToScroll: 5,
     dots: true,
     arrows: false,
     autoplay: true,
@@ -30,29 +30,31 @@ export class MainPageComponent implements OnInit {
     private bookService: BookService,
     private router: Router,
     private sanitizer: DomSanitizer
-    ) {
-   }
+  ) {
+  }
 
   ngOnInit(): void {
     this.bookService.getFirstBooks(10)
-    .pipe(untilDestroyed(this))
-    .subscribe({
-      next: res => {        
-        this.books = res;
+      .pipe(untilDestroyed(this))
+      .subscribe({
+        next: res => {
+          if (res.length > 0) {
+            this.books = res;
 
-        this.books.forEach(item => {
-          this.bookService.getImage(item.image?.id)
-            .pipe(untilDestroyed(this))
-            .subscribe(res => {
-              let obj = { book: item, img: this.sanitizer.bypassSecurityTrustResourceUrl('data:image/png;base64,' + res.base64ImageRepresentation) }
-              this.testbooks.push(obj);
+            this.books.forEach(item => {
+              this.bookService.getImage(item.image?.id)
+                .pipe(untilDestroyed(this))
+                .subscribe(res => {
+                  let obj = { book: item, img: this.sanitizer.bypassSecurityTrustResourceUrl('data:image/png;base64,' + res.base64ImageRepresentation) }
+                  this.booksToShow.push(obj);
+                })
             })
-        })
-      },
-      error: (err: any) => {
-        this.router.navigate(['/error', { error: JSON.stringify(err) }]);
-      }
-    });
+          }
+        },
+        error: (err: any) => {
+          this.router.navigate(['/error', { error: JSON.stringify(err) }]);
+        }
+      });
   }
 
 }
