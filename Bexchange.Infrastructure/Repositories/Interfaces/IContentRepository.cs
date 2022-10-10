@@ -1,4 +1,5 @@
 ﻿using Bexchange.Domain.Models;
+using Bexchange.Infrastructure.Services.Repositories;
 using BexchangeAPI.Domain.Enum;
 using System;
 using System.Collections.Generic;

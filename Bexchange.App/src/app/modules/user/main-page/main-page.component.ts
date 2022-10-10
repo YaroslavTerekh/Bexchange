@@ -16,6 +16,7 @@ export class MainPageComponent implements OnInit {
 
   books: Book[] = [];
   booksToShow: any[] = [];
+  imgTemp: any;
 
   slideConfig = {
     slidesToShow: 5,
@@ -45,8 +46,16 @@ export class MainPageComponent implements OnInit {
               this.bookService.getImage(item.image?.id)
                 .pipe(untilDestroyed(this))
                 .subscribe(res => {
-                  let obj = { book: item, img: this.sanitizer.bypassSecurityTrustResourceUrl('data:image/png;base64,' + res.base64ImageRepresentation) }
-                  this.booksToShow.push(obj);
+                  let reader = new FileReader();
+                  reader.addEventListener("load", () => {
+                    let obj = { book: item, img: reader.result };
+                    this.booksToShow.push(obj);
+                  }, false);
+
+                  if (res) {
+                    reader.readAsDataURL(res);
+                  }
+
                 })
             })
           }
@@ -55,6 +64,17 @@ export class MainPageComponent implements OnInit {
           this.router.navigate(['/error', { error: JSON.stringify(err) }]);
         }
       });
+  }
+
+  createImageFromBlob(image: Blob) {
+    let reader = new FileReader();
+    reader.addEventListener("load", () => {
+      this.imgTemp = reader.result;
+    }, false);
+
+    if (image) {
+      reader.readAsDataURL(image);
+    }
   }
 
 }

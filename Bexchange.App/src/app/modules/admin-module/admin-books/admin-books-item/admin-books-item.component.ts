@@ -13,6 +13,7 @@ export class AdminBooksItemComponent implements AfterViewInit {
   @Output() bookDeleted = new EventEmitter<void>();
   @Input() book!: Book;
   changeStatus!: boolean;
+  error!: string;
   
   constructor(
     private readonly bookService: BookService,
@@ -40,8 +41,14 @@ export class AdminBooksItemComponent implements AfterViewInit {
 
   modifyState(id: number, state: number) {
     this.bookService.modifyBookState(id, state)
-      .subscribe(res => { 
+      .subscribe({
+        next: res => { 
           this.router.navigate(['/admin/stats']);
+        },
+        error: err => {
+          this.error = err.error.response;
+          console.log(err.error.response);          
+        }
       });
   }
 

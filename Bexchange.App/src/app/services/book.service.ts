@@ -22,6 +22,10 @@ export class BookService {
     return this.http.get<Book[]>(`${environment.bexchangeApi}Book/user/ignore/${id}`);
   }
 
+  public getAllVerifiedBooks(id: number): Observable<Book[]> {
+    return this.http.get<Book[]>(`${environment.bexchangeApi}Book/all/verified/${id}`);
+  }
+  
   public getAllBooks(): Observable<Book[]> {
     return this.http.get<Book[]>(`${environment.bexchangeApi}Book/all`);
   }
@@ -46,9 +50,10 @@ export class BookService {
     return this.http.get<Book[]>(`${environment.bexchangeApi}Book/main-page/${amount}`);
   }
 
-  public getImage(id: number | undefined | null): Observable<any> {
-    return this.http.get(`${environment.bexchangeApi}Book/image/${id}`);
-
+  public getImage(id: number | undefined | null): Observable<Blob> {
+    return this.http.get(`${environment.bexchangeApi}Book/image/${id}`, {
+      responseType: 'blob',
+    });
   }
 
   // get - genres
@@ -68,6 +73,10 @@ export class BookService {
   }
 
   // get - authors
+
+  public getVerifiedAuthors(): Observable<Author[]> {
+    return this.http.get<Author[]>(`${environment.bexchangeApi}Book/authors/verified`);
+  }
 
   public getAllAuthors(): Observable<Author[]> {
     return this.http.get<Author[]>(`${environment.bexchangeApi}Book/authors`);

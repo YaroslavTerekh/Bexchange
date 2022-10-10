@@ -42,12 +42,19 @@ export class MainBookComponent implements OnInit, OnDestroy {
             this.bookService.getImage(this.slideList[this.i]?.image?.id)
               .pipe(untilDestroyed(this))
               .subscribe(res => {
-                this.slideImg = this.sanitizer.bypassSecurityTrustResourceUrl('data:image/png;base64,' + res.base64ImageRepresentation);
+                this.createImageFromBlob(res);
               });
             this.description = this.slideList[this.i]?.description;
             this.title = this.slideList[this.i]?.title;
 
             this.interval = setInterval(() => {
+              
+              if(res.length <= 1) {
+                clearInterval(this.interval);
+                clearTimeout(this.timeout);
+                return;
+              }
+
               this.imgDIV?.nativeElement.classList.add('hide');
               this.descrDIV?.nativeElement.classList.add('hide');
 
@@ -58,7 +65,7 @@ export class MainBookComponent implements OnInit, OnDestroy {
                 this.bookService.getImage(this.slideList[this.i]?.image?.id)
                   .pipe(untilDestroyed(this))
                   .subscribe(res => {
-                    this.slideImg = this.sanitizer.bypassSecurityTrustResourceUrl('data:image/png;base64,' + res.base64ImageRepresentation);
+                    this.createImageFromBlob(res);
                     this.description = this.slideList[this.i]?.description;
                     this.title = this.slideList[this.i]?.title;
                     this.imgDIV?.nativeElement.classList.remove('hide');
@@ -81,5 +88,16 @@ export class MainBookComponent implements OnInit, OnDestroy {
   ngOnDestroy(): void {
     clearTimeout(this.timeout);
     clearInterval(this.interval);
+  }
+
+  createImageFromBlob(image: Blob) {
+    let reader = new FileReader();
+    reader.addEventListener("load", () => {
+      this.slideImg = reader.result;
+    }, false);
+ 
+    if (image) {
+       reader.readAsDataURL(image);
+    }
   }
 }

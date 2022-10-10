@@ -1,4 +1,5 @@
 ﻿using Bexchange.Infrastructure.Repositories.Interfaces;
+using Bexchange.Infrastructure.Services.Repositories;
 using BexchangeAPI.Domain.Enum;
 using BexchangeAPI.Domain.Models;
 using BexchangeAPI.Infrastructure.DtbContext;

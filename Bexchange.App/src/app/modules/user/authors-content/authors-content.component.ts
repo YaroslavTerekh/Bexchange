@@ -2,6 +2,7 @@ import { HttpClient } from "@angular/common/http";
 import { Component, OnInit } from "@angular/core";
 import { Router } from "@angular/router";
 import { UntilDestroy, untilDestroyed } from "@ngneat/until-destroy";
+import { Author } from "src/app/models/Author";
 import { BookService } from "src/app/services/book.service";
 
 
@@ -13,7 +14,7 @@ import { BookService } from "src/app/services/book.service";
 })
 export class AuthorsContentComponent implements OnInit {
 
-  authors: any;
+  authors: Author[] = [];
 
   constructor(
     private http: HttpClient,
@@ -22,7 +23,7 @@ export class AuthorsContentComponent implements OnInit {
     ) { }
 
   ngOnInit(): void {
-    this.bookService.getAllAuthors()
+    this.bookService.getVerifiedAuthors()
       .pipe(untilDestroyed(this))
       .subscribe({
         next: res => {

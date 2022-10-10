@@ -17,6 +17,6 @@ import { BookService } from "src/app/services/book.service";
       ) { }
     
     resolve(): Observable<Book[]> {
-      return this.bookService.getBooks(this.authorizationService.getUserId());
+      return this.bookService.getAllVerifiedBooks(this.authorizationService.getUserId());
     }
   }

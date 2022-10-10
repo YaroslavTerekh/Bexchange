@@ -40,7 +40,7 @@ export class CreateOrderComponent implements OnInit {
       this.bookService.getImage(this.book.image?.id)
         .pipe(untilDestroyed(this))
         .subscribe(res => {
-          this.bookImg = this.sanitizer.bypassSecurityTrustResourceUrl('data:image/png;base64,' + res.base64ImageRepresentation)
+          this.bookImg = this.createImageFromBlob(res);
         })
     });     
 
@@ -49,6 +49,17 @@ export class CreateOrderComponent implements OnInit {
       .subscribe(res => { 
         this.books = res
       });      
+  }
+
+  createImageFromBlob(image: Blob) {
+    let reader = new FileReader();
+    reader.addEventListener("load", () => {
+      this.bookImg = reader.result;
+    }, false);
+ 
+    if (image) {
+       reader.readAsDataURL(image);
+    }
   }
 
   public createOrder() {
@@ -64,11 +75,4 @@ export class CreateOrderComponent implements OnInit {
       })  
   }
 
-  getImage(id: number) {
-    this.bookService.getImage(id)
-      .subscribe(res => {
-        console.log(res);
-        
-      });
-  }
 }
