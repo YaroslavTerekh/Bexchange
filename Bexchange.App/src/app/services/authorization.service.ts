@@ -25,7 +25,9 @@ export class AuthorizationService {
 
   public setLoggedIn() {
     this.authorizationSubject.next(true);
-    this.isAdminSubject.next(this.checkAdmin());
+    if(localStorage.getItem('loggedUserRole') != 'User') {
+      this.isAdminSubject.next(true);
+    }
   }
 
   public setLoggedOut() {
@@ -33,6 +35,7 @@ export class AuthorizationService {
       localStorage.removeItem('authToken');
       localStorage.removeItem('loggedUserRole');
       this.authorizationSubject.next(false);
+      this.isAdminSubject.next(false);
     }
   }
 
@@ -70,6 +73,8 @@ export class AuthorizationService {
       let decodeToken = this.helper.decodeToken(token);
 
       if (decodeToken.Role == 'Admin' || decodeToken.Role == 'SuperAdmin') {
+        console.log(decodeToken.Role);
+        
         return true;
       }
       return false;

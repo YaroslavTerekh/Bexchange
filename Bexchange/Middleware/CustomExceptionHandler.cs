@@ -65,7 +65,7 @@ namespace BexchangeAPI.Middleware
                     error = new
                     {
                         code = (int)HttpStatusCode.BadRequest,
-                        response = "very bad"
+                        response = "Something went wrong"
                     },
             };
 

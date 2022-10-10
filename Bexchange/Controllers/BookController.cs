@@ -61,10 +61,22 @@ namespace BexchangeAPI.Controllers
             return Ok(_mapper.Map<IEnumerable<BookDto>>(books));
         }
 
-        [HttpGet("all"), AllowAnonymous]
+        [HttpGet("all"), Authorize(Policy = PoliciesConstants.Admins)]
         public async Task<IActionResult> AllBooks(CancellationToken token)
         {
             var books = await _contentRepo.GetAllComponentsAsync(token);
+
+            if (books == null)
+                throw new NotFoundException("No books here", (int)HttpStatusCode.NotFound);
+
+            return Ok(_mapper.Map<IEnumerable<BookDto>>(books));
+
+        }
+
+        [HttpGet("all/verified/{usedId}"), AllowAnonymous]
+        public async Task<IActionResult> AllVerifiedBooks(int userId)
+        {
+            var books = await _contentRepo.GetAllVerifiedBooksAsync(userId);
 
             if (books == null)
                 throw new NotFoundException("No books here", (int)HttpStatusCode.NotFound);
@@ -81,7 +93,10 @@ namespace BexchangeAPI.Controllers
             if (book == null)
                 throw new NotFoundException("Book not found", (int)HttpStatusCode.NotFound);
 
-            return Ok(_mapper.Map<BookDto>(book));
+            if(book.UserId == _userService.GetUserId(HttpContext) || book.State == State.Verified || _userService.IsAdmin(HttpContext))
+                return Ok(_mapper.Map<BookDto>(book));
+
+            return BadRequest();
         }
 
         [HttpGet("user/{userId}")]
@@ -102,7 +117,6 @@ namespace BexchangeAPI.Controllers
 
             newBook.UserId = _userService.GetUserId(HttpContext);
             newBook.User = await _usersRepository.GetUserAsync(newBook.UserId);
-            newBook.GenreId = book.GenreId;
             newBook.ImageId = imgId;
             await _contentRepo.AddComponentAsync(newBook);
 
@@ -125,16 +139,7 @@ namespace BexchangeAPI.Controllers
             if (image == null)
                 throw new NotFoundException("Image not found", (int)HttpStatusCode.NotFound);
 
-            byte[] imageArray = System.IO.File.ReadAllBytes(image.Path);
-            string base64ImageRepresentation = Convert.ToBase64String(imageArray);
-
-            var obj = new
-            {
-                base64ImageRepresentation
-            };
-
-            return Ok(obj);
-
+            return PhysicalFile(image.Path, "image/png");
         }
 
         [HttpPut("modify")]
@@ -165,7 +170,7 @@ namespace BexchangeAPI.Controllers
 
             if (_userService.GetUserId(HttpContext) == book.UserId || _userService.IsAdmin(HttpContext))
             {
-                await _contentRepo.DeleteImageAsync(book.ImageId);
+                await _contentRepo.DeleteComponentAsync(book.ImageId);
                 
                 return Ok();
             }
@@ -216,10 +221,21 @@ namespace BexchangeAPI.Controllers
             return Ok(_mapper.Map<IEnumerable<BookDto>>(books));
         }
 
-        [HttpGet("authors"), AllowAnonymous]
+        [HttpGet("authors/verified"), AllowAnonymous]
         public async Task<IActionResult> Authors()
         {
             var authors = await _contentRepo.GetAuthorsAsync();
+
+            if (authors == null)
+                throw new NotFoundException("No authors were added", (int)HttpStatusCode.NotFound);
+
+            return Ok(authors);
+        }
+
+        [HttpGet("authors"), Authorize(Policy = PoliciesConstants.Admins)]
+        public async Task<IActionResult> AllAuthors()
+        {
+            var authors = await _contentRepo.GetAllAuthorsAsync();
 
             if (authors == null)
                 throw new NotFoundException("No authors were added", (int)HttpStatusCode.NotFound);

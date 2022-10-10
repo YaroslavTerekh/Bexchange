@@ -37,7 +37,7 @@ export class BookContentComponent implements OnInit {
           this.bookService.getImage(res.image?.id)
             .pipe(untilDestroyed(this))
             .subscribe(res => {
-              this.bookImg = this.sanitizer.bypassSecurityTrustResourceUrl('data:image/png;base64,' + res.base64ImageRepresentation);
+              this.createImageFromBlob(res);
             })
 
           this.book = res; 
@@ -55,6 +55,17 @@ export class BookContentComponent implements OnInit {
           this.router.navigate(['/error', { error: JSON.stringify(err) }])
         }
       })
+  }
+
+  createImageFromBlob(image: Blob) {
+    let reader = new FileReader();
+    reader.addEventListener("load", () => {
+      this.bookImg = reader.result;
+    }, false);
+ 
+    if (image) {
+       reader.readAsDataURL(image);
+    }
   }
 
 }

@@ -25,7 +25,8 @@ namespace BexchangeAPI.Mapper
                 .ForMember(dest => dest.Image, opt => opt.MapFrom(b => b.Image))
                 .ForMember(dest => dest.Title, opt => opt.MapFrom(b => b.Title))
                 .ForMember(dest => dest.Description, opt => opt.MapFrom(b => b.Description))
-                .ForMember(dest => dest.State, opt => opt.Ignore());
+                .ForMember(dest => dest.State, opt => opt.Ignore())
+                .ForMember(dest => dest.GenreId, opt => opt.MapFrom(b => b.GenreId));
 
             CreateMap<ExchangeOrderDto, ExchangeOrder>()
                     .ForMember(dest => dest.FirstBookId, opt => opt.MapFrom(o => o.FirstBookId))

@@ -4,16 +4,8 @@ using Bexchange.Infrastructure.Services.Repositories;
 using BexchangeAPI.Domain.Enum;
 using BexchangeAPI.Domain.Models;
 using BexchangeAPI.Infrastructure.DtbContext;
-using BexchangeAPI.Infrastructure.Repositories.Interfaces;
-using Grpc.Core;
 using Microsoft.AspNetCore.Http;
 using Microsoft.EntityFrameworkCore;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-
 namespace BexchangeAPI.Infrastructure.Repositories
 {
     public class BooksRepository : IBookContentRepository<Book>
@@ -27,6 +19,7 @@ namespace BexchangeAPI.Infrastructure.Repositories
         public async Task<IEnumerable<Book>> GetFirstBooksAsync(int amount)
         {
             return await _context.Books
+                .Where(b => b.State == State.Verified)
                 .Include(b => b.Image)
                 .OrderByDescending(b => b.Id)
                 .Take(amount)
@@ -48,15 +41,38 @@ namespace BexchangeAPI.Infrastructure.Repositories
                 .ToListAsync(token);
         }
 
+        public async Task<IEnumerable<Book>> GetAllVerifiedBooksAsync(int userId)
+        {
+            return await _context.Books.Where(b => b.State == State.Verified && b.UserId != userId)
+                .Include(b => b.Image)
+                .Include(b => b.Author)
+                .Include(b => b.Genre)
+                .Include(b => b.User)
+                    .ThenInclude(u => u.Address)
+                .Include(b => b.User)
+                    .ThenInclude(u => u.Books)
+                .Include(b => b.Comments)
+                    .ThenInclude(c => c.Author)
+                .ToListAsync();
+        }
+
         public async Task AddComponentAsync(Book book)
         {
             book.Image = await GetImageAsync(book.ImageId);
-            book.Author = new Author
+            var author = await GetAuthorByNameAsync(book.Author.Name);
+
+            if(author == null)
             {
-                Name = book.Author.Name,
-                WikiLink = "",
-                ImgPath = ""
-            };
+                book.Author = new Author
+                {
+                    Name = book.Author.Name,
+                    WikiLink = "",
+                    ImgPath = ""
+                };
+            } else
+            {
+                book.Author = author;
+            }
 
             book.Genre = await GetGenreAsync(book.GenreId);
 
@@ -66,7 +82,7 @@ namespace BexchangeAPI.Infrastructure.Repositories
 
         public async Task<Book?> GetComponentAsync(int id)
         {
-            return await _context.Books.Where(b => b.Id == id && b.State == State.Verified)
+            return await _context.Books.Where(b => b.Id == id)
                 .Include(b => b.Image)
                 .Include(b => b.Author)
                 .Include(b => b.Genre)
@@ -81,10 +97,21 @@ namespace BexchangeAPI.Infrastructure.Repositories
 
         public async Task DeleteComponentAsync(int id)
         {
-            var book = await GetComponentAsync(id);
+            var book = await GetComponentAsync(id);                       
 
+            await DeleteImageAsync(book.ImageId);
             _context.Books.Remove(book);
             await _context.SaveChangesAsync();
+
+            //var booksWithAuthor = await _context.Books.Where(b => b.AuthorId == book.AuthorId).FirstOrDefaultAsync();
+            var test = _context.Books.Any(b => b.AuthorId == book.AuthorId);
+
+            if (test)
+            {
+                var author = await GetAuthorAsync(book.AuthorId);
+                _context.Authors.Remove(author);
+                await _context.SaveChangesAsync();
+            }
         }
 
         public async Task ModifyComponentAsync(Book book)
@@ -101,10 +128,16 @@ namespace BexchangeAPI.Infrastructure.Repositories
 
         public async Task ModifyComponentStateAsync(int id, State state)
         {
-            Book book = await _context.Books.Where(b => b.Id == id).FirstOrDefaultAsync();
+            Book book = await _context.Books.Where(b => b.Id == id).Include(b => b.Author).FirstOrDefaultAsync();
 
-            book.State = state;
-            await _context.SaveChangesAsync();
+            if(book.Author.Name != "" && book.Author.ImgPath != "" && book.Author.WikiLink != "")
+            {
+                book.State = state;
+                await _context.SaveChangesAsync();
+            } else
+            {
+                throw new Exception("You must modify author first!");
+            }
         }
 
         public async Task<IEnumerable<Book>> GetUserComponentsAsync(int userId)
@@ -140,6 +173,21 @@ namespace BexchangeAPI.Infrastructure.Repositories
         }
 
         public async Task<IEnumerable<Author>> GetAuthorsAsync()
+        {
+            return await _context.Authors.Where(a => a.WikiLink != "" && a.Name != "" && a.ImgPath != "").ToListAsync();
+        }
+
+        public async Task<Author> GetAuthorAsync(int id)
+        {
+            return await _context.Authors.Where(a => a.Id == id).FirstOrDefaultAsync();
+        }
+
+        public async Task<Author> GetAuthorByNameAsync(string name)
+        {
+            return await _context.Authors.Where(a => a.Name == name).FirstOrDefaultAsync();
+        }
+
+        public async Task<IEnumerable<Author>> GetAllAuthorsAsync()
         {
             return await _context.Authors.ToListAsync();
         }
@@ -240,8 +288,8 @@ namespace BexchangeAPI.Infrastructure.Repositories
         public async Task DeleteImageAsync(int id)
         {
             var image = await GetImageAsync(id);
-            _context.Images.Remove(image);
-            await _context.SaveChangesAsync();
+            //_context.Images.Remove(image);
+            //await _context.SaveChangesAsync();
 
             File.Delete(image.Path);
         }

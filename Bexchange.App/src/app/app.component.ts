@@ -21,7 +21,7 @@ export class AppComponent implements OnInit {
   ) { }
 
   ngOnInit() {
-    this.authorizationService.authorizationSubject
+    this.authorizationService.isAdminSubject
       .subscribe({
         next: res => {
           this.isAdmin = res;

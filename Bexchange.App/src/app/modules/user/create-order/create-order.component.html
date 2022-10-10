@@ -14,9 +14,8 @@
             <h5>Пропоную</h5>
             <input type="text" placeholder="Введіть назву книги...">
             <div class="input-books">
-                <div [ngStyle]="{'background-color' : books[i].id == activeBookId ? '#b67437' : ''}" 
+                <div [ngStyle]="{'backdrop-filter' : books[i].id == activeBookId ? 'blur(1px)' : ''}" 
                 class="input-book" *ngFor="let book of books; let i = index" (click)="activeBookIndex = i" (click)="activeBookId = book.id">
-                    <img [src]="" alt="">
                     <div>
                         <p>назва: <span>{{book.title}}</span></p>
                         <p>автор: <span>{{book.author.name}}</span></p>
