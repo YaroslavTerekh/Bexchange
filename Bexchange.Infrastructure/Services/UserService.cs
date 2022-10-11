@@ -6,14 +6,10 @@ using BexchangeAPI.Domain.Models;
 using Microsoft.AspNetCore.Http;
 using Microsoft.Extensions.Configuration;
 using Microsoft.IdentityModel.Tokens;
-using System;
-using System.Collections.Generic;
 using System.IdentityModel.Tokens.Jwt;
-using System.Linq;
 using System.Security.Claims;
 using System.Security.Cryptography;
 using System.Text;
-using System.Threading.Tasks;
 
 namespace Bexchange.Infrastructure.Services
 {
@@ -45,7 +41,7 @@ namespace Bexchange.Infrastructure.Services
         }
         public void SetRefreshToken(RefreshToken token, User user, HttpContext context, IUsersRepository<User> _usersRepository)
         {
-            var cookieOpts = new Microsoft.AspNetCore.Http.CookieOptions
+            var cookieOpts = new CookieOptions
             {
                 HttpOnly = true,
                 Expires = token.Expires,
@@ -117,7 +113,7 @@ namespace Bexchange.Infrastructure.Services
 
             var token = new JwtSecurityToken(
                 claims: claims,
-                expires: DateTime.Now.AddDays(1),
+                expires: DateTime.Now.AddSeconds(10),
                 signingCredentials: creds);
 
             var jwt = new JwtSecurityTokenHandler().WriteToken(token);

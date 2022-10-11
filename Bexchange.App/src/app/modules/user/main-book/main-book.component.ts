@@ -76,7 +76,7 @@ export class MainBookComponent implements OnInit, OnDestroy {
                   });
               }, 400);
 
-            }, 1000)
+            }, 15000)
           }
         },
         error: (err: any) => {

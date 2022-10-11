@@ -1,3 +1,4 @@
+import { Router } from '@angular/router';
 import { User } from './../models/User';
 
 import { HttpClient } from '@angular/common/http';
@@ -19,13 +20,16 @@ export class AuthorizationService {
   authorizationSubject: BehaviorSubject<boolean> = new BehaviorSubject<boolean>(this.checkAuthorized());
   isAdminSubject: BehaviorSubject<boolean> = new BehaviorSubject<boolean>(this.checkAdmin());
 
-  constructor(private http: HttpClient) {
+  constructor(
+    private readonly http: HttpClient,
+    private readonly router: Router
+  ) {
 
   }
 
   public setLoggedIn() {
     this.authorizationSubject.next(true);
-    if(localStorage.getItem('loggedUserRole') != 'User') {
+    if (localStorage.getItem('loggedUserRole') != 'User') {
       this.isAdminSubject.next(true);
     }
   }
@@ -36,7 +40,18 @@ export class AuthorizationService {
       localStorage.removeItem('loggedUserRole');
       this.authorizationSubject.next(false);
       this.isAdminSubject.next(false);
+      this.router.navigate(['']);
     }
+  }
+
+  public logIn(tokenJSON: any) {
+    let token = JSON.parse(tokenJSON);
+
+    localStorage.setItem('authToken', token.token);
+    localStorage.setItem('refreshToken', token.refreshToken.token);
+    localStorage.setItem('loggedUserRole', this.getUserRole(token.token).toString());
+
+    this.setLoggedIn();
   }
 
   public isLogged(): boolean {
@@ -55,7 +70,11 @@ export class AuthorizationService {
     return this.http.post(`${environment.bexchangeApi}User/login/${method}`, model, {
       responseType: "text",
     })
-  }  
+  }
+
+  public refreshToken(id: number): Observable<string> {
+    return this.http.post<string>(`${environment.bexchangeApi}User/refresh-token/${id}`, id);
+  }
 
   public checkAuthorized(): boolean {
     let token = localStorage.getItem('authToken');
@@ -74,7 +93,7 @@ export class AuthorizationService {
 
       if (decodeToken.Role == 'Admin' || decodeToken.Role == 'SuperAdmin') {
         console.log(decodeToken.Role);
-        
+
         return true;
       }
       return false;
@@ -95,8 +114,6 @@ export class AuthorizationService {
   }
 
   public getUserRole(token: string): string {
-    console.log(token);
-
     if (token) {
       return this.helper.decodeToken(token).Role;
     }

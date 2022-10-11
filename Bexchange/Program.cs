@@ -1,11 +1,7 @@
 using BexchangeAPI.Infrastructure;
 using BexchangeAPI.Infrastructure.DtbContext;
 using BexchangeAPI.Infrastructure.Repositories;
-using BexchangeAPI.Infrastructure.Repositories.Interfaces;
-using Microsoft.EntityFrameworkCore;
-using AutoMapper;
 using BexchangeAPI.Domain.Models;
-using BexchangeAPI.Middleware;
 using System.Text.Json.Serialization;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.IdentityModel.Tokens;
@@ -18,8 +14,6 @@ using Bexchange.Infrastructure.Services;
 using Bexchange.Domain;
 using Microsoft.AspNetCore.Identity;
 using Bexchange.Infrastructure.Services.Repositories;
-using Microsoft.Extensions.Options;
-using Microsoft.Extensions.FileProviders;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -68,11 +62,13 @@ builder.Services.AddAuthentication(options => {
     {
         options.TokenValidationParameters = new TokenValidationParameters
         {
+            ClockSkew = TimeSpan.Zero,
             ValidateIssuerSigningKey = true,
             IssuerSigningKey = new SymmetricSecurityKey(Encoding.UTF8
                 .GetBytes(builder.Configuration.GetSection("AppSettings:Token").Value)),
             ValidateIssuer = false,
             ValidateAudience = false,
+            ValidateLifetime = true
         };
     });
 

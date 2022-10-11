@@ -133,14 +133,14 @@ namespace BexchangeAPI.Controllers
             var refreshToken = _userService.GenerateRefreshToken();
             _userService.SetRefreshToken(refreshToken, user, HttpContext, _usersRepository);
 
-            return Ok(token);
+            return Ok(new {token, refreshToken});
         }
 
-        [Authorize]
-        [HttpPost("refresh-token")]
-        public async Task<ActionResult<string>> RefreshToken()
+        //[Authorize]
+        [HttpPost("refresh-token/{id}")]
+        public async Task<ActionResult<string>> RefreshToken(int id)
         {
-            var user = await _usersRepository.GetUserAsync(_userService.GetUserId(HttpContext));
+            var user = await _usersRepository.GetUserAsync(id);
 
             var refreshToken = Request.Cookies["refreshToken"];
 
