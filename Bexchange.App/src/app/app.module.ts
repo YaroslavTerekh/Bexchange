@@ -1,3 +1,4 @@
+import { SharedModule } from './modules/shared-module/shared.module';
 
 import { NgModule } from '@angular/core';
 import { HTTP_INTERCEPTORS } from '@angular/common/http';
@@ -12,12 +13,13 @@ import { AdminBookTextTrimPipe } from './pipes/admin-book-text-trim.pipe';
 
 @NgModule({
   declarations: [  
-    AdminBookTextTrimPipe
+    AdminBookTextTrimPipe,
   ],
   imports: [
     AppRoutingModule,
     AdminModule,
-    UserModule
+    UserModule,
+    SharedModule
   ],
   providers: [    
     {

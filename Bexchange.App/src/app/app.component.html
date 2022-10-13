@@ -16,6 +16,7 @@
         </ul>
     </nav>
 </header>
+<app-spinner></app-spinner>
 <app-login-modal *ngIf="modal" (close)="modal = false" (openRegister)="registerModal = true"></app-login-modal>
 <app-register-modal *ngIf="registerModal" (close)="registerModal = false"></app-register-modal>
 <app-account-modal *ngIf="accountModal" (logout)="checkAuthorized = false" (modifyAccount)="accountModifyModal = true"
