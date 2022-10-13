@@ -47,13 +47,9 @@ export class AuthInterceptorService {
                     localStorage.setItem('refreshToken', v.refreshToken.token);
                     localStorage.setItem('loggedUserRole', this.authorizationService.getUserRole(v.token).toString());
                     this.authorizationService.setLoggedIn();
-                    
-                    console.log(req.clone({
-                      setHeaders: { Authorization: `Bearer ${localStorage.getItem('authToken')}`, 'Content-Type': 'application/json' },
-                    }));
 
                     return next.handle(req.clone({
-                      setHeaders: { Authorization: `Bearer ${localStorage.getItem('authToken')}`, 'Content-Type': 'application/json' },
+                      setHeaders: { Authorization: `Bearer ${localStorage.getItem('authToken')}`},
                     }));
                 })
               );

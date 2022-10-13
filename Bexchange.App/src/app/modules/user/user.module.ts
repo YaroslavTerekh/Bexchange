@@ -26,6 +26,7 @@ import { OrderContentItemComponent } from './order-content-item/order-content-it
 import { OrderContentComponent } from './order-content/order-content.component';
 import { RegisterModalComponent } from './register-modal/register-modal.component';
 import { TextTrimPipe } from 'src/app/pipes/text-trim.pipe';
+import { AboutUsPageComponent } from './main-page/about-us-page/about-us-page.component';
 
 
 
@@ -55,6 +56,7 @@ import { TextTrimPipe } from 'src/app/pipes/text-trim.pipe';
     BookContentOwnerFunctionsComponent,
     CommentsModalComponent,
     CommentsModalItemComponent,
+    AboutUsPageComponent,
   ],
   imports: [
     CommonModule,
