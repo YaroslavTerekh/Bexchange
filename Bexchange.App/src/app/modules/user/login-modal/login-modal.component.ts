@@ -47,9 +47,9 @@ export class LoginModalComponent implements OnInit {
     this.authorizationService.loginUser(user, this.loginMethod)
     .subscribe({
       next: token => {         
-        localStorage.setItem('authToken', token);   
-        localStorage.setItem('loggedUserRole', this.authorizationService.getUserRole(token).toString());
-        this.authorizationService.setLoggedIn(); 
+        this.authorizationService.logIn(token);
+        console.log('done');
+        
       },
       error: err => {
         this.router.navigate(['/error', {error: err}]);

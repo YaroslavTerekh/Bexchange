@@ -6,14 +6,10 @@ using BexchangeAPI.Domain.Models;
 using Microsoft.AspNetCore.Http;
 using Microsoft.Extensions.Configuration;
 using Microsoft.IdentityModel.Tokens;
-using System;
-using System.Collections.Generic;
 using System.IdentityModel.Tokens.Jwt;
-using System.Linq;
 using System.Security.Claims;
 using System.Security.Cryptography;
 using System.Text;
-using System.Threading.Tasks;
 
 namespace Bexchange.Infrastructure.Services
 {
@@ -45,7 +41,7 @@ namespace Bexchange.Infrastructure.Services
         }
         public void SetRefreshToken(RefreshToken token, User user, HttpContext context, IUsersRepository<User> _usersRepository)
         {
-            var cookieOpts = new Microsoft.AspNetCore.Http.CookieOptions
+            var cookieOpts = new CookieOptions
             {
                 HttpOnly = true,
                 Expires = token.Expires,
@@ -63,28 +59,6 @@ namespace Bexchange.Infrastructure.Services
             user.TokenExpires = token.Expires;
 
             _usersRepository.SaveUser();
-        }
-        public string CreateToken(User user, IConfiguration _configuration)
-        {
-            List<Claim> claims = new List<Claim>
-            {
-                new Claim(ClaimTypes.Name, user.UserName),
-                new Claim(ClaimTypes.Role, "Admin")
-            };
-
-            var key = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(
-                _configuration.GetSection("AppSettings:Token").Value));
-
-            var creds = new SigningCredentials(key, SecurityAlgorithms.HmacSha512Signature);
-
-            var token = new JwtSecurityToken(
-                claims: claims,
-                expires: DateTime.Now.AddDays(1),
-                signingCredentials: creds);
-
-            var jwt = new JwtSecurityTokenHandler().WriteToken(token);
-
-            return jwt;
         }
         public async Task<bool> TestUserSearchAsync(UserRequest user, IUsersRepository<User> _usersRepository)
         {

@@ -133,33 +133,34 @@ namespace BexchangeAPI.Controllers
             var refreshToken = _userService.GenerateRefreshToken();
             _userService.SetRefreshToken(refreshToken, user, HttpContext, _usersRepository);
 
-            return Ok(token);
+            return Ok(new {token, refreshToken});
         }
 
-        [Authorize]
+        //[Authorize]
         [HttpPost("refresh-token")]
-        public async Task<ActionResult<string>> RefreshToken()
+        public async Task<ActionResult<string>> RefreshToken(RefreshTokenRequest tokenRequest)
         {
-            var user = await _usersRepository.GetUserAsync(_userService.GetUserId(HttpContext));
+            var user = await _usersRepository.GetUserAsync(tokenRequest.UserId);
 
-            var refreshToken = Request.Cookies["refreshToken"];
-
-            if (!user.RefreshToken.Equals(refreshToken))
+            if(user == null)
             {
-                return Unauthorized("Invalid Refresh Token.");
+                return NotFound("Log in first");
+            } 
+            else if(!user.RefreshToken.Equals(tokenRequest.RefreshToken))
+            {
+                return BadRequest("Invalid Refresh Token.");
             }
             else if (user.TokenExpires < DateTime.Now)
             {
-                return Unauthorized("Token expired.");
+                return BadRequest("Token expired.");
             }
 
-            string token = _userService.CreateToken(user, _configuration);
-            var newRefreshToken = _userService.GenerateRefreshToken();
-            _userService.SetRefreshToken(newRefreshToken, user, HttpContext, _usersRepository);
+            string token = await _userService.CreateTokenAsync(user, _configuration);
+            var refreshToken = _userService.GenerateRefreshToken();
+            _userService.SetRefreshToken(refreshToken, user, HttpContext, _usersRepository);
 
-            return Ok(token);
+            return Ok(new { token, refreshToken});
         }
-
         
     }
 }

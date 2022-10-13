@@ -51,7 +51,7 @@ namespace BexchangeAPI.Controllers
         }
 
         [HttpGet("main-page/{amount}"), AllowAnonymous]
-        public async Task<IActionResult> FirstBooks(int amount)
+        public async Task<IActionResult> FirstBooks(int amount = 10)
         {
             var books = await _contentRepo.GetFirstBooksAsync(amount);
 

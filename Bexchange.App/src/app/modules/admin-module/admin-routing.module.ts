@@ -28,7 +28,6 @@ const routes: Routes = [
             {
                 path: 'orders',
                 component: AdminOrdersComponent,
-                // resolve: 
             },
             {
                 path: 'users',
