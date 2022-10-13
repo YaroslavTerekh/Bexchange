@@ -72,8 +72,8 @@ export class AuthorizationService {
     })
   }
 
-  public refreshToken(id: number): Observable<string> {
-    return this.http.post<string>(`${environment.bexchangeApi}User/refresh-token/${id}`, id);
+  public refreshToken(id: number, refreshToken: string): Observable<any> {
+    return this.http.post<any>(`${environment.bexchangeApi}User/refresh-token`, {RefreshToken: refreshToken, userId: id});
   }
 
   public checkAuthorized(): boolean {
@@ -114,6 +114,8 @@ export class AuthorizationService {
   }
 
   public getUserRole(token: string): string {
+    console.log(token);
+    
     if (token) {
       return this.helper.decodeToken(token).Role;
     }

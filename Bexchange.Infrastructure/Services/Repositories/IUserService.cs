@@ -17,7 +17,6 @@ namespace Bexchange.Infrastructure.Services.Repositories
         public bool IsAdmin(HttpContext context);
         public RefreshToken GenerateRefreshToken();
         public void SetRefreshToken(RefreshToken token, User user, HttpContext context, IUsersRepository<User> _usersRepository);
-        public string CreateToken(User user, IConfiguration _configuration);
         public Task<bool> TestUserSearchAsync(UserRequest user, IUsersRepository<User> _usersRepository);
         public Task<string> CreateTokenAsync(User user, IConfiguration _configuration);
     }

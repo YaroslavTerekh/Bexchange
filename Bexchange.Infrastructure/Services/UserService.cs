@@ -60,28 +60,6 @@ namespace Bexchange.Infrastructure.Services
 
             _usersRepository.SaveUser();
         }
-        public string CreateToken(User user, IConfiguration _configuration)
-        {
-            List<Claim> claims = new List<Claim>
-            {
-                new Claim(ClaimTypes.Name, user.UserName),
-                new Claim(ClaimTypes.Role, "Admin")
-            };
-
-            var key = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(
-                _configuration.GetSection("AppSettings:Token").Value));
-
-            var creds = new SigningCredentials(key, SecurityAlgorithms.HmacSha512Signature);
-
-            var token = new JwtSecurityToken(
-                claims: claims,
-                expires: DateTime.Now.AddDays(1),
-                signingCredentials: creds);
-
-            var jwt = new JwtSecurityTokenHandler().WriteToken(token);
-
-            return jwt;
-        }
         public async Task<bool> TestUserSearchAsync(UserRequest user, IUsersRepository<User> _usersRepository)
         {
             var testSearchUser = await _usersRepository.GetUserByNameAsync(user.UserName);
@@ -113,7 +91,7 @@ namespace Bexchange.Infrastructure.Services
 
             var token = new JwtSecurityToken(
                 claims: claims,
-                expires: DateTime.Now.AddSeconds(10),
+                expires: DateTime.Now.AddDays(1),
                 signingCredentials: creds);
 
             var jwt = new JwtSecurityTokenHandler().WriteToken(token);
