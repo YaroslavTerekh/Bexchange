@@ -1,3 +1,4 @@
+import { AuthorizationService } from 'src/app/services/authorization.service';
 import { Component, OnInit } from "@angular/core";
 import { DomSanitizer } from "@angular/platform-browser";
 import { Router } from "@angular/router";
@@ -17,6 +18,7 @@ export class MainPageComponent implements OnInit {
   books: Book[] = [];
   booksToShow: any[] = [];
   imgTemp: any;
+  isLoggedIn!: boolean;
 
   slideConfig = {
     slidesToShow: 5,
@@ -30,11 +32,18 @@ export class MainPageComponent implements OnInit {
   constructor(
     private bookService: BookService,
     private router: Router,
-    private sanitizer: DomSanitizer
+    private readonly authorizationService: AuthorizationService
   ) {
   }
 
   ngOnInit(): void {
+    this.authorizationService.authorizationSubject
+      .subscribe({
+        next: res => {
+          this.isLoggedIn = res;
+        }
+      });
+
     this.bookService.getFirstBooks(10)
       .pipe(untilDestroyed(this))
       .subscribe({
