@@ -14,13 +14,15 @@ import { BookService } from 'src/app/services/book.service';
 import { OrderService } from 'src/app/services/order.service';
 import { RegistrationService } from 'src/app/services/registration.service';
 import { ErrorPageComponent } from './error-page/error-page.component';
+import { SpinnerComponent } from './spinner/spinner.component';
 
 
 
 @NgModule({
   declarations: [
     ErrorPageComponent,
-    TextTrimPipe
+    TextTrimPipe,
+    SpinnerComponent
   ],
   imports: [    
     CommonModule,
@@ -33,7 +35,8 @@ import { ErrorPageComponent } from './error-page/error-page.component';
     FormsModule,
     ReactiveFormsModule,
     BrowserAnimationsModule,    
-    TextTrimPipe
+    TextTrimPipe,
+    SpinnerComponent
   ],
   providers: [
     BookService,

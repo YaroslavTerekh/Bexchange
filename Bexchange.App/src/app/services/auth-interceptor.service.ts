@@ -4,18 +4,22 @@ import { Observable } from 'rxjs/internal/Observable';
 import { HttpEvent, HttpHandler, HttpHeaders, HttpRequest } from '@angular/common/http';
 import { Injectable } from '@angular/core';
 import { catchError, subscribeOn, throwError } from 'rxjs';
-import { switchMap } from 'rxjs/operators';
+import { finalize, switchMap } from 'rxjs/operators';
 import { JwtHelperService } from '@auth0/angular-jwt';
 import { helper } from 'echarts';
+import { LoaderService } from './loader.service';
 
 @Injectable({
   providedIn: 'root'
 })
 export class AuthInterceptorService {
 
+  private totalRequests = 0;
+
   constructor(
     private readonly authorizationService: AuthorizationService,
-    private readonly router: Router
+    private readonly router: Router,
+    private loadingService: LoaderService
   ) { }
 
   intercept(
@@ -23,6 +27,8 @@ export class AuthInterceptorService {
     next: HttpHandler
   ): Observable<HttpEvent<any>> {
     const token = localStorage.getItem('authToken');
+    this.totalRequests++;
+    this.loadingService.setLoading(true);
 
     if (token) {
       req = req.clone({
@@ -56,7 +62,13 @@ export class AuthInterceptorService {
             }
           }
           return next.handle(req);
+        }),
+        finalize(() => {
+          this.totalRequests--;
+          if (this.totalRequests == 0) {
+            this.loadingService.setLoading(false);
+          }
         })
-      )
+      )      
   }
 }
