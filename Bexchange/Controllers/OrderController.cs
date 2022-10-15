@@ -1,5 +1,6 @@
 ﻿using AutoMapper;
 using Bexchange.Infrastructure.Repositories.Interfaces;
+using Bexchange.Infrastructure.Services.Repositories;
 using BexchangeAPI.Domain.CustomExceptions;
 using BexchangeAPI.Domain.Enum;
 using BexchangeAPI.Domain.Models;
@@ -21,12 +22,15 @@ namespace BexchangeAPI.Controllers
         private readonly IOrderContentRepository<ExchangeOrder> _orderRepo;
         private readonly IBookContentRepository<Book> _bookRepo;
         private readonly IMapper _mapper;
+        private readonly IUserService _userService;
 
-        public OrderController(IOrderContentRepository<ExchangeOrder> contentRepo, IMapper mapper, IBookContentRepository<Book> bookRepo)
+        public OrderController(IOrderContentRepository<ExchangeOrder> contentRepo, IMapper mapper, 
+            IBookContentRepository<Book> bookRepo, IUserService userService)
         {
             _orderRepo = contentRepo;
             _mapper = mapper;
             _bookRepo = bookRepo;
+            _userService = userService;
         }
 
         [HttpGet]
@@ -62,10 +66,10 @@ namespace BexchangeAPI.Controllers
             return Ok(order);
         }
 
-        [HttpGet("user/{id}/outgoing")]
-        public async Task<IActionResult> GetUserOutgoingOrders(int id)
+        [HttpGet("user/outgoing")]
+        public async Task<IActionResult> GetUserOutgoingOrders()
         {
-            var order = await _orderRepo.GetUserOutgoingOrdersAsync(id);
+            var order = await _orderRepo.GetUserOutgoingOrdersAsync(_userService, HttpContext);
 
             if (order == null)
                 throw new NotFoundException("Orders not found", (int)HttpStatusCode.NotFound);
@@ -73,15 +77,26 @@ namespace BexchangeAPI.Controllers
             return Ok(order);
         }
 
-        [HttpGet("user/{id}/incoming")]
-        public async Task<IActionResult> GetUserImcomingOrders(int id)
+        [HttpGet("user/incoming")]
+        public async Task<IActionResult> GetUserImcomingOrders()
         {
-            var order = await _orderRepo.GetUserIncomingOrdersAsync(id);
+            var order = await _orderRepo.GetUserIncomingOrdersAsync(_userService, HttpContext);
 
             if (order == null)
                 throw new NotFoundException("Orders not found", (int)HttpStatusCode.NotFound);
 
             return Ok(order);
+        }
+
+        [HttpGet("user/succeded")]
+        public async Task<IActionResult> GetUserSuccededOrders()
+        {
+            var orders = await _orderRepo.GetUserSuceededOrdersAsync(_userService, HttpContext);
+            
+            if (orders == null)
+                throw new NotFoundException("Orders not found", (int)HttpStatusCode.NotFound);
+
+            return Ok(orders);
         }
 
         [HttpPost("add")]
@@ -140,6 +155,14 @@ namespace BexchangeAPI.Controllers
                 return BadRequest(e);
             }
 
+        }
+
+        [HttpPatch("success/{id}")]
+        public async Task<IActionResult> SuccessOrder(int id) 
+        {
+            await _orderRepo.SuccessOrderAsync(id, _userService, HttpContext);
+
+            return Ok();
         }
 
         [HttpPatch("state/decline/{id}")]

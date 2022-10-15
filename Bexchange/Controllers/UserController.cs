@@ -136,7 +136,6 @@ namespace BexchangeAPI.Controllers
             return Ok(new {token, refreshToken});
         }
 
-        //[Authorize]
         [HttpPost("refresh-token")]
         public async Task<ActionResult<string>> RefreshToken(RefreshTokenRequest tokenRequest)
         {

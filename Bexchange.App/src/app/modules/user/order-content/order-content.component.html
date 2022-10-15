@@ -2,9 +2,11 @@
     <h3 *ngIf="orders > 0">Мої ордери на обмін</h3>
     <div class="buttons">
         <button [ngStyle]="{'background-color': inActive ? '#b8ab01' : ''}" class="incoming" 
-        (click)="outActive = false" (click)="inActive = true" (click)="orders = incomingOrders" (click)="isIncoming = true">Вхідні</button>
+        (click)="outActive = false; inActive = true; successActive = false" (click)="orders = incomingOrders" (click)="isIncoming = true">Вхідні</button>
         <button [ngStyle]="{'background-color': outActive ? '#b8ab01' : ''}" class="outgoing" 
-        (click)="outActive = true" (click)="inActive = false" (click)="orders = outgoingOrders" (click)="isIncoming = false">Вихідні</button>
+        (click)="inActive = false; successActive = false; outActive = true" (click)="orders = outgoingOrders" (click)="isIncoming = false">Вихідні</button>
+        <button [ngStyle]="{'background-color': successActive ? '#b8ab01' : ''}" class="success" 
+        (click)="outActive = false; inActive = false; successActive = true" (click)="orders = succededOrders" (click)="isIncoming = false">Підтверджені</button>
     </div>
     <div class="orders-list">
         <app-order-content-item (click)="toggle(i)" *ngFor="let order of orders; let i = index" [firstBook]="order.firstBook.title"

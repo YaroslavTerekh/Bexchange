@@ -4,6 +4,7 @@ using BexchangeAPI.Domain.Enum;
 using BexchangeAPI.Domain.Models;
 using BexchangeAPI.Infrastructure.DtbContext;
 using BexchangeAPI.Infrastructure.Repositories.Interfaces;
+using Microsoft.AspNetCore.Http;
 using Microsoft.EntityFrameworkCore;
 using System;
 using System.Collections.Generic;
@@ -67,11 +68,11 @@ namespace BexchangeAPI.Infrastructure.Repositories
             await _context.SaveChangesAsync();
         }
 
-        public async Task<IEnumerable<ExchangeOrder>> GetUserComponentsAsync(int userId)
+        public async Task<IEnumerable<ExchangeOrder>> GetUserComponentsAsync(int id)
         {
             return await _context.Orders
-                .Where(o => o.FirstBook.UserId == userId || o.SecondBook.UserId == userId)
-                .Include(b => b.FirstBook)
+                .Where(o => o.FirstBook.UserId == id || o.SecondBook.UserId == id)
+                .Include(o => o.FirstBook)
                 .Include(b => b.SecondBook)
                 .ToListAsync();
         }
@@ -83,6 +84,20 @@ namespace BexchangeAPI.Infrastructure.Repositories
             await _context.SaveChangesAsync();
         }
 
+        public async Task SuccessOrderAsync(int id, IUserService userService, HttpContext context)
+        {
+            ExchangeOrder order = await GetComponentAsync(id);
+            int userId = userService.GetUserId(context);
+
+            if (order.FirstBook.UserId == userId)
+                order.FirstUserAccepted = true;
+
+            if (order.SecondBook.UserId == userId)
+                order.SecondUserAccepted = true;
+
+            await _context.SaveChangesAsync();
+        }
+
         public async Task DeclineOrderAsync(int id)
         {
             var order = await GetComponentAsync(id);
@@ -90,19 +105,30 @@ namespace BexchangeAPI.Infrastructure.Repositories
             await _context.SaveChangesAsync();
         }
 
-        public async Task<IEnumerable<ExchangeOrder>> GetUserOutgoingOrdersAsync(int id)
+        public async Task<IEnumerable<ExchangeOrder>> GetUserOutgoingOrdersAsync(IUserService userService, HttpContext context)
         {
             return await _context.Orders
-                .Where(o => o.SecondBook.UserId == id && o.State == State.Verified)
+                .Where(o => o.SecondBook.UserId == userService.GetUserId(context) && o.State == State.Verified)
                 .Include(b => b.FirstBook)
                 .Include(b => b.SecondBook)
                 .ToListAsync();
         }
 
-        public async Task<IEnumerable<ExchangeOrder>> GetUserIncomingOrdersAsync(int id)
+        public async Task<IEnumerable<ExchangeOrder>> GetUserIncomingOrdersAsync(IUserService userService, HttpContext context)
         {
             return await _context.Orders
-                .Where(o => o.FirstBook.UserId == id)
+                .Where(o => o.FirstBook.UserId == userService.GetUserId(context))
+                .Include(b => b.FirstBook)
+                .Include(b => b.SecondBook)
+                .ToListAsync();
+        }
+
+        public async Task<IEnumerable<ExchangeOrder>> GetUserSuceededOrdersAsync(IUserService userService, HttpContext context)
+        {
+            int userId = userService.GetUserId(context);
+
+            return await _context.Orders
+                .Where(b => (b.FirstBook.UserId == userId || b.SecondBook.UserId == userId) && (b.FirstUserAccepted == true && b.SecondUserAccepted == true))
                 .Include(b => b.FirstBook)
                 .Include(b => b.SecondBook)
                 .ToListAsync();

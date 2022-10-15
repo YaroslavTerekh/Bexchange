@@ -1,3 +1,4 @@
+import { Order } from './../../../models/Order';
 import { Component, OnInit, Input } from "@angular/core";
 import { Router, ActivatedRoute } from "@angular/router";
 import { OrderService } from "src/app/services/order.service";
@@ -9,7 +10,7 @@ import { OrderService } from "src/app/services/order.service";
   styleUrls: ['./order-content-item-additional.component.scss']
 })
 export class OrderContentItemAdditionalComponent implements OnInit {
-  @Input() order: any;
+  @Input() order!: Order;
   @Input() isIncoming!: boolean;
 
   constructor(
@@ -45,6 +46,15 @@ export class OrderContentItemAdditionalComponent implements OnInit {
         this.refreshPage();
       }
     });     
+  }
+
+  successOrder(id: number) {
+    this.orderService.successOrder(id)
+      .subscribe({
+        next: res => {
+          this.refreshPage();
+        }
+      });
   }
 
   private refreshPage() {

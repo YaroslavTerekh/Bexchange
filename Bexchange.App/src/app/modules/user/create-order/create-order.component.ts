@@ -9,6 +9,7 @@ import { OrderService } from "src/app/services/order.service";
 import { debounceTime, distinctUntilChanged, map, tap } from "rxjs/operators";
 import { fromEvent } from "rxjs";
 import { Book } from "src/app/models/Book";
+import { OrderRequest } from 'src/app/models/OrderRequest';
 
 
 @Component({
@@ -77,7 +78,7 @@ export class CreateOrderComponent implements OnInit {
   }
 
   createOrder() {
-    let order: Order = {
+    let order: OrderRequest = {
       id: 0,
       firstBookId: this.book.id,
       secondBookId: this.activeBookId, 
