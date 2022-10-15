@@ -28,9 +28,6 @@ export class AuthorsContentComponent implements OnInit {
       .subscribe({
         next: res => {
           this.authors = res;
-        }, 
-        error: (err: any) => {
-          this.router.navigate(['/error', { error: JSON.stringify(err) }])
         }
       });
   }

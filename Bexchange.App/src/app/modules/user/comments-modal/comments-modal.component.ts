@@ -40,10 +40,6 @@ export class CommentsModalComponent implements OnInit {
           this.router.routeReuseStrategy.shouldReuseRoute = () => false;
           this.router.onSameUrlNavigation = 'reload';
           this.router.navigate([this.router.url])
-        }, 
-        error: (err) => {
-          console.log(err);
-          
         }
       });
   }

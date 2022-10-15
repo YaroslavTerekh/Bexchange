@@ -26,17 +26,19 @@ export class AdminStatsComponent implements OnInit {
     this.userId = this.authorizationService.getUserId();
 
     this.adminService.getLastUsers()
-      .subscribe(res => {
-        this.initECharts(res);
-        this.resUsers = Object.values(res);
-
-        this.resUsers.forEach(item => {
-          if (Array.isArray(item) && item.length > 0) {
-            item.forEach(childItem => {
-              this.users.push(childItem);
-            })
-          }
-        });
+      .subscribe({
+        next: res => {
+          this.initECharts(res);
+          this.resUsers = Object.values(res);
+  
+          this.resUsers.forEach(item => {
+            if (Array.isArray(item) && item.length > 0) {
+              item.forEach(childItem => {
+                this.users.push(childItem);
+              })
+            }
+          });
+        }
       });
   }
 

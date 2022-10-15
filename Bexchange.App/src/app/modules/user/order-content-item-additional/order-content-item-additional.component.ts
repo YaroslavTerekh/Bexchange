@@ -24,8 +24,10 @@ export class OrderContentItemAdditionalComponent implements OnInit {
 
   deleteOrder(id: number) {
     this.orderService.deleteOrder(id)
-    .subscribe(res => {
-      this.refreshPage();
+    .subscribe({
+      next: res => {
+        this.refreshPage();
+      }
     });
   }
 
@@ -38,8 +40,10 @@ export class OrderContentItemAdditionalComponent implements OnInit {
 
   declineOrder(id: number) {
     this.orderService.declineOrder(id)
-    .subscribe(res => {
-      this.refreshPage();
+    .subscribe({
+      next: res => {
+        this.refreshPage();
+      }
     });     
   }
 

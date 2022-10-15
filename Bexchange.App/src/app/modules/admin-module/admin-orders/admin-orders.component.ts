@@ -19,8 +19,10 @@ export class AdminOrdersComponent implements OnInit {
   ngOnInit(): void {
     this.orderService.getAllOrders()
       .pipe(untilDestroyed(this))
-      .subscribe(res => {
-        this.orders = res;
+      .subscribe({
+        next: res => {
+          this.orders = res;
+        }
       });
   }
 

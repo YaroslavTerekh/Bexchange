@@ -36,9 +36,6 @@ export class OrderContentComponent implements OnInit {
       .subscribe({
         next: res => {                    
           this.orders = res; 
-        },
-        error: err => {
-          this.router.navigate(['/error', { error: JSON.stringify(err) }])
         }
       })
     } else {
@@ -48,9 +45,6 @@ export class OrderContentComponent implements OnInit {
         next: res => {
           this.incomingOrders = res; 
           this.orders = this.incomingOrders;
-        },
-        error: err => {
-          this.router.navigate(['/error', { error: JSON.stringify(err) }])
         }
       })
       
@@ -59,9 +53,6 @@ export class OrderContentComponent implements OnInit {
       .subscribe({
         next: res => {                 
           this.outgoingOrders = res; 
-        },
-        error: err => {
-          this.router.navigate(['/error', { error: JSON.stringify(err) }])
         }
       })
     }        

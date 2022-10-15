@@ -52,9 +52,6 @@ export class RegisterModalComponent implements OnInit {
       .subscribe({
         next: res => {
           this.close.emit();
-        }, 
-        error: (err) => {
-          this.errorMessage = err.error;
         }
       });
   }

@@ -39,14 +39,16 @@ export class CreateOrderComponent implements OnInit {
   ngOnInit(): void {
     this.bookService.getBook(this.route.snapshot.params['id'])
     .pipe(untilDestroyed(this))
-    .subscribe(res => {      
-      this.book = res;
-
-      this.bookService.getImage(this.book.image?.id)
-        .pipe(untilDestroyed(this))
-        .subscribe(res => {
-          this.bookImg = this.createImageFromBlob(res);
-        })
+    .subscribe({
+      next: res => {      
+        this.book = res;
+  
+        this.bookService.getImage(this.book.image?.id)
+          .pipe(untilDestroyed(this))
+          .subscribe(res => {
+            this.bookImg = this.createImageFromBlob(res);
+          })
+      }
     });
 
     this.bookService.getUserBooks(this.authorizationService.getUserId())

@@ -78,9 +78,6 @@ export class MainBookComponent implements OnInit, OnDestroy {
 
             }, 15000)
           }
-        },
-        error: (err: any) => {
-          this.router.navigate(['/error', { error: JSON.stringify(err) }]);
         }
       });
   }

@@ -52,9 +52,6 @@ export class BookContentComponent implements OnInit {
           } else {
             this.isOwner = false;
           }
-        },
-        error: err => {
-          this.router.navigate(['/error', { error: JSON.stringify(err) }])
         }
       })
   }

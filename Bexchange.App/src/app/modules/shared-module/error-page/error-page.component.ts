@@ -10,13 +10,12 @@ export class ErrorPageComponent implements OnInit {
   response!: any;
   code!: string;
   description!: string;
-  
+
   constructor(
     private route: ActivatedRoute
   ) { }
 
   ngOnInit(): void {
-    console.log(this.route.snapshot.params['error']);
     this.response = JSON.parse(this.route.snapshot.params['error']);
       
     if(this.response && this.response.status != 401 && this.response.status != 403) {

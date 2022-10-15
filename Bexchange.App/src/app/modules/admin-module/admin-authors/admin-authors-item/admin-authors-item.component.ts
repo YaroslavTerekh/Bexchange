@@ -31,17 +31,9 @@ export class AdminAuthorsItemComponent implements OnInit {
       name: this.form.get('name')?.value,
       wikiLink: this.form.get('wikiLink')?.value,
       imgPath: this.form.get('imgPath')?.value
-    };
-
-    console.log(author);
-    
+    };    
 
     this.bookService.modifyAuthor(author)
-      .subscribe({
-        next: res => {
-          console.log(res);
-          
-        }
-      });
+      .subscribe();
   }
 }

@@ -19,12 +19,12 @@ export class AdminUsersComponent implements OnInit {
 
   ngOnInit(): void {
     this.adminService.getAllUsers()
-      .subscribe(res => {
-        this.users = res;
-      })
+      .subscribe({
+        next: res => {
+          this.users = res;
+        }
+      });
 
     this.userId = this.authorizationsService.getUserId();
   }
-  
-
 }

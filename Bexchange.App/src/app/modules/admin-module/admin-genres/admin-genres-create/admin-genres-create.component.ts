@@ -11,7 +11,7 @@ import { Component, OnInit } from '@angular/core';
   templateUrl: './admin-genres-create.component.html',
   styleUrls: ['./admin-genres-create.component.scss']
 })
-export class AdminGenresCreateComponent implements OnInit {
+export class AdminGenresCreateComponent {
   form: FormGroup = new FormGroup({
     title: this.fb.control('', [Validators.required]),
     imagePath: this.fb.control('', [Validators.required]),
@@ -24,9 +24,6 @@ export class AdminGenresCreateComponent implements OnInit {
     private readonly router: Router
   ) { }
 
-  ngOnInit(): void {
-  }
-
   addGenre() {
     const newGenre: Genre = {
       id: 0,
@@ -34,8 +31,6 @@ export class AdminGenresCreateComponent implements OnInit {
       imgPath: this.form.get('imagePath')?.value,
       description: this.form.get('description')?.value
     }
-
-    console.log(newGenre);
     
     this.bookService.addGenre(newGenre)
       .subscribe({next: res => {

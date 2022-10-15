@@ -9,7 +9,7 @@ import { Book } from 'src/app/models/Book';
   templateUrl: './admin-books-item.component.html',
   styleUrls: ['./admin-books-item.component.scss']
 })
-export class AdminBooksItemComponent implements AfterViewInit {
+export class AdminBooksItemComponent {
   @Output() bookDeleted = new EventEmitter<void>();
   @Input() book!: Book;
   changeStatus!: boolean;
@@ -19,10 +19,6 @@ export class AdminBooksItemComponent implements AfterViewInit {
     private readonly bookService: BookService,
     private readonly router: Router
   ) { }
-
-  ngAfterViewInit() {
-    console.log(this.book);
-  }
 
   deleteBook(id: number) {
     this.bookService.deleteBook(id)
@@ -44,10 +40,6 @@ export class AdminBooksItemComponent implements AfterViewInit {
       .subscribe({
         next: res => { 
           this.router.navigate(['/admin/stats']);
-        },
-        error: err => {
-          this.error = err.error.response;
-          console.log(err.error.response);          
         }
       });
   }

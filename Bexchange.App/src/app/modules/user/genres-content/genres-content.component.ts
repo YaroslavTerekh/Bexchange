@@ -27,9 +27,6 @@ export class GenresContentComponent implements OnInit {
       .subscribe({
         next: res => {
           this.genres = res;          
-        }, 
-        error: (err: any) => {
-          this.router.navigate(['/error', { error: JSON.stringify(err) }])
         }
       });
   }

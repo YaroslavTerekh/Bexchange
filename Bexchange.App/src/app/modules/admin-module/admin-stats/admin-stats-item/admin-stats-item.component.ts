@@ -24,36 +24,40 @@ export class AdminStatsItemComponent implements OnInit {
 
   ngOnInit(): void {
     this.authorizationsService.getUserInfo(this.user.id)
-      .subscribe(res => {
-        this.userRole = +res.role;
+      .subscribe({
+        next: res => {
+          this.userRole = +res.role;
+        }
       });
 
-    this.loggedUserRole = localStorage.getItem('loggedUserRole')?.toString();
-    console.log(this.loggedUserRole);
-    
-    
+    this.loggedUserRole = localStorage.getItem('loggedUserRole')?.toString();  
   }
 
   banUser(id: number) {
     this.adminService.banUser(id)
-      .subscribe(res => {
-        this.reloadPage();
-      })
+      .subscribe({
+        next: res => {
+          this.reloadPage();
+        }
+      });
   }
 
   unbanUser(id: number) {
     this.adminService.unbanUser(id)
-      .subscribe(res => {
-        this.reloadPage();
-      })
+      .subscribe({
+        next: res => {
+          this.reloadPage();
+        }
+      });
   }
 
   changeUserRole(role: number, id: number) {
     this.adminService.changeUserRole(role, id)
-      .subscribe(res => {
-        this.reloadPage();
-        // console.log(res);        
-      })
+      .subscribe({
+        next: res => {
+          this.reloadPage();
+        }
+      });
   }
   
 

@@ -24,8 +24,10 @@ export class AdminOrdersItemComponent implements OnInit {
 
   deleteOrder(id: number) {
     this.orderService.deleteOrder(id)
-      .subscribe(res => {
-        this.router.navigate(['/admin/stats']);
+      .subscribe({
+        next: res => {
+          this.router.navigate(['/admin/stats']);
+        }
       });
   }
 }

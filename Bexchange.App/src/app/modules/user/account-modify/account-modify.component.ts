@@ -32,8 +32,10 @@ export class AccountModifyComponent implements OnInit {
 
   ngOnInit(): void {
     this.authorizationService.getUserInfo(this.authorizationService.getUserId())
-      .subscribe(res => {
-        this.user = res;
+      .subscribe({
+        next: res => {
+          this.user = res;
+        }
       })
   }
 
@@ -52,15 +54,7 @@ export class AccountModifyComponent implements OnInit {
     }     
 
     this.authorizationService.changeUserInfo(user)
-      .subscribe({
-        next: res => {
-          
-          
-        }, 
-        error: (err) => {
-          this.router.navigate(['/error', JSON.stringify(err)]);          
-        }
-      });
+      .subscribe();
   }
 
 }

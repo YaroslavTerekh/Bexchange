@@ -23,8 +23,6 @@ export class AdminGenresItemComponent implements OnInit {
   }
 
   deleteGenre(id: number) {
-    console.log('try');
-    
     this.bookService.deleteGenre(id)
       .pipe(untilDestroyed(this))
       .subscribe({

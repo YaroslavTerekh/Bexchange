@@ -25,7 +25,7 @@ export class LoginModalComponent implements OnInit {
   constructor(
     private authorizationService: AuthorizationService,
     private fb: FormBuilder,
-    private router: Router) { }
+    ) { }
 
   ngOnInit(): void {
   }
@@ -47,12 +47,7 @@ export class LoginModalComponent implements OnInit {
     this.authorizationService.loginUser(user, this.loginMethod)
     .subscribe({
       next: token => {         
-        this.authorizationService.logIn(token);
-        console.log('done');
-        
-      },
-      error: err => {
-        this.router.navigate(['/error', {error: err}]);
+        this.authorizationService.logIn(token);        
       }
     });
   }
