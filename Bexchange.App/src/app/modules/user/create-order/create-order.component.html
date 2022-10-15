@@ -13,7 +13,7 @@
         <div class="i-give">
             <h5>Пропоную</h5>
             <div class="input-books">
-                <div [ngStyle]="{'backdrop-filter' : books[i].id == activeBookId ? 'blur(1px)' : ''}" 
+                <div [ngClass]="{'active' : books[i].id == activeBookId}" 
                 class="input-book" *ngFor="let book of books; let i = index" (click)="activeBookIndex = i" (click)="activeBookId = book.id">
                     <div>
                         <p>назва: <span>{{book.title}}</span></p>

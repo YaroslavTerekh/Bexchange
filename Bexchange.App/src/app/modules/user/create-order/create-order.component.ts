@@ -1,3 +1,4 @@
+import { StateDictionary } from 'src/app/models/StateDictionary';
 import { AfterViewInit, Component, ElementRef, OnInit, ViewChild } from "@angular/core";
 import { ActivatedRoute, Router } from "@angular/router";
 import { UntilDestroy, untilDestroyed } from "@ngneat/until-destroy";
@@ -5,7 +6,7 @@ import { BookService } from "src/app/services/book.service";
 import { Order } from "src/app/models/Order";
 import { AuthorizationService } from "src/app/services/authorization.service";
 import { OrderService } from "src/app/services/order.service";
-import { debounceTime, distinctUntilChanged, tap } from "rxjs/operators";
+import { debounceTime, distinctUntilChanged, map, tap } from "rxjs/operators";
 import { fromEvent } from "rxjs";
 import { Book } from "src/app/models/Book";
 
@@ -18,6 +19,8 @@ import { Book } from "src/app/models/Book";
 
 @UntilDestroy()
 export class CreateOrderComponent implements OnInit {
+  userId: number = this.authorizationService.getUserId();
+  stateDict: StateDictionary = new StateDictionary();
   books: Book[] = [];
   book!: Book;
   bookImg: any;
@@ -47,12 +50,17 @@ export class CreateOrderComponent implements OnInit {
     });
 
     this.bookService.getUserBooks(this.authorizationService.getUserId())
-      .pipe(untilDestroyed(this))
-      .subscribe({
-        next: res => {          
-          this.books = res
-        }
-      });
+      .pipe(
+        untilDestroyed(this),
+        map(res => {
+          res.forEach(b => {
+            if(b.state == 1) {
+              this.books.push(b);
+            }
+          })
+        })  
+      )
+      .subscribe();
   }
 
   createImageFromBlob(image: Blob) {
@@ -75,8 +83,8 @@ export class CreateOrderComponent implements OnInit {
 
     this.orderService.addOrder(order)
       .subscribe(res => {
-        this.router.navigate(['/orders'])
-      })  
+        this.router.navigate(['/orders/user/',this.userId]);
+      });
   }
 
 }

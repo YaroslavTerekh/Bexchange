@@ -221,7 +221,7 @@ namespace BexchangeAPI.Infrastructure.Repositories
         public async Task<IEnumerable<Book>> GetByGenreAsync(string genre)
         {
             return await _context.Books
-                .Where(b => b.Genre.Title == genre)
+                .Where(b => b.Genre.Title == genre && b.State == State.Verified)
                 .Include(b => b.Image)
                 .Include(b => b.Author)
                 .Include(b => b.Genre)
@@ -234,7 +234,7 @@ namespace BexchangeAPI.Infrastructure.Repositories
         public async Task<IEnumerable<Book>> GetByAuthorAsync(string author)
         {
             return await _context.Books
-                .Where(b => b.Author.Name == author)
+                .Where(b => b.Author.Name == author && b.State == State.Verified)
                 .Include(b => b.Image)
                 .Include(b => b.Author)
                 .Include(b => b.Genre)

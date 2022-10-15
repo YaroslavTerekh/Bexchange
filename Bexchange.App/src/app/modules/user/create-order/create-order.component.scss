@@ -82,6 +82,7 @@
 
                 .input-book {
                     cursor: pointer;
+                    border-top: 1px solid #fff;
                     border-bottom: 1px solid #fff;
                     padding: 10px;
                     display: flex;
@@ -100,6 +101,10 @@
                             color: #fff;
                             font-weight: 600;
                         }
+
+                        .state {
+                            color: #ffe600;
+                        }
                     }
                 }
             }
@@ -116,5 +121,5 @@
 }
 
 .active {
-    opacity: .9;
+    background-color: rgba(0, 0, 0, 0.267);
 }

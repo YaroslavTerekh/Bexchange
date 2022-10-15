@@ -1,6 +1,7 @@
 ﻿using AutoMapper;
 using Bexchange.Infrastructure.Repositories.Interfaces;
 using BexchangeAPI.Domain.CustomExceptions;
+using BexchangeAPI.Domain.Enum;
 using BexchangeAPI.Domain.Models;
 using BexchangeAPI.DTOs;
 using BexchangeAPI.Infrastructure.Repositories.Interfaces;
@@ -33,7 +34,7 @@ namespace BexchangeAPI.Controllers
         {
             var orders = await _orderRepo.GetAllComponentsAsync(token);
 
-            if (orders == null) 
+            if (orders == null)
                 throw new NotFoundException("Orders not found", (int)HttpStatusCode.NotFound);
 
             return Ok(orders);
@@ -83,29 +84,26 @@ namespace BexchangeAPI.Controllers
             return Ok(order);
         }
 
-
         [HttpPost("add")]
         public async Task<IActionResult> AddOrder(ExchangeOrderDto order)
         {
-            if (ModelState.IsValid)
-            {
-                var newOrder = _mapper.Map<ExchangeOrder>(order);
+            var newOrder = _mapper.Map<ExchangeOrder>(order);
 
-                var firstBook = await _bookRepo.GetComponentAsync(order.FirstBookId);
-                var secondBook = await _bookRepo.GetComponentAsync(order.SecondBookId);
+            var firstBook = await _bookRepo.GetComponentAsync(order.FirstBookId);
+            var secondBook = await _bookRepo.GetComponentAsync(order.SecondBookId);
 
-                if(firstBook == null || secondBook == null) 
-                    throw new NotFoundException("Books not found", (int)HttpStatusCode.NotFound);
+            if (firstBook == null || secondBook == null)
+                throw new NotFoundException("Books not found", (int)HttpStatusCode.NotFound);
 
-                newOrder.FirstBook = firstBook;
-                newOrder.SecondBook = secondBook;
+            if (firstBook.State != State.Verified || secondBook.State != State.Verified)
+                return BadRequest();
 
-                await _orderRepo.AddComponentAsync(newOrder);
+            newOrder.FirstBook = firstBook;
+            newOrder.SecondBook = secondBook;
 
-                return Created(Request.Path, new { newOrder.Id });
-            }
+            await _orderRepo.AddComponentAsync(newOrder);
 
-            return BadRequest(ModelState.Values.First().Errors.First().ErrorMessage);
+            return Created(Request.Path, new { newOrder.Id });
         }
 
         [HttpPut("modify")]
@@ -113,7 +111,7 @@ namespace BexchangeAPI.Controllers
         {
             if (ModelState.IsValid)
             {
-                if (await _orderRepo.GetComponentAsync(order.Id) == null) 
+                if (await _orderRepo.GetComponentAsync(order.Id) == null)
                     throw new NotFoundException("Order not found", (int)HttpStatusCode.NotFound);
 
                 var mappedOrder = _mapper.Map<ExchangeOrder>(order);
@@ -162,7 +160,7 @@ namespace BexchangeAPI.Controllers
         [HttpDelete("delete/{id}")]
         public async Task<IActionResult> DeleteOrder(int id)
         {
-            if (await _orderRepo.GetComponentAsync(id) == null) 
+            if (await _orderRepo.GetComponentAsync(id) == null)
                 throw new NotFoundException("Order not found", (int)HttpStatusCode.NotFound);
 
             await _orderRepo.DeleteComponentAsync(id);
