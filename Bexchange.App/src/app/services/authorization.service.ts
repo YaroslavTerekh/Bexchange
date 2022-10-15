@@ -92,8 +92,6 @@ export class AuthorizationService {
       let decodeToken = this.helper.decodeToken(token);
 
       if (decodeToken.Role == 'Admin' || decodeToken.Role == 'SuperAdmin') {
-        console.log(decodeToken.Role);
-
         return true;
       }
       return false;
@@ -113,9 +111,7 @@ export class AuthorizationService {
     return 0;
   }
 
-  public getUserRole(token: string): string {
-    console.log(token);
-    
+  public getUserRole(token: string): string {    
     if (token) {
       return this.helper.decodeToken(token).Role;
     }

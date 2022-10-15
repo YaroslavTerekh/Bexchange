@@ -20,9 +20,7 @@ export class AdminBooksComponent implements OnInit {
     this.books = this.route.snapshot.data['books'];    
   }
 
-  reloadPage() {
-    console.log('done!');
-    
+  reloadPage() {    
     this.router.routeReuseStrategy.shouldReuseRoute = () => false;
     this.router.onSameUrlNavigation = 'reload';
     this.router.navigate([this.router.url]);

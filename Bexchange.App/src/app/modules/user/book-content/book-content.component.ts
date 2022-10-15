@@ -38,14 +38,13 @@ export class BookContentComponent implements OnInit {
         next: res => {       
           this.bookService.getImage(res.image?.id)
             .pipe(untilDestroyed(this))
-            .subscribe(res => {
-              this.createImageFromBlob(res);
-            })
+            .subscribe({
+              next: res => {
+                this.createImageFromBlob(res);
+              }
+            });
 
           this.book = res; 
-          
-          console.log(this.book);
-          
 
           if(this.book.userId == this.authorizationService.getUserId()) {
             this.isOwner = true;

@@ -23,7 +23,6 @@ export class LibraryContentComponent implements AfterViewInit {
     this.books = this.route.snapshot.data['books'];
     this.isAnyParam = this.paramCheck();
     
-
     if(!this.isAnyParam) {
       this.bookService.bookSearchSubject
       .subscribe({

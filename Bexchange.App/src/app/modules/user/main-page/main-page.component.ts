@@ -68,9 +68,6 @@ export class MainPageComponent implements OnInit {
                 })
             })
           }
-        },
-        error: (err: any) => {
-          this.router.navigate(['/error', { error: JSON.stringify(err) }]);
         }
       });
   }
