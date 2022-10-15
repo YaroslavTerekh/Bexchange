@@ -14,6 +14,7 @@ using Bexchange.Infrastructure.Services;
 using Bexchange.Domain;
 using Microsoft.AspNetCore.Identity;
 using Bexchange.Infrastructure.Services.Repositories;
+using BexchangeAPI.Middleware;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -121,7 +122,7 @@ app.UseCors(x => x
 
 app.UseHttpsRedirection();
 
-//app.UseCustomExceptionHandler();
+app.UseCustomExceptionHandler();
 app.UseHttpsRedirection();
 
 app.UseAuthentication();

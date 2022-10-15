@@ -60,6 +60,8 @@ export class AuthInterceptorService {
                 })
               );
             }
+          } else {
+            this.router.navigate(['/error', {error: JSON.stringify(errData)}]);
           }
           return next.handle(req);
         }),

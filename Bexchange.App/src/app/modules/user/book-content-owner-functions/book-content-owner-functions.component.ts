@@ -1,3 +1,4 @@
+import { Router } from '@angular/router';
 import { Component, OnInit, Input, Output, EventEmitter } from "@angular/core";
 import { BookService } from "src/app/services/book.service";
 import { Book } from "src/app/models/Book";
@@ -13,7 +14,8 @@ export class BookContentOwnerFunctionsComponent implements OnInit {
   @Output()comments = new EventEmitter<void>();
   
   constructor(
-    private bookService: BookService
+    private bookService: BookService,
+    private readonly router: Router
   ) { }
 
   ngOnInit(): void {
@@ -21,8 +23,10 @@ export class BookContentOwnerFunctionsComponent implements OnInit {
 
   deleteBook() {
     this.bookService.deleteBook(this.book.id)
-      .subscribe(res => {
-        console.log(res);        
+      .subscribe({
+        next: res => {
+          this.router.navigate(['']);
+        }
       })
   }
 

@@ -26,7 +26,9 @@
             
             .main-info {
                 display: flex;
-                justify-content: space-between;                
+                justify-content: space-between;         
+                border-bottom: 1px solid #fff;
+                margin-bottom: 10px;
 
                 p {
                     color: grey;

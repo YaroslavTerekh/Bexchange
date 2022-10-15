@@ -7,7 +7,10 @@ import { Component, OnInit } from '@angular/core';
   styleUrls: ['./error-page.component.scss']
 })
 export class ErrorPageComponent implements OnInit {
-
+  response!: any;
+  code!: string;
+  description!: string;
+  
   constructor(
     private route: ActivatedRoute
   ) { }
@@ -32,7 +35,5 @@ export class ErrorPageComponent implements OnInit {
     }    
   }
 
-  response!: any;
-  code!: string;
-  description!: string;
+
 }

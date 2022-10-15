@@ -1,3 +1,4 @@
+import { StateDictionary } from 'src/app/models/StateDictionary';
 import { HttpClient } from "@angular/common/http";
 import { Component, OnInit } from "@angular/core";
 import { DomSanitizer } from "@angular/platform-browser";
@@ -14,6 +15,7 @@ import { BookService } from "src/app/services/book.service";
   styleUrls: ['./book-content.component.scss']
 })
 export class BookContentComponent implements OnInit {
+  stateDict: StateDictionary = new StateDictionary();
   book!: any;
   bookImg: any;
   isOwner!: boolean;

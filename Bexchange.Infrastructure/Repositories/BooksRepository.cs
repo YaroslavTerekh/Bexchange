@@ -110,10 +110,9 @@ namespace BexchangeAPI.Infrastructure.Repositories
             _context.Books.Remove(book);
             await _context.SaveChangesAsync();
 
-            //var booksWithAuthor = await _context.Books.Where(b => b.AuthorId == book.AuthorId).FirstOrDefaultAsync();
-            var test = _context.Books.Any(b => b.AuthorId == book.AuthorId);
+            var booksWithAuthor = _context.Books.Any(b => b.AuthorId == book.AuthorId);
 
-            if (test)
+            if (!booksWithAuthor)
             {
                 var author = await GetAuthorAsync(book.AuthorId);
                 _context.Authors.Remove(author);
