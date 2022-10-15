@@ -39,8 +39,8 @@ namespace BexchangeAPI.Controllers
             _userService = userService;
             _env = env;
         }
-
-        [HttpGet("user/ignore/{id}")]
+         
+        [HttpGet("user/ignore/{id}")] 
         public async Task<IActionResult> Books(int id)
         {
             var books = await _contentRepo.IgnoreUserBooksAsync(id);
@@ -51,7 +51,7 @@ namespace BexchangeAPI.Controllers
             return Ok(_mapper.Map<IEnumerable<BookDto>>(books));
         }
 
-        [HttpGet("main-page/{amount}"), AllowAnonymous]
+        [HttpGet("main-page/{amount}"), AllowAnonymous] 
         public async Task<IActionResult> FirstBooks(int amount = 10)
         {
             var books = await _contentRepo.GetFirstBooksAsync(amount);
@@ -74,7 +74,7 @@ namespace BexchangeAPI.Controllers
 
         }
 
-        [HttpGet("all/verified/{usedId}"), AllowAnonymous]
+        [HttpGet("all/verified/{usedId}"), AllowAnonymous] 
         public async Task<IActionResult> AllVerifiedBooks(int userId)
         {
             var books = await _contentRepo.GetAllVerifiedBooksAsync(userId);
@@ -86,7 +86,7 @@ namespace BexchangeAPI.Controllers
 
         }
 
-        [HttpPost("search")]
+        [HttpPost("search")] 
         public async Task<IActionResult> SearchBook(SearchBookRequest request)
         {
             var books = await _contentRepo.SearchBooksAsync(request.Title);
@@ -94,7 +94,7 @@ namespace BexchangeAPI.Controllers
             return Ok(books);
         }
 
-        [HttpGet("{id}")]
+        [HttpGet("{id}")] 
         public async Task<IActionResult> GetBook(int id)
         {
             var book = await _contentRepo.GetComponentAsync(id);
@@ -108,7 +108,7 @@ namespace BexchangeAPI.Controllers
             return BadRequest();
         }
 
-        [HttpGet("user/{userId}")]
+        [HttpGet("user/{userId}")] 
         public async Task<IActionResult> GetUserBooks(int userId)
         {
             var books = await _contentRepo.GetUserComponentsAsync(userId);
@@ -119,7 +119,7 @@ namespace BexchangeAPI.Controllers
             return Ok(_mapper.Map<IEnumerable<BookDto>>(books));
         }
 
-        [HttpPost("add/book/{imgId}")]
+        [HttpPost("add/book/{imgId}")] 
         public async Task<IActionResult> AddBook(BookDto book, int imgId)
         {
             var newBook = _mapper.Map<Book>(book);
@@ -132,7 +132,7 @@ namespace BexchangeAPI.Controllers
             return Created(Request.Path, new { Id = newBook.Id, Path = Request.Path + $"/{newBook.Id}" });
         }
 
-        [HttpPost("add/image")]
+        [HttpPost("add/image")] 
         public async Task<IActionResult> AddImage()
         {
             var imgId = await _contentRepo.AddImageAsync(HttpContext, _env.WebRootPath, _userService, _env.ContentRootPath);
@@ -151,25 +151,7 @@ namespace BexchangeAPI.Controllers
             return PhysicalFile(image.Path, "image/png");
         }
 
-        [HttpPut("modify")]
-        public async Task<IActionResult> ModifyBook(BookDto book)
-        {
-            if (_userService.GetUserId(HttpContext) == book.UserId || _userService.IsAdmin(HttpContext))
-            {
-                if (await _contentRepo.GetComponentAsync(book.Id) == null)
-                    throw new NotFoundException("Book not found", (int)HttpStatusCode.NotFound);
-
-                await _contentRepo.ModifyComponentAsync(_mapper.Map<Book>(book));
-
-                return Ok();
-            }
-
-            return BadRequest("You can modify only your own books");
-
-            //return BadRequest(ModelState.Values.First().Errors.First().ErrorMessage);
-        }
-
-        [HttpDelete("delete/{id}")]
+        [HttpDelete("delete/{id}")] 
         public async Task<IActionResult> DeleteBook(int id)
         {
             Book book = await _contentRepo.GetComponentAsync(id);
@@ -187,7 +169,7 @@ namespace BexchangeAPI.Controllers
             return BadRequest("you can delete only your own book");
         }
 
-        [HttpPatch("{id}/comments/add")]
+        [HttpPatch("{id}/comments/add")] 
         public async Task<IActionResult> AddComment(CommentDto comment, int id)
         {
             var mappedComment = _mapper.Map<Comment>(comment);
@@ -198,9 +180,7 @@ namespace BexchangeAPI.Controllers
             return Created(Request.Path, new { comment });
         }
 
-        // GENRES, AUTHORS
-
-        [HttpPost("genre/add"), Authorize(Policy = PoliciesConstants.Admins)]
+        [HttpPost("genre/add"), Authorize(Policy = PoliciesConstants.Admins)] 
         public async Task<IActionResult> AddGenre(Genre genre)
         {
             await _contentRepo.AddGenreAsync(genre);
@@ -208,7 +188,7 @@ namespace BexchangeAPI.Controllers
             return Created(Request.Path, new { genre });
         }
 
-        [HttpGet("genres"), AllowAnonymous]
+        [HttpGet("genres"), AllowAnonymous] 
         public async Task<IActionResult> Genres()
         {
             var genres = await _contentRepo.GetGenresAsync();
@@ -219,7 +199,7 @@ namespace BexchangeAPI.Controllers
             return Ok(genres);
         }
 
-        [HttpGet("genre/{genre}")]
+        [HttpGet("genre/{genre}")] 
         public async Task<IActionResult> GetByGenre(string genre)
         {
             var books = await _contentRepo.GetByGenreAsync(genre);
@@ -230,7 +210,7 @@ namespace BexchangeAPI.Controllers
             return Ok(_mapper.Map<IEnumerable<BookDto>>(books));
         }
 
-        [HttpGet("authors/verified"), AllowAnonymous]
+        [HttpGet("authors/verified"), AllowAnonymous] 
         public async Task<IActionResult> Authors()
         {
             var authors = await _contentRepo.GetAuthorsAsync();
@@ -241,7 +221,7 @@ namespace BexchangeAPI.Controllers
             return Ok(authors);
         }
 
-        [HttpGet("authors"), Authorize(Policy = PoliciesConstants.Admins)]
+        [HttpGet("authors"), Authorize(Policy = PoliciesConstants.Admins)] 
         public async Task<IActionResult> AllAuthors()
         {
             var authors = await _contentRepo.GetAllAuthorsAsync();
@@ -252,7 +232,7 @@ namespace BexchangeAPI.Controllers
             return Ok(authors);
         }
 
-        [HttpGet("author/{author}")]
+        [HttpGet("author/{author}")] 
         public async Task<IActionResult> GetByAuthor(string author)
         {
             var books = await _contentRepo.GetByAuthorAsync(author);
@@ -263,7 +243,7 @@ namespace BexchangeAPI.Controllers
             return Ok(_mapper.Map<IEnumerable<BookDto>>(books));
         }
 
-        [HttpDelete("genre/delete/{id}")]
+        [HttpDelete("genre/delete/{id}")] 
         public async Task<IActionResult> DeleteGenre(int id)
         {
             await _contentRepo.DeleteGenreAsync(id);

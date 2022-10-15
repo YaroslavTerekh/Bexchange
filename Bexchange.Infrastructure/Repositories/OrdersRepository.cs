@@ -51,16 +51,6 @@ namespace BexchangeAPI.Infrastructure.Repositories
             await _context.SaveChangesAsync();
         }
 
-        public async Task ModifyComponentAsync(ExchangeOrder order)
-        {
-            ExchangeOrder originalOrder = await GetComponentAsync(order.Id);
-
-            originalOrder.FirstBook = order.FirstBook;
-            originalOrder.SecondBook = order.SecondBook;
-
-            await _context.SaveChangesAsync();
-        }
-
         public async Task ModifyComponentStateAsync(int id, State state)
         {
             ExchangeOrder order = await GetComponentAsync(id);

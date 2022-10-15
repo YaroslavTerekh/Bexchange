@@ -120,18 +120,6 @@ namespace BexchangeAPI.Infrastructure.Repositories
             }
         }
 
-        public async Task ModifyComponentAsync(Book book)
-        {
-            Book originalBook = await GetComponentAsync(book.Id);
-
-            originalBook.Title = book.Title;
-            originalBook.Description = book.Description;
-            originalBook.Image.Path = book.Image.Path;
-            originalBook.Image.Date = book.Image.Date;
-
-            await _context.SaveChangesAsync();
-        }
-
         public async Task ModifyComponentStateAsync(int id, State state)
         {
             Book book = await _context.Books.Where(b => b.Id == id).Include(b => b.Author).FirstOrDefaultAsync();
