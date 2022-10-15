@@ -15,8 +15,8 @@ import { CommentsModalItemComponent } from './comments-modal-item/comments-modal
 import { CommentsModalComponent } from './comments-modal/comments-modal.component';
 import { CreateOrderComponent } from './create-order/create-order.component';
 import { GenresContentComponent } from './genres-content/genres-content.component';
-import { LibraryContentBookComponent } from './library-content-book/library-content-book.component';
-import { LibraryContentSearchbarComponent } from './library-content-searchbar/library-content-searchbar.component';
+import { LibraryContentBookComponent } from './library-content/library-content-book/library-content-book.component';
+import { LibraryContentSearchbarComponent } from './library-content/library-content-searchbar/library-content-searchbar.component';
 import { LibraryContentComponent } from './library-content/library-content.component';
 import { LoginModalComponent } from './login-modal/login-modal.component';
 import { MainBookComponent } from './main-book/main-book.component';

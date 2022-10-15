@@ -85,5 +85,4 @@ export class MainPageComponent implements OnInit {
       reader.readAsDataURL(image);
     }
   }
-
 }

@@ -13,6 +13,7 @@ import { BookService } from "src/app/services/book.service";
       ) { }
     
     resolve(route: ActivatedRouteSnapshot): Observable<Book[]> {
-      return this.bookService.getUserBooks(+route.params['id']);
+      // return this.bookService.getUserBooks(+route.params['id']);
+      return this.bookService.getUserBooks();
     }
   }

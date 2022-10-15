@@ -56,6 +56,13 @@ namespace BexchangeAPI.Infrastructure.Repositories
                 .ToListAsync();
         }
 
+        public async Task<IEnumerable<Book>> SearchBooksAsync(string? title)
+        {
+            return await _context.Books.Where(b => b.Title.Contains(title))
+                .Include(b => b.Image)
+                .ToListAsync();
+        }
+
         public async Task AddComponentAsync(Book book)
         {
             book.Image = await GetImageAsync(book.ImageId);

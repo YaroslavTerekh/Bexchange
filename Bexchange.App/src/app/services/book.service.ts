@@ -1,7 +1,7 @@
 import { Author } from '../models/Author';
 import { HttpClient } from '@angular/common/http';
 import { Injectable } from '@angular/core';
-import { Observable } from 'rxjs';
+import { debounceTime, Observable, Subject } from 'rxjs';
 import { Book } from '../models/Book';
 import { environment } from 'src/environments/environment';
 import { CommentRequest } from '../models/CommentRequest';
@@ -11,11 +11,15 @@ import { Genre } from '../models/Genre';
   providedIn: 'root'
 })
 export class BookService {
+  public bookSearchSubject: Subject<Book[]> = new Subject();
 
   constructor(
     private http: HttpClient
   ) { }
 
+  public searchBook(title: string): Observable<Book[]> {
+    return this.http.post<Book[]>(`${environment.bexchangeApi}Book/search`, {title: title});
+  }
 
   // get - books
   public getBooks(id: number): Observable<Book[]> {
@@ -34,8 +38,8 @@ export class BookService {
     return this.http.get<Book>(`${environment.bexchangeApi}Book/${id}`);
   }
 
-  public getUserBooks(id: number): Observable<Book[]> {
-    return this.http.get<Book[]>(`${environment.bexchangeApi}Book/user/${id}`);
+  public getUserBooks(): Observable<Book[]> {
+    return this.http.get<Book[]>(`${environment.bexchangeApi}Book/user`);
   }
 
   public getBooksByGenre(title: string): Observable<Book[]> {

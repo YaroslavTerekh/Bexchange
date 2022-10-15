@@ -31,5 +31,6 @@ namespace Bexchange.Infrastructure.Repositories.Interfaces
         public Task<Author> GetAuthorByNameAsync(string name);
         public Task ModifyAuthorAsync(Author author);
         public Task<IEnumerable<T>> IgnoreUserBooksAsync(int userId);
+        public Task<IEnumerable<T>> SearchBooksAsync(string title);
     }
 }

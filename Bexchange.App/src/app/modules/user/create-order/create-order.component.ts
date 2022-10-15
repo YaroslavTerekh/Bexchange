@@ -1,11 +1,13 @@
-import { Component, OnInit } from "@angular/core";
-import { DomSanitizer } from "@angular/platform-browser";
+import { AfterViewInit, Component, ElementRef, OnInit, ViewChild } from "@angular/core";
 import { ActivatedRoute, Router } from "@angular/router";
 import { UntilDestroy, untilDestroyed } from "@ngneat/until-destroy";
 import { BookService } from "src/app/services/book.service";
 import { Order } from "src/app/models/Order";
 import { AuthorizationService } from "src/app/services/authorization.service";
 import { OrderService } from "src/app/services/order.service";
+import { debounceTime, distinctUntilChanged, tap } from "rxjs/operators";
+import { fromEvent } from "rxjs";
+import { Book } from "src/app/models/Book";
 
 
 @Component({
@@ -16,11 +18,12 @@ import { OrderService } from "src/app/services/order.service";
 
 @UntilDestroy()
 export class CreateOrderComponent implements OnInit {
-  books: any[] = [];
-  book!: any;
+  books: Book[] = [];
+  book!: Book;
+  bookImg: any;
   activeBookIndex!: number;
   activeBookId!: number;
-  bookImg: any;
+  
 
   constructor(
     private orderService: OrderService,
@@ -28,13 +31,12 @@ export class CreateOrderComponent implements OnInit {
     private authorizationService: AuthorizationService,
     private route: ActivatedRoute,
     private router: Router,
-    private sanitizer: DomSanitizer
   ) { }
 
   ngOnInit(): void {
     this.bookService.getBook(this.route.snapshot.params['id'])
     .pipe(untilDestroyed(this))
-    .subscribe(res => {
+    .subscribe(res => {      
       this.book = res;
 
       this.bookService.getImage(this.book.image?.id)
@@ -42,13 +44,17 @@ export class CreateOrderComponent implements OnInit {
         .subscribe(res => {
           this.bookImg = this.createImageFromBlob(res);
         })
-    });     
+    });
 
-    this.bookService.getUserBooks(this.authorizationService.getUserId())
+    this.bookService.getUserBooks()
       .pipe(untilDestroyed(this))
-      .subscribe(res => { 
-        this.books = res
-      });      
+      .subscribe({
+        next: res => {
+          console.log(res);
+          
+          this.books = res
+        }
+      });
   }
 
   createImageFromBlob(image: Blob) {
@@ -62,7 +68,7 @@ export class CreateOrderComponent implements OnInit {
     }
   }
 
-  public createOrder() {
+  createOrder() {
     let order: Order = {
       id: 0,
       firstBookId: this.book.id,

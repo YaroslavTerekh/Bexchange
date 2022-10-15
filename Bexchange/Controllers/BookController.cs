@@ -2,6 +2,7 @@
 using Bexchange.API.DTOs;
 using Bexchange.Domain;
 using Bexchange.Domain.Models;
+using Bexchange.Domain.RequestModels;
 using Bexchange.Infrastructure.Repositories.Interfaces;
 using Bexchange.Infrastructure.Services.Repositories;
 using BexchangeAPI.Domain.CustomExceptions;
@@ -85,6 +86,14 @@ namespace BexchangeAPI.Controllers
 
         }
 
+        [HttpPost("search")]
+        public async Task<IActionResult> SearchBook(SearchBookRequest request)
+        {
+            var books = await _contentRepo.SearchBooksAsync(request.Title);
+
+            return Ok(books);
+        }
+
         [HttpGet("{id}")]
         public async Task<IActionResult> GetBook(int id)
         {
@@ -99,10 +108,10 @@ namespace BexchangeAPI.Controllers
             return BadRequest();
         }
 
-        [HttpGet("user/{userId}")]
-        public async Task<IActionResult> GetUserBooks(int userId)
+        [HttpGet("user")]
+        public async Task<IActionResult> GetUserBooks()
         {
-            var books = await _contentRepo.GetUserComponentsAsync(userId);
+            var books = await _contentRepo.GetUserComponentsAsync(_userService.GetUserId(HttpContext));
 
             if (books == null)
                 throw new NotFoundException("Books not found", (int)HttpStatusCode.NotFound);

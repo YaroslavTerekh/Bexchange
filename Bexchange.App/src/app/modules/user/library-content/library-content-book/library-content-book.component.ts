@@ -17,25 +17,23 @@ export class LibraryContentBookComponent implements OnInit {
   img: any;
 
   constructor(
-    private bookService: BookService,
-    private sanitizer: DomSanitizer
+    private readonly bookService: BookService,
+    private readonly sanitizer: DomSanitizer
   ) { }
 
   ngOnInit(): void {
     this.bookService.getImage(this.book.image?.id)
-    .pipe(
-      map(v => this.createImageFromBlob(v))
-    )
-    .subscribe(data => {
-      // this.createImageFromBlob(data);
-    })
+    .subscribe({
+      next: res => {
+        this.createImageFromBlob(res)
+      }
+    });
   }
 
   createImageFromBlob(image: Blob) {
     let reader = new FileReader();
     reader.addEventListener("load", () => {
        this.img = reader.result;
-       
     }, false);
  
     if (image) {
