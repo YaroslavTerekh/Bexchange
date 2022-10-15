@@ -108,10 +108,10 @@ namespace BexchangeAPI.Controllers
             return BadRequest();
         }
 
-        [HttpGet("user")]
-        public async Task<IActionResult> GetUserBooks()
+        [HttpGet("user/{userId}")]
+        public async Task<IActionResult> GetUserBooks(int userId)
         {
-            var books = await _contentRepo.GetUserComponentsAsync(_userService.GetUserId(HttpContext));
+            var books = await _contentRepo.GetUserComponentsAsync(userId);
 
             if (books == null)
                 throw new NotFoundException("Books not found", (int)HttpStatusCode.NotFound);

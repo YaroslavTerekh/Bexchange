@@ -12,7 +12,6 @@
         </div>
         <div class="i-give">
             <h5>Пропоную</h5>
-            <!-- <input type="text" placeholder="Введіть назву книги..." #input> -->
             <div class="input-books">
                 <div [ngStyle]="{'backdrop-filter' : books[i].id == activeBookId ? 'blur(1px)' : ''}" 
                 class="input-book" *ngFor="let book of books; let i = index" (click)="activeBookIndex = i" (click)="activeBookId = book.id">

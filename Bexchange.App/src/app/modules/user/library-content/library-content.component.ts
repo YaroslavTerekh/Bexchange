@@ -10,9 +10,10 @@ import { Book } from "src/app/models/Book";
   styleUrls: ['./library-content.component.scss']
 })
 export class LibraryContentComponent implements AfterViewInit {
-  books: Book[] = [];
   @Output() newBooks: Book[] = [];
-  
+  books: Book[] = [];
+  isAnyParam!: boolean;
+
   constructor(
     private route: ActivatedRoute,
     private readonly bookService: BookService
@@ -20,12 +21,38 @@ export class LibraryContentComponent implements AfterViewInit {
 
   ngAfterViewInit(): void {
     this.books = this.route.snapshot.data['books'];
+    this.isAnyParam = this.paramCheck();
+    
 
-    this.bookService.bookSearchSubject
+    if(!this.isAnyParam) {
+      this.bookService.bookSearchSubject
       .subscribe({
         next: res => {
           this.books = res;
         }
       });
+    } 
+  }
+
+  private paramCheck(): boolean {
+    let paramsArr = [];
+    let param = this.route.snapshot.params['id'];
+    paramsArr.push(param);
+    param = this.route.snapshot.params['author'];
+    paramsArr.push(param)
+    param = this.route.snapshot.params['genre'];
+    paramsArr.push(param)    
+
+    let result = false;
+
+    paramsArr.forEach(p => {
+      if(p != undefined) {
+        result = true;
+        return result;
+      }
+      return result;
+    });
+
+    return result;
   }
 }

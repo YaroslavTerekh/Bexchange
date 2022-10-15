@@ -38,8 +38,8 @@ export class BookService {
     return this.http.get<Book>(`${environment.bexchangeApi}Book/${id}`);
   }
 
-  public getUserBooks(): Observable<Book[]> {
-    return this.http.get<Book[]>(`${environment.bexchangeApi}Book/user`);
+  public getUserBooks(id: number): Observable<Book[]> {
+    return this.http.get<Book[]>(`${environment.bexchangeApi}Book/user/${id}`);
   }
 
   public getBooksByGenre(title: string): Observable<Book[]> {

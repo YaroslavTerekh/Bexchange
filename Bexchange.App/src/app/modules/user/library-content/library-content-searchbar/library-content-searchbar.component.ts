@@ -32,7 +32,6 @@ export class LibraryContentSearchbarComponent implements AfterViewInit {
     this.bookService.searchBook(title)
       .subscribe({
         next: res => {
-          console.log(res);
           this.bookService.bookSearchSubject.next(res);
         }
       });

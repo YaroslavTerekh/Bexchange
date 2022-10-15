@@ -46,12 +46,10 @@ export class CreateOrderComponent implements OnInit {
         })
     });
 
-    this.bookService.getUserBooks()
+    this.bookService.getUserBooks(this.authorizationService.getUserId())
       .pipe(untilDestroyed(this))
       .subscribe({
-        next: res => {
-          console.log(res);
-          
+        next: res => {          
           this.books = res
         }
       });
