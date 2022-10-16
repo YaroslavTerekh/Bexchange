@@ -56,6 +56,13 @@ namespace BexchangeAPI.Infrastructure.Repositories
                 .ToListAsync();
         }
 
+        public async Task<IEnumerable<Book>> SearchBooksAsync(string? title)
+        {
+            return await _context.Books.Where(b => b.Title.Contains(title) && b.State == State.Verified)
+                .Include(b => b.Image)
+                .ToListAsync();
+        }
+
         public async Task AddComponentAsync(Book book)
         {
             book.Image = await GetImageAsync(book.ImageId);
@@ -99,31 +106,19 @@ namespace BexchangeAPI.Infrastructure.Repositories
         {
             var book = await GetComponentAsync(id);                       
 
-            await DeleteImageAsync(book.ImageId);
+            
             _context.Books.Remove(book);
             await _context.SaveChangesAsync();
+            await DeleteImageAsync(book.ImageId);
 
-            //var booksWithAuthor = await _context.Books.Where(b => b.AuthorId == book.AuthorId).FirstOrDefaultAsync();
-            var test = _context.Books.Any(b => b.AuthorId == book.AuthorId);
+            var booksWithAuthor = _context.Books.Any(b => b.AuthorId == book.AuthorId);
 
-            if (test)
+            if (!booksWithAuthor)
             {
                 var author = await GetAuthorAsync(book.AuthorId);
                 _context.Authors.Remove(author);
                 await _context.SaveChangesAsync();
             }
-        }
-
-        public async Task ModifyComponentAsync(Book book)
-        {
-            Book originalBook = await GetComponentAsync(book.Id);
-
-            originalBook.Title = book.Title;
-            originalBook.Description = book.Description;
-            originalBook.Image.Path = book.Image.Path;
-            originalBook.Image.Date = book.Image.Date;
-
-            await _context.SaveChangesAsync();
         }
 
         public async Task ModifyComponentStateAsync(int id, State state)
@@ -214,7 +209,7 @@ namespace BexchangeAPI.Infrastructure.Repositories
         public async Task<IEnumerable<Book>> GetByGenreAsync(string genre)
         {
             return await _context.Books
-                .Where(b => b.Genre.Title == genre)
+                .Where(b => b.Genre.Title == genre && b.State == State.Verified)
                 .Include(b => b.Image)
                 .Include(b => b.Author)
                 .Include(b => b.Genre)
@@ -227,7 +222,7 @@ namespace BexchangeAPI.Infrastructure.Repositories
         public async Task<IEnumerable<Book>> GetByAuthorAsync(string author)
         {
             return await _context.Books
-                .Where(b => b.Author.Name == author)
+                .Where(b => b.Author.Name == author && b.State == State.Verified)
                 .Include(b => b.Image)
                 .Include(b => b.Author)
                 .Include(b => b.Genre)

@@ -16,7 +16,6 @@ namespace BexchangeAPI.Infrastructure.Repositories.Interfaces
         public Task AddComponentAsync(T component);
         public Task<T> GetComponentAsync(int id);
         public Task DeleteComponentAsync(int id);
-        public Task ModifyComponentAsync(T component);
         public Task ModifyComponentStateAsync(int id, State state);
         
     }

@@ -1,19 +1,17 @@
-import { SharedModule } from './modules/shared-module/shared.module';
+import { NgModule } from "@angular/core";
+import { AppRoutingModule } from "./app-routing.module";
+import { AdminModule } from "./modules/admin-module/admin.module";
+import { UserModule } from "./modules/user/user.module";
+import { SharedModule } from "./shared/shared.module";
 
-import { NgModule } from '@angular/core';
-import { HTTP_INTERCEPTORS } from '@angular/common/http';
-import { AppRoutingModule } from './app-routing.module';
-import { AdminModule } from './modules/admin-module/admin.module';
-import { UserModule } from './modules/user/user.module';
+import { AppComponent } from "./app.component";
 
-import { AppComponent } from './app.component';
-import { AuthInterceptorService } from './services/auth-interceptor.service';
-import { AdminBookTextTrimPipe } from './pipes/admin-book-text-trim.pipe';
+import { AuthInterceptorService } from "./core/interceptors/auth-interceptor.service";
 
+import { HTTP_INTERCEPTORS } from "@angular/common/http";
 
 @NgModule({
   declarations: [  
-    AdminBookTextTrimPipe,
   ],
   imports: [
     AppRoutingModule,

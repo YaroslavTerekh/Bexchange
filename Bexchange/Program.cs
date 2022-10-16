@@ -14,6 +14,7 @@ using Bexchange.Infrastructure.Services;
 using Bexchange.Domain;
 using Microsoft.AspNetCore.Identity;
 using Bexchange.Infrastructure.Services.Repositories;
+using BexchangeAPI.Middleware;
 
 var builder = WebApplication.CreateBuilder(args);
 

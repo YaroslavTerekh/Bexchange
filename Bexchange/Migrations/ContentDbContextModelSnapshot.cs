@@ -75,7 +75,7 @@ namespace Bexchange.API.Migrations
 
                     b.HasKey("Id");
 
-                    b.ToTable("Authors", (string)null);
+                    b.ToTable("Authors");
                 });
 
             modelBuilder.Entity("Bexchange.Domain.Models.Comment", b =>
@@ -102,7 +102,7 @@ namespace Bexchange.API.Migrations
 
                     b.HasIndex("BookId");
 
-                    b.ToTable("Comment", (string)null);
+                    b.ToTable("Comment");
                 });
 
             modelBuilder.Entity("Bexchange.Domain.Models.Genre", b =>
@@ -129,7 +129,7 @@ namespace Bexchange.API.Migrations
 
                     b.HasKey("Id");
 
-                    b.ToTable("Genres", (string)null);
+                    b.ToTable("Genres");
                 });
 
             modelBuilder.Entity("BexchangeAPI.Domain.Models.AddressInfo", b =>
@@ -154,7 +154,7 @@ namespace Bexchange.API.Migrations
 
                     b.HasKey("Id");
 
-                    b.ToTable("Addresses", (string)null);
+                    b.ToTable("Addresses");
                 });
 
             modelBuilder.Entity("BexchangeAPI.Domain.Models.Book", b =>
@@ -194,11 +194,12 @@ namespace Bexchange.API.Migrations
 
                     b.HasIndex("GenreId");
 
-                    b.HasIndex("ImageId");
+                    b.HasIndex("ImageId")
+                        .IsUnique();
 
                     b.HasIndex("UserId");
 
-                    b.ToTable("Books", (string)null);
+                    b.ToTable("Books");
                 });
 
             modelBuilder.Entity("BexchangeAPI.Domain.Models.ExchangeOrder", b =>
@@ -212,8 +213,14 @@ namespace Bexchange.API.Migrations
                     b.Property<int>("FirstBookId")
                         .HasColumnType("int");
 
+                    b.Property<bool>("FirstUserAccepted")
+                        .HasColumnType("bit");
+
                     b.Property<int>("SecondBookId")
                         .HasColumnType("int");
+
+                    b.Property<bool>("SecondUserAccepted")
+                        .HasColumnType("bit");
 
                     b.Property<int>("State")
                         .HasColumnType("int");
@@ -224,7 +231,7 @@ namespace Bexchange.API.Migrations
 
                     b.HasIndex("SecondBookId");
 
-                    b.ToTable("Orders", (string)null);
+                    b.ToTable("Orders");
                 });
 
             modelBuilder.Entity("BexchangeAPI.Domain.Models.Image", b =>
@@ -244,7 +251,7 @@ namespace Bexchange.API.Migrations
 
                     b.HasKey("Id");
 
-                    b.ToTable("Images", (string)null);
+                    b.ToTable("Images");
                 });
 
             modelBuilder.Entity("BexchangeAPI.Domain.Models.User", b =>
@@ -460,7 +467,7 @@ namespace Bexchange.API.Migrations
                     b.HasOne("BexchangeAPI.Domain.Models.Book", null)
                         .WithMany("Comments")
                         .HasForeignKey("BookId")
-                        .OnDelete(DeleteBehavior.Restrict);
+                        .OnDelete(DeleteBehavior.Cascade);
 
                     b.Navigation("Author");
                 });
@@ -480,8 +487,8 @@ namespace Bexchange.API.Migrations
                         .IsRequired();
 
                     b.HasOne("BexchangeAPI.Domain.Models.Image", "Image")
-                        .WithMany()
-                        .HasForeignKey("ImageId")
+                        .WithOne()
+                        .HasForeignKey("BexchangeAPI.Domain.Models.Book", "ImageId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 

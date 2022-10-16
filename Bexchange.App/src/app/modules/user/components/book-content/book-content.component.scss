@@ -1,0 +1,62 @@
+.main-content {
+    max-width: 1180px;
+    margin: 0 auto;
+    margin-top: 5%;
+    margin-bottom: 5%;
+
+    height: initial;
+    display: flex;
+    justify-content: space-between;
+
+    img {
+        width: 400px;
+        height: 625px;
+        margin-right: 50px;
+    }
+
+    .book {
+        width: 100%;
+        background-color: rgba(0, 0, 0, .7);
+        display: flex;
+
+        .book-descr {    
+            width: 60%;
+            height: inherit;
+            padding-top: 20px;
+            
+            .main-info {
+                display: flex;
+                justify-content: space-between;         
+                border-bottom: 1px solid #fff;
+                margin-bottom: 10px;
+
+                p {
+                    color: grey;
+                }
+
+                .state {
+                    font-weight: bold;
+                    color: rgb(206, 206, 206);
+                }
+            }
+
+            h3 {
+                font-style: normal;
+                font-weight: 600;
+                font-size: 36px;
+                line-height: 45px;
+            }
+        
+            p {
+                font-style: normal;
+                font-weight: lighter;
+                font-size: 14px;
+                line-height: 22px;
+                text-align: justify;
+                color: #fff;
+            }
+        }
+    }
+}
+
+

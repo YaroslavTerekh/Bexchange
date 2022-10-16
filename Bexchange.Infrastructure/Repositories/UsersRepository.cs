@@ -111,13 +111,6 @@ namespace BexchangeAPI.Infrastructure.Repositories
             await _context.SaveChangesAsync();
         }
 
-        public async Task RegisterUserAsync(User user)
-        {
-            await _context.Users.AddAsync(user);
-
-            await _context.SaveChangesAsync();
-        }
-
         public async Task SaveUser()
         {
             await _context.SaveChangesAsync();

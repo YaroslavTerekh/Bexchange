@@ -13,7 +13,6 @@ namespace Bexchange.Infrastructure.Repositories.Interfaces
         public Task<object> GetLastUsersAsync();
         public Task<IEnumerable<T>> GetAdminsOnlyAsync();
         public Task<IEnumerable<T>> GetAllUsersAsync();
-        public Task RegisterUserAsync(T user);
         public Task<T> GetUserAsync(int id);
         public Task<T> GetUserByNameAsync(string name);
         public Task<T> GetUserByEmailAsync(string email);
@@ -21,7 +20,6 @@ namespace Bexchange.Infrastructure.Repositories.Interfaces
         public Task UnbanUserAsync(int id);
         public Task ModifyUserAsync(ChangeUserInfoRequest user);
         public Task ChangeRoleAsync(Roles role, int id);
-        //public Task ChangePasswordAsync(int id);
         public Task SaveUser();
     }
 }

@@ -1,0 +1,125 @@
+.create-order-content {
+    max-width: 940px;
+    margin: 0 auto;
+    margin-top: 50px;
+
+    h1 {
+        font-weight: 300;
+    }
+
+    h2 {
+        position: absolute;
+        top: 50%;
+        left: 50%;
+        transform: translate(-50%, -50%);
+        color: rgb(255, 151, 151);
+    }
+
+    .create-order-settings {
+        max-width: 100%;
+        display: flex;
+        justify-content: space-between;
+
+        .i-want {
+            max-width: 50%;
+            display: flex;
+            flex-direction: column;
+            align-items: flex-start;
+
+            h5 {
+                font-weight: 300;
+                font-size: 25px;
+                margin-bottom: 10px;
+            }
+
+            img {
+                width: 250px;
+            }
+
+            div {
+                margin-left: 10px;
+
+                p {
+                    color: #ffe600;
+                    margin-top: 5px;
+                }
+            }
+        }
+
+
+        .i-give {
+            width: 50%;            
+
+            h5 {
+                font-weight: 300;
+                font-size: 25px;
+                margin-bottom: 10px;
+            }
+
+            input {
+                width: 100%;
+                height: 50px;
+                color: #fff;
+                padding: 10px;
+                background: #7e7e7e41;
+                backdrop-filter: blur(10px);
+                border-bottom: 1px solid #fff;                
+                border-radius: 5px 5px 0 0;
+            }
+
+            input::placeholder {
+                color: rgba(255, 255, 255, 0.329);
+            }
+
+            .input-books {
+                width: 104%;
+                max-height: 400px;
+                background-color: #7e7e7e41;
+                backdrop-filter: blur(10px);
+                overflow-y: scroll;
+                border-radius: 0 0 5px 5px;
+
+
+                .input-book {
+                    cursor: pointer;
+                    border-top: 1px solid #fff;
+                    border-bottom: 1px solid #fff;
+                    padding: 10px;
+                    display: flex;
+
+
+                    img {
+                        width: 20%;
+                    }
+
+                    div {
+                        margin-left: 10px;
+                        display: flex;
+                        flex-direction: column;
+
+                        p {
+                            color: #fff;
+                            font-weight: 600;
+                        }
+
+                        .state {
+                            color: #ffe600;
+                        }
+                    }
+                }
+            }
+        }
+    }
+
+    button {
+        cursor: pointer;
+        border-radius: 5px;
+        margin-top: 10px;
+        padding: 10px;
+        background-color: #239600;
+    }
+}
+
+.active {
+    background-color: rgba(0, 0, 0, 0.267);
+}

@@ -1,8 +1,0 @@
-<div class="content" *ngIf="books.length > 0">
-    <app-library-content-searchbar class="sbar"></app-library-content-searchbar>
-    <div class="books">        
-        <app-library-content-book *ngFor="let book of books" [book]="book" class="book"></app-library-content-book>
-    </div>    
-</div>
-
-<h2 *ngIf="books.length < 1">Книги ще не були додані...</h2>

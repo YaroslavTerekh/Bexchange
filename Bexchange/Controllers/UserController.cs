@@ -40,7 +40,7 @@ namespace BexchangeAPI.Controllers
         }
 
         [Authorize]
-        [HttpGet("id/{id}")]
+        [HttpGet("id/{id}")] 
         public async Task<IActionResult> GetUser(int id)
         {
             if(_userService.GetUserId(HttpContext) == id || _userService.IsAdmin(HttpContext))
@@ -53,14 +53,14 @@ namespace BexchangeAPI.Controllers
         }
 
         [Authorize]
-        [HttpPost("modify")]
+        [HttpPost("modify")] 
         public async Task<IActionResult> ModifyUser(ChangeUserInfoRequest user)
         {
             await _usersRepository.ModifyUserAsync(user);
             return Ok();
         }
 
-        [HttpPost("register")]
+        [HttpPost("register")] 
         public async Task<IActionResult> Register(UserRequest user)
         {
             if (await _userService.TestUserSearchAsync(user, _usersRepository))
@@ -94,7 +94,7 @@ namespace BexchangeAPI.Controllers
             return BadRequest(result.Errors.ToArray()[0].Description);
         }
 
-        [HttpPost("login/email")]
+        [HttpPost("login/email")] 
         public async Task<ActionResult<string>> LoginWithEmail(LoginRequest loginUser)
         {
             User user = await _usersRepository.GetUserByEmailAsync(loginUser.UserName);
@@ -112,10 +112,10 @@ namespace BexchangeAPI.Controllers
             var refreshToken = _userService.GenerateRefreshToken();
             _userService.SetRefreshToken(refreshToken, user, HttpContext, _usersRepository);
 
-            return Ok(token);
+            return Ok(new { token, refreshToken, user.Id });
         }
 
-        [HttpPost("login/name")]
+        [HttpPost("login/name")] 
         public async Task<ActionResult<string>> LoginWithName(LoginRequest loginUser)
         {
             User user = await _usersRepository.GetUserByNameAsync(loginUser.UserName);
@@ -133,11 +133,10 @@ namespace BexchangeAPI.Controllers
             var refreshToken = _userService.GenerateRefreshToken();
             _userService.SetRefreshToken(refreshToken, user, HttpContext, _usersRepository);
 
-            return Ok(new {token, refreshToken});
+            return Ok(new {token, refreshToken, user.Id });
         }
 
-        //[Authorize]
-        [HttpPost("refresh-token")]
+        [HttpPost("refresh-token")] 
         public async Task<ActionResult<string>> RefreshToken(RefreshTokenRequest tokenRequest)
         {
             var user = await _usersRepository.GetUserAsync(tokenRequest.UserId);
@@ -159,7 +158,7 @@ namespace BexchangeAPI.Controllers
             var refreshToken = _userService.GenerateRefreshToken();
             _userService.SetRefreshToken(refreshToken, user, HttpContext, _usersRepository);
 
-            return Ok(new { token, refreshToken});
+            return Ok(new { token, refreshToken, user.Role });
         }
         
     }
