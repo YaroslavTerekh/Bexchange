@@ -1,4 +1,4 @@
-import { AfterViewInit } from '@angular/core';
+import { AfterViewInit, Output } from '@angular/core';
 import { Router, ActivatedRoute } from '@angular/router';
 import { Component, OnInit } from '@angular/core';
 import { Book } from 'src/app/models/Book';
@@ -10,7 +10,7 @@ import { Book } from 'src/app/models/Book';
 })
 export class AdminBooksComponent implements OnInit {
   books: Book[] = [];
-
+  
   constructor(
     private readonly route: ActivatedRoute,
     private readonly router: Router

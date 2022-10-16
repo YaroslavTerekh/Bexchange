@@ -22,8 +22,13 @@ export class AdminBooksItemComponent {
 
   deleteBook(id: number) {
     this.bookService.deleteBook(id)
-      .subscribe(res => { 
-        this.router.navigate(['/admin/stats']);
+      .subscribe({
+        next: res => { 
+          this.router.navigate(['/admin/stats']);
+        },
+        error: err => {
+          this.router.navigate(['/admin/orders']);
+        }
       });
   }
 
@@ -40,6 +45,9 @@ export class AdminBooksItemComponent {
       .subscribe({
         next: res => { 
           this.router.navigate(['/admin/stats']);
+        },
+        error: err => {
+          this.router.navigate(['/admin/authors']);
         }
       });
   }

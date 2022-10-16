@@ -106,9 +106,10 @@ namespace BexchangeAPI.Infrastructure.Repositories
         {
             var book = await GetComponentAsync(id);                       
 
-            await DeleteImageAsync(book.ImageId);
+            
             _context.Books.Remove(book);
             await _context.SaveChangesAsync();
+            await DeleteImageAsync(book.ImageId);
 
             var booksWithAuthor = _context.Books.Any(b => b.AuthorId == book.AuthorId);
 

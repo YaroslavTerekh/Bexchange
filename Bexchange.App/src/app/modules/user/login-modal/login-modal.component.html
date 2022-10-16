@@ -11,10 +11,10 @@
         </div>
         <div class="login-creds"> 
             <form [formGroup]="form">
-                <input formControlName="userName" type="text" placeholder="Login..." >
-                <input formControlName="password" type="password" placeholder="Password..." >
-                <button class="submit" *ngIf="isValue != 0" (click)="logIn()" (click)="close.emit()">Увійти</button>
-                <button class="submit" *ngIf="isValue === 0" style="opacity: .5; cursor: not-allowed;">Увійти</button>
+                <input formControlName="userName" type="text" placeholder="Login..." #login>
+                <input formControlName="password" type="password" placeholder="Password..." #pass>
+                <button class="submit" *ngIf="isValue != 0 && login.value && pass.value" (click)="logIn()" (click)="close.emit()">Увійти</button>
+                <button class="submit" *ngIf="isValue === 0 || !login.value || !pass.value" style="opacity: .5; cursor: not-allowed;">Увійти</button>
             </form>
         </div>
         <a (click)="openRegister.emit()" (click)="close.emit()">Не маєте акаунту? Зареєструватися</a>

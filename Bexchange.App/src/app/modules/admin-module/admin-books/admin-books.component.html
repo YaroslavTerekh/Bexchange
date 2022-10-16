@@ -1,3 +1,4 @@
-
+<p>Перед підтвердженням необхідно заповнити дані автора</p>
+<p >Видалення книги з активним ордером - неможливе</p>
 <app-admin-books-item *ngFor="let book of books" (bookDeleted)="reloadPage()" [book]="book"></app-admin-books-item>
 <p *ngIf="books.length < 1">Поки жоден з користувачів не додав книгу</p>
