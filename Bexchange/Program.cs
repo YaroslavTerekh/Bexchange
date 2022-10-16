@@ -122,7 +122,7 @@ app.UseCors(x => x
 
 app.UseHttpsRedirection();
 
-app.UseCustomExceptionHandler();
+//app.UseCustomExceptionHandler();
 app.UseHttpsRedirection();
 
 app.UseAuthentication();

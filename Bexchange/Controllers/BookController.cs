@@ -86,7 +86,7 @@ namespace BexchangeAPI.Controllers
 
         }
 
-        [HttpPost("search")] 
+        [HttpPost("search"), AllowAnonymous] 
         public async Task<IActionResult> SearchBook(SearchBookRequest request)
         {
             var books = await _contentRepo.SearchBooksAsync(request.Title);

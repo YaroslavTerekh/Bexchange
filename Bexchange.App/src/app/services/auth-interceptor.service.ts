@@ -4,7 +4,7 @@ import { Observable } from 'rxjs/internal/Observable';
 import { HttpEvent, HttpHandler, HttpRequest } from '@angular/common/http';
 import { Injectable } from '@angular/core';
 import { catchError } from 'rxjs';
-import { finalize, switchMap } from 'rxjs/operators';
+import { finalize, switchMap, tap } from 'rxjs/operators';
 import { LoaderService } from './loader.service';
 
 @Injectable({
@@ -40,7 +40,6 @@ export class AuthInterceptorService {
           let accessToken = localStorage.getItem('authToken');
           let refreshToken = localStorage.getItem('refreshToken');
           let id = this.authorizationService.getUserId();
-          
           if (errData.status == 401) {
 
             if (accessToken && refreshToken && id) {
@@ -48,14 +47,16 @@ export class AuthInterceptorService {
                 switchMap(v => {
                     localStorage.setItem('authToken', v.token);
                     localStorage.setItem('refreshToken', v.refreshToken.token);
-                    localStorage.setItem('loggedUserRole', this.authorizationService.getUserRole());
-                    this.authorizationService.setLoggedIn();
-
+                    localStorage.setItem('loggedUserRole', v.role);
+                    this.authorizationService.setLoggedIn();  
+                                        
                     return next.handle(req.clone({
                       setHeaders: { Authorization: `Bearer ${localStorage.getItem('authToken')}`},
                     }));
                 })
               );
+            } else {
+              this.router.navigate(['/error', {error: JSON.stringify(errData)}]);
             }
           } else {
             this.router.navigate(['/error', {error: JSON.stringify(errData)}]);

@@ -3,7 +3,7 @@ import { UntilDestroy, untilDestroyed } from '@ngneat/until-destroy';
 import { Router } from '@angular/router';
 import { User } from './../models/User';
 
-import { HttpClient } from '@angular/common/http';
+import { HttpClient, HttpStatusCode } from '@angular/common/http';
 import { Injectable, OnInit } from '@angular/core';
 import { Observable } from 'rxjs/internal/Observable';
 import { JwtHelperService } from '@auth0/angular-jwt';
@@ -28,7 +28,7 @@ export class AuthorizationService implements OnInit {
     private readonly router: Router
   ) { }
 
-  ngOnInit(): void {    
+  ngOnInit(): void {
   }
 
   public setLoggedIn() {

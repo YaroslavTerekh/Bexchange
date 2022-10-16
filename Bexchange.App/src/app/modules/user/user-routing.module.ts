@@ -1,3 +1,4 @@
+import { IsAuthorizedGuard } from './../../guards/is-authorized.guard';
 import { IsAdminGuard } from './../../guards/is-admin.guard';
 import { NgModule } from "@angular/core";
 import { Routes, RouterModule } from "@angular/router";
@@ -30,7 +31,10 @@ const childRoutes: Routes = [
     component: LibraryContentComponent,
     resolve: {
       books: UserBookResolver,
-    }
+    },
+    canActivate: [
+      IsAuthorizedGuard
+    ]
   },
   { 
     path: 'library/genre/:genre', 
@@ -46,11 +50,41 @@ const childRoutes: Routes = [
       books: AuthorBookResolver,
     }
   },
-  { path: 'book/:id', component: BookContentComponent },
-  { path: 'create-book', component: AddBookComponent },
-  { path: 'orders', component: OrderContentComponent },
-  { path: 'orders/user/:id', component: OrderContentComponent },
-  { path: 'create-order/:id', component: CreateOrderComponent },
+  { 
+    path: 'book/:id', 
+    component: BookContentComponent,
+    // canActivate: [
+    //   IsAuthorizedGuard
+    // ]
+   },
+  { 
+    path: 'create-book', 
+    component: AddBookComponent,
+    canActivate: [
+      IsAuthorizedGuard
+    ]
+  },
+  { 
+    path: 'orders', 
+    component: OrderContentComponent,
+    canActivate: [
+      IsAuthorizedGuard
+    ]
+  },
+  { 
+    path: 'orders/user/:id', 
+    component: OrderContentComponent,
+    canActivate: [
+      IsAuthorizedGuard
+    ]
+  },
+  { 
+    path: 'create-order/:id', 
+    component: CreateOrderComponent,
+    canActivate: [
+      IsAuthorizedGuard
+    ]
+  },
   { path: '**', component: ErrorPageComponent },
 ];
 

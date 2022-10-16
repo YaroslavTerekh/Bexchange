@@ -64,7 +64,6 @@ export class OrderContentComponent implements OnInit {
         .subscribe({
           next: res => {
             this.succededOrders = res;
-            
           }
         })
     }
