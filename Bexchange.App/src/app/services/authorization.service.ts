@@ -1,3 +1,5 @@
+import { Roles } from './../models/Roles';
+import { UntilDestroy, untilDestroyed } from '@ngneat/until-destroy';
 import { Router } from '@angular/router';
 import { User } from './../models/User';
 
@@ -10,11 +12,12 @@ import { ChangeUserInfoRequest } from '../models/ChangeUserInfoRequest';
 import { LoginRequest } from '../models/LoginRequest';
 import { BehaviorSubject } from 'rxjs';
 
+@UntilDestroy()
 @Injectable({
   providedIn: 'root'
 })
-export class AuthorizationService {
-  private _loggedRole!: number;
+export class AuthorizationService implements OnInit {
+  private _user: User | null = null;
   isAuthorized!: boolean;
   helper = new JwtHelperService();
   authorizationSubject: BehaviorSubject<boolean> = new BehaviorSubject<boolean>(this.checkAuthorized());
@@ -23,8 +26,9 @@ export class AuthorizationService {
   constructor(
     private readonly http: HttpClient,
     private readonly router: Router
-  ) {
+  ) { }
 
+  ngOnInit(): void {    
   }
 
   public setLoggedIn() {
@@ -36,22 +40,37 @@ export class AuthorizationService {
 
   public setLoggedOut() {
     if (localStorage.getItem('authToken')) {
-      localStorage.removeItem('authToken');
-      localStorage.removeItem('loggedUserRole');
       this.authorizationSubject.next(false);
       this.isAdminSubject.next(false);
       this.router.navigate(['']);
+      this.logOut();
     }
   }
 
   public logIn(tokenJSON: any) {
     let token = JSON.parse(tokenJSON);
-
+    localStorage.setItem('userId', token.id);
     localStorage.setItem('authToken', token.token);
     localStorage.setItem('refreshToken', token.refreshToken.token);
-    localStorage.setItem('loggedUserRole', this.getUserRole(token.token).toString());
 
-    this.setLoggedIn();
+    this.getUserInfo(token.id)
+      .pipe(untilDestroyed(this))
+      .subscribe({
+        next: res => {
+          this._user = res;
+          localStorage.setItem('loggedUserRole', Roles[this._user?.role]);
+
+          this.setLoggedIn();
+        }
+      });
+  }
+
+  public logOut() {
+    this._user = null;
+    localStorage.removeItem('authToken');
+    localStorage.removeItem('refreshToken');
+    localStorage.removeItem('loggedUserRole');
+    localStorage.removeItem('userId');
   }
 
   public isLogged(): boolean {
@@ -73,7 +92,7 @@ export class AuthorizationService {
   }
 
   public refreshToken(id: number, refreshToken: string): Observable<any> {
-    return this.http.post<any>(`${environment.bexchangeApi}User/refresh-token`, {RefreshToken: refreshToken, userId: id});
+    return this.http.post<any>(`${environment.bexchangeApi}User/refresh-token`, { RefreshToken: refreshToken, userId: id });
   }
 
   public checkAuthorized(): boolean {
@@ -86,12 +105,10 @@ export class AuthorizationService {
   }
 
   public checkAdmin(): boolean {
-    let token = localStorage.getItem('authToken');
+    let role = localStorage.getItem('loggedUserRole')
 
-    if (token) {
-      let decodeToken = this.helper.decodeToken(token);
-
-      if (decodeToken.Role == 'Admin' || decodeToken.Role == 'SuperAdmin') {
+    if (this.checkAuthorized()) {
+      if (role == "Admin" || role == "SuperAdmin") {
         return true;
       }
       return false;
@@ -100,28 +117,22 @@ export class AuthorizationService {
   }
 
   public getUserId(): number {
-    let token = localStorage.getItem('authToken');
+    let id = localStorage.getItem('userId');
 
-    if (token) {
-      let decodeToken = this.helper.decodeToken(token);
-
-      return decodeToken.Id;
+    if (id) {
+      return parseInt(id);
     }
 
     return 0;
   }
 
-  public getUserRole(token: string): string {    
-    if (token) {
-      return this.helper.decodeToken(token).Role;
+  public getUserRole(): string {
+    let role = localStorage.getItem('loggedUserRole')
+
+    if (role) {
+      return Roles[parseInt(role)].toString();
     }
 
-    return 'user';
+    return '';
   }
-
-  public exit(): void {
-
-  }
-
-
 }

@@ -112,7 +112,7 @@ namespace BexchangeAPI.Controllers
             var refreshToken = _userService.GenerateRefreshToken();
             _userService.SetRefreshToken(refreshToken, user, HttpContext, _usersRepository);
 
-            return Ok(new { token, refreshToken });
+            return Ok(new { token, refreshToken, user.Id });
         }
 
         [HttpPost("login/name")] 
@@ -133,7 +133,7 @@ namespace BexchangeAPI.Controllers
             var refreshToken = _userService.GenerateRefreshToken();
             _userService.SetRefreshToken(refreshToken, user, HttpContext, _usersRepository);
 
-            return Ok(new {token, refreshToken});
+            return Ok(new {token, refreshToken, user.Id });
         }
 
         [HttpPost("refresh-token")] 

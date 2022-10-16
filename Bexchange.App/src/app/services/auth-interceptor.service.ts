@@ -1,12 +1,10 @@
 import { Router } from '@angular/router';
 import { AuthorizationService } from 'src/app/services/authorization.service';
 import { Observable } from 'rxjs/internal/Observable';
-import { HttpEvent, HttpHandler, HttpHeaders, HttpRequest } from '@angular/common/http';
+import { HttpEvent, HttpHandler, HttpRequest } from '@angular/common/http';
 import { Injectable } from '@angular/core';
-import { catchError, subscribeOn, throwError } from 'rxjs';
+import { catchError } from 'rxjs';
 import { finalize, switchMap } from 'rxjs/operators';
-import { JwtHelperService } from '@auth0/angular-jwt';
-import { helper } from 'echarts';
 import { LoaderService } from './loader.service';
 
 @Injectable({
@@ -41,17 +39,16 @@ export class AuthInterceptorService {
         catchError(errData => {
           let accessToken = localStorage.getItem('authToken');
           let refreshToken = localStorage.getItem('refreshToken');
-
+          let id = this.authorizationService.getUserId();
+          
           if (errData.status == 401) {
-            let helper = new JwtHelperService();
-            let id = helper.decodeToken(accessToken!).Id;
 
-            if (accessToken && refreshToken) {
+            if (accessToken && refreshToken && id) {
               return this.authorizationService.refreshToken(id, refreshToken).pipe(
                 switchMap(v => {
                     localStorage.setItem('authToken', v.token);
                     localStorage.setItem('refreshToken', v.refreshToken.token);
-                    localStorage.setItem('loggedUserRole', this.authorizationService.getUserRole(v.token).toString());
+                    localStorage.setItem('loggedUserRole', this.authorizationService.getUserRole());
                     this.authorizationService.setLoggedIn();
 
                     return next.handle(req.clone({

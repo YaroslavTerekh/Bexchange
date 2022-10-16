@@ -1,3 +1,4 @@
+import { Roles } from './Roles';
 import { AddressInfo } from './AddressInfo';
 import { Book } from './Book';
 
@@ -10,7 +11,7 @@ export interface User {
     addressInfo: AddressInfo
     books: Book[];
     registeredDate: Date;    
-    role: number;
+    role: Roles;
 
     isBanned: boolean;
 }
