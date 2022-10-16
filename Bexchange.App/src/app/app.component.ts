@@ -1,6 +1,6 @@
-import { IsAdminGuard } from './guards/is-admin.guard';
-import { Component, EventEmitter, Output, OnInit, ViewChild, ElementRef } from '@angular/core';
-import { AuthorizationService } from './services/authorization.service';
+import { Component, OnInit } from "@angular/core";
+import { AuthorizationService } from "./core/services/authorization.service";
+
 
 @Component({
   selector: 'app-root',
@@ -21,14 +21,14 @@ export class AppComponent implements OnInit {
   ) { }
 
   ngOnInit() {
-    this.authorizationService.isAdminSubject
+    this.authorizationService.isAdminSubject$
       .subscribe({
         next: res => {
           this.isAdmin = res;
         }
       });
 
-    this.authorizationService.authorizationSubject
+    this.authorizationService.authorizationSubject$
       .subscribe({
         next: res => {
           this.checkAuthorized = res;

@@ -1,22 +1,23 @@
-import { AdminRoutingModule } from './admin-routing.module';
-import { NgModule } from '@angular/core';
-import { CommonModule } from '@angular/common';
-import { SharedModule } from '../shared-module/shared.module';
-import { AdminMainPageComponent } from './admin-main-page/admin-main-page.component';
-import { AdminStatsComponent } from './admin-stats/admin-stats.component';
-import { AdminSidebarComponent } from './admin-sidebar/admin-sidebar.component';
-import { AdminUsersComponent } from './admin-users/admin-users.component';
-import { AdminBooksComponent } from './admin-books/admin-books.component';
-import { AdminOrdersComponent } from './admin-orders/admin-orders.component';
-import { AdminAdminsComponent } from './admin-admins/admin-admins.component';
-import { AdminStatsItemComponent } from './admin-stats/admin-stats-item/admin-stats-item.component';
-import { AdminBooksItemComponent } from './admin-books/admin-books-item/admin-books-item.component';
-import { AdminOrdersItemComponent } from './admin-orders/admin-orders-item/admin-orders-item.component';
-import { AdminGenresComponent } from './admin-genres/admin-genres.component';
-import { AdminGenresCreateComponent } from './admin-genres/admin-genres-create/admin-genres-create.component';
-import { AdminGenresItemComponent } from './admin-genres/admin-genres-item/admin-genres-item.component';
-import { AdminAuthorsComponent } from './admin-authors/admin-authors.component';
-import { AdminAuthorsItemComponent } from './admin-authors/admin-authors-item/admin-authors-item.component';
+import { CommonModule } from "@angular/common";
+import { NgModule } from "@angular/core";
+import { SharedModule } from "src/app/shared/shared.module";
+import { AdminRoutingModule } from "./admin-routing.module";
+
+import { AdminAdminsComponent } from "./components/admin-admins/admin-admins.component";
+import { AdminAuthorsItemComponent } from "./components/admin-authors/admin-authors-item/admin-authors-item.component";
+import { AdminAuthorsComponent } from "./components/admin-authors/admin-authors.component";
+import { AdminBooksItemComponent } from "./components/admin-books/admin-books-item/admin-books-item.component";
+import { AdminBooksComponent } from "./components/admin-books/admin-books.component";
+import { AdminGenresCreateComponent } from "./components/admin-genres/admin-genres-create/admin-genres-create.component";
+import { AdminGenresItemComponent } from "./components/admin-genres/admin-genres-item/admin-genres-item.component";
+import { AdminGenresComponent } from "./components/admin-genres/admin-genres.component";
+import { AdminMainPageComponent } from "./components/admin-main-page/admin-main-page.component";
+import { AdminOrdersItemComponent } from "./components/admin-orders/admin-orders-item/admin-orders-item.component";
+import { AdminOrdersComponent } from "./components/admin-orders/admin-orders.component";
+import { AdminSidebarComponent } from "./components/admin-sidebar/admin-sidebar.component";
+import { AdminStatsItemComponent } from "./components/admin-stats/admin-stats-item/admin-stats-item.component";
+import { AdminStatsComponent } from "./components/admin-stats/admin-stats.component";
+import { AdminUsersComponent } from "./components/admin-users/admin-users.component";
 
 
 

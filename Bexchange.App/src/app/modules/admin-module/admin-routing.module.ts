@@ -1,17 +1,15 @@
-import { AdminAuthorsComponent } from './admin-authors/admin-authors.component';
-import { AdminGenresComponent } from './admin-genres/admin-genres.component';
-import { AdminBooksItemComponent } from './admin-books/admin-books-item/admin-books-item.component';
-import { BookAllResolver } from './../../guards/resolvers/booksAll.resolver';
-import { AdminBooksComponent } from './admin-books/admin-books.component';
-import { AdminAdminsComponent } from './admin-admins/admin-admins.component';
-import { AdminUsersComponent } from './admin-users/admin-users.component';
-import { AdminOrdersComponent } from './admin-orders/admin-orders.component';
-import { AdminStatsComponent } from './admin-stats/admin-stats.component';
-import { IsAdminGuard } from './../../guards/is-admin.guard';
-import { AdminMainPageComponent } from './admin-main-page/admin-main-page.component';
-import { NgModule } from '@angular/core';
-import { RouterModule, Routes } from '@angular/router';
-
+import { NgModule } from "@angular/core";
+import { Routes, RouterModule } from "@angular/router";
+import { IsAdminGuard } from "src/app/core/guards/is-admin.guard";
+import { BookAllResolver } from "src/app/core/resolvers/booksAll.resolver";
+import { AdminAdminsComponent } from "./components/admin-admins/admin-admins.component";
+import { AdminAuthorsComponent } from "./components/admin-authors/admin-authors.component";
+import { AdminBooksComponent } from "./components/admin-books/admin-books.component";
+import { AdminGenresComponent } from "./components/admin-genres/admin-genres.component";
+import { AdminMainPageComponent } from "./components/admin-main-page/admin-main-page.component";
+import { AdminOrdersComponent } from "./components/admin-orders/admin-orders.component";
+import { AdminStatsComponent } from "./components/admin-stats/admin-stats.component";
+import { AdminUsersComponent } from "./components/admin-users/admin-users.component";
 
 const routes: Routes = [
     {
