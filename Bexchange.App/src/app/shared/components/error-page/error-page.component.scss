@@ -1,0 +1,18 @@
+.error-content {
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);   
+    background-color: rgba(0,0,0,.8);
+    padding: 100px;
+    
+    h3 {
+        font-size: 25px;
+        padding-bottom: 20px;
+        font-weight: bold;
+    }
+    
+    p {
+        font-weight: 200;
+    }
+}

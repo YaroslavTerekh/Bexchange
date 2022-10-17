@@ -1,0 +1,17 @@
+<div class="add-book">
+    <h2>Додати книгу</h2>
+    <form class="book-inputs" [formGroup]="form">
+        <div><span>Назва</span> <input formControlName="title" type="text"></div>
+        <div>
+            <span>Жанр</span>
+            <select formControlName="genre" name="" id="">
+                <option  *ngFor="let genre of genres" value="{{genre.id}}">{{genre.title}}</option>
+            </select>
+        </div>
+        <div><span>Автор</span> <input formControlName="author" type="text"></div>
+        <div><span>Обкладинка</span> <input formControlName="image" type="file" (change)="onFileSelected($event)"></div>
+        <div><span>Опис</span> <textarea formControlName="description" name="" id="" cols="100" rows="20"></textarea></div>
+    </form>
+    <button class="submit" (click)="addBook()">Додати книгу</button>
+    <p>*книгу буде додано після модерації</p>
+</div>

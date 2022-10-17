@@ -1,0 +1,15 @@
+<div class="content">
+    <h1>Автори</h1>
+    <div class="content__items">
+        <a *ngFor="let author of authors">
+            <p>{{author.name}}</p>
+            <div class="choise">
+                <button [routerLink]="['/library/author', author.name]">Подивитися книги автора</button>
+                <a href="{{author.wikiLink}}" target="_blank">Прочитати біографію</a>
+            </div>
+            <div class="item" style="background-image: url('{{author.imgPath}}');">
+                <div class="item-bg"></div>
+            </div>
+        </a>
+    </div>
+</div>

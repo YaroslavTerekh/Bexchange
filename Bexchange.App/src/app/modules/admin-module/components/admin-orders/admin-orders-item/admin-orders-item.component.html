@@ -1,0 +1,16 @@
+<div class="item">
+    <div class="item-descr">
+        <div>
+            <p>id: </p> {{order.id}}
+            <div>
+                <label><p>1-st book: </p> {{order.firstBookId}}</label>
+                <label><p>2-nd book: </p> {{order.secondBookId}}</label>
+            </div>
+        </div>
+        <div class="buttons">
+            <button [routerLink]="['/book/' + order.firstBookId]" class="check">Переглянути id: {{order.firstBookId}}</button>
+            <button [routerLink]="['/book/' + order.secondBookId]" class="check">Переглянути id: {{order.secondBookId}}</button>
+            <button class="delete" (click)="deleteOrder(order.id)">Видалити</button>
+        </div>
+    </div>
+</div>

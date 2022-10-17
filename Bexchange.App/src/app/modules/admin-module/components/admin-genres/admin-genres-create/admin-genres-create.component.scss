@@ -1,0 +1,36 @@
+.content {
+    border: 2px solid rgb(72, 160, 98);
+    display: flex;
+    justify-content: space-between;
+    align-items: flex-end;
+    padding: 20px;
+    margin-left: 20px;
+
+    form {
+
+        input {
+            background-color: transparent;
+            border-bottom: 1px solid #fff;
+            margin: 10px;
+            padding-bottom: 10px;
+        }
+
+        input[type="file"] {
+            border: none;
+            padding: 0;
+        }
+    }
+
+    button {
+        width: fit-content;
+        height: fit-content;
+        padding: 20px;
+        border: 2px solid rgb(42, 143, 55);
+        background-color: transparent;
+        cursor: pointer;
+    }
+
+    button:hover {
+        background-color: rgba(42, 143, 56, 0.219);;
+    }
+}

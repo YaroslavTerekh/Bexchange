@@ -1,0 +1,57 @@
+.additional-content {
+    width: 100%;
+    background-color: rgba(255, 255, 255, .5);
+    display: flex;
+    justify-content: space-between;
+    padding: 20px;
+    backdrop-filter: blur(10px);
+
+    .info {
+        display: flex;
+        flex-direction: column;
+
+        button {
+            margin-top: 10px;
+            padding: 15px;
+            width: fit-content;
+            background-color: #BD7373;
+            cursor: pointer;
+        }
+    }
+
+    .func {
+        p {
+            font-size: 20px;
+        }
+
+        .func-wrap {
+            display: flex;
+            justify-content: space-around;
+            flex-wrap: wrap;
+            width: 100%;
+
+            button {
+                padding: 15px;
+                margin-top: 10px;
+                margin-right: 10px;
+                cursor: pointer;
+            }
+
+            .accept {
+                background-color: #229107;
+            }
+
+            .decline {
+                background-color: #BD7373;
+            }
+
+            .confirm-success {
+                background-color: #229107;
+            }
+
+            .delete {
+                background-color: #C8312F;
+            }
+        }
+    }
+}

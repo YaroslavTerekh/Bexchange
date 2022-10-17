@@ -1,0 +1,37 @@
+div {
+    width: 110%;
+    .stats {
+        width: 100%;
+        display: flex;
+        justify-content: space-between;
+        margin-bottom: 30px;
+    
+        div {
+            display: flex;
+            div {
+                width: 20px;
+                height: 20px;  
+                margin-right: 5px;          
+            }
+        }
+    
+        .green {
+            background-color: #3ba272;
+        }
+    
+        .violet {
+            background-color: rgb(140, 51, 243);
+        }
+    
+        .red {
+            background-color: red;
+        }
+    }
+    
+    div {
+        width: 100%;
+        margin-left: 20px;
+    }
+    
+    
+}

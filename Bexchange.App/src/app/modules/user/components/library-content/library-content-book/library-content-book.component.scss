@@ -1,0 +1,49 @@
+$libW: 300px;
+$libH: 490px;
+
+.lib-book{
+    width: $libW;
+    height: $libH;
+    cursor: pointer;
+
+    img {
+        width: inherit;
+        height: inherit;
+        position: absolute;        
+    }
+
+    .lib-book-content {
+        opacity: 0;
+        transition: .4s;
+    }
+
+    .lib-book-content:hover {
+        opacity: 1;
+        transition: .4s;
+    }
+
+    .lib-bg{
+        position: absolute;
+        z-index: 1;
+        width: $libW;
+        height: $libH;
+        background-color: rgba(0, 0, 0, .7);
+    }
+
+    .lib-book-info {
+        position: relative;
+        left: 10px;
+        top: 40px;
+        z-index: 2;
+        max-width: 280px;
+        text-align: justify;
+    }
+
+    p {
+        font-weight: 200;
+    }
+
+    .sdesc {
+        color:antiquewhite;
+    }
+}
