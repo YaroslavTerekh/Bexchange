@@ -44,31 +44,21 @@
             }
 
             :nth-child(3n) {
-                border: 2px solid #DAB805;
-                transition: .2s;
-            }
-
-            :nth-child(4n) {
                 border: 2px solid #9b0bb8;
                 transition: .2s;
             }
 
-            :nth-child(5n) {
+            :nth-child(4n) {
                 border: 2px solid #CD0000;
                 transition: .2s;
             }
 
             :nth-child(3n):hover {
-                background-color: #DAB805;
-                transition: .2s;
-            }
-
-            :nth-child(4n):hover {
                 background-color: #9b0bb8;
                 transition: .2s;
             }
 
-            :nth-child(5n):hover {
+            :nth-child(4n):hover {
                 background-color: #CD0000;
                 transition: .2s;
             }

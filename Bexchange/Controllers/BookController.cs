@@ -41,9 +41,9 @@ namespace BexchangeAPI.Controllers
         }
          
         [HttpGet("user/ignore/{id}")] 
-        public async Task<IActionResult> Books(int id)
+        public async Task<IActionResult> Books(int id, CancellationToken token = default)
         {
-            var books = await _contentRepo.IgnoreUserBooksAsync(id);
+            var books = await _contentRepo.IgnoreUserBooksAsync(id, token);
 
             if (books == null)
                 throw new NotFoundException("No books here", (int)HttpStatusCode.NotFound);
@@ -52,9 +52,9 @@ namespace BexchangeAPI.Controllers
         }
 
         [HttpGet("main-page/{amount}"), AllowAnonymous] 
-        public async Task<IActionResult> FirstBooks(int amount = 10)
+        public async Task<IActionResult> FirstBooks(int amount = 10, CancellationToken token = default)
         {
-            var books = await _contentRepo.GetFirstBooksAsync(amount);
+            var books = await _contentRepo.GetFirstBooksAsync(amount, token);
 
             if (books == null)
                 throw new NotFoundException("No books here", (int)HttpStatusCode.NotFound);
@@ -63,7 +63,7 @@ namespace BexchangeAPI.Controllers
         }
 
         [HttpGet("all"), Authorize(Policy = PoliciesConstants.Admins)]
-        public async Task<IActionResult> AllBooks(CancellationToken token)
+        public async Task<IActionResult> AllBooks(CancellationToken token = default)
         {
             var books = await _contentRepo.GetAllComponentsAsync(token);
 
@@ -75,9 +75,9 @@ namespace BexchangeAPI.Controllers
         }
 
         [HttpGet("all/verified/{usedId}"), AllowAnonymous] 
-        public async Task<IActionResult> AllVerifiedBooks(int userId)
+        public async Task<IActionResult> AllVerifiedBooks(int userId, CancellationToken token = default)
         {
-            var books = await _contentRepo.GetAllVerifiedBooksAsync(userId);
+            var books = await _contentRepo.GetAllVerifiedBooksAsync(userId, token);
 
             if (books == null)
                 throw new NotFoundException("No books here", (int)HttpStatusCode.NotFound);
@@ -87,17 +87,17 @@ namespace BexchangeAPI.Controllers
         }
 
         [HttpPost("search"), AllowAnonymous] 
-        public async Task<IActionResult> SearchBook(SearchBookRequest request)
+        public async Task<IActionResult> SearchBook(SearchBookRequest request, CancellationToken token = default)
         {
-            var books = await _contentRepo.SearchBooksAsync(request.Title);
+            var books = await _contentRepo.SearchBooksAsync(request.Title, token);
 
             return Ok(books);
         }
 
         [HttpGet("{id}")] 
-        public async Task<IActionResult> GetBook(int id)
+        public async Task<IActionResult> GetBook(int id, CancellationToken token = default)
         {
-            var book = await _contentRepo.GetComponentAsync(id);
+            var book = await _contentRepo.GetComponentAsync(id, token);
 
             if (book == null)
                 throw new NotFoundException("Book not found", (int)HttpStatusCode.NotFound);
@@ -109,9 +109,9 @@ namespace BexchangeAPI.Controllers
         }
 
         [HttpGet("user/{userId}")] 
-        public async Task<IActionResult> GetUserBooks(int userId)
+        public async Task<IActionResult> GetUserBooks(int userId, CancellationToken token = default)
         {
-            var books = await _contentRepo.GetUserComponentsAsync(userId);
+            var books = await _contentRepo.GetUserComponentsAsync(userId, token);
 
             if (books == null)
                 throw new NotFoundException("Books not found", (int)HttpStatusCode.NotFound);
@@ -120,30 +120,30 @@ namespace BexchangeAPI.Controllers
         }
 
         [HttpPost("add/book/{imgId}")] 
-        public async Task<IActionResult> AddBook(BookDto book, int imgId)
+        public async Task<IActionResult> AddBook(BookDto book, int imgId, CancellationToken token = default)
         {
             var newBook = _mapper.Map<Book>(book);
 
             newBook.UserId = _userService.GetUserId(HttpContext);
-            newBook.User = await _usersRepository.GetUserAsync(newBook.UserId);
+            newBook.User = await _usersRepository.GetUserAsync(newBook.UserId, token);
             newBook.ImageId = imgId;
-            await _contentRepo.AddComponentAsync(newBook);
+            await _contentRepo.AddComponentAsync(newBook, token);
 
             return Created(Request.Path, new { Id = newBook.Id, Path = Request.Path + $"/{newBook.Id}" });
         }
 
         [HttpPost("add/image")] 
-        public async Task<IActionResult> AddImage()
+        public async Task<IActionResult> AddImage(CancellationToken token = default)
         {
-            var imgId = await _contentRepo.AddImageAsync(HttpContext, _env.WebRootPath, _userService, _env.ContentRootPath);
+            var imgId = await _contentRepo.AddImageAsync(HttpContext, _env.WebRootPath, _userService, _env.ContentRootPath, token);
 
             return Ok(imgId);
         }
 
         [HttpGet("image/{id}"), AllowAnonymous]
-        public async Task<IActionResult> GetImage(int id)
+        public async Task<IActionResult> GetImage(int id, CancellationToken token = default)
         {
-            var image = await _contentRepo.GetImageAsync(id);
+            var image = await _contentRepo.GetImageAsync(id, token);
 
             if (image == null)
                 throw new NotFoundException("Image not found", (int)HttpStatusCode.NotFound);
@@ -152,16 +152,16 @@ namespace BexchangeAPI.Controllers
         }
 
         [HttpDelete("delete/{id}")] 
-        public async Task<IActionResult> DeleteBook(int id)
+        public async Task<IActionResult> DeleteBook(int id, CancellationToken token = default)
         {
-            Book book = await _contentRepo.GetComponentAsync(id);
+            Book book = await _contentRepo.GetComponentAsync(id, token);
 
             if (book == null)
                 throw new NotFoundException("Book not found", (int)HttpStatusCode.NotFound);
 
             if (_userService.GetUserId(HttpContext) == book.UserId || _userService.IsAdmin(HttpContext))
             {
-                await _contentRepo.DeleteComponentAsync(book.ImageId);
+                await _contentRepo.DeleteComponentAsync(book.ImageId, token);
                 
                 return Ok();
             }
@@ -170,28 +170,28 @@ namespace BexchangeAPI.Controllers
         }
 
         [HttpPatch("{id}/comments/add")] 
-        public async Task<IActionResult> AddComment(CommentDto comment, int id)
+        public async Task<IActionResult> AddComment(CommentDto comment, int id, CancellationToken token = default)
         {
             var mappedComment = _mapper.Map<Comment>(comment);
-            var user = await _usersRepository.GetUserAsync(_userService.GetUserId(HttpContext));
+            var user = await _usersRepository.GetUserAsync(_userService.GetUserId(HttpContext), token);
 
-            await _contentRepo.AddCommentAsync(mappedComment, id, user);
+            await _contentRepo.AddCommentAsync(mappedComment, id, user, token);
 
             return Created(Request.Path, new { comment });
         }
 
         [HttpPost("genre/add"), Authorize(Policy = PoliciesConstants.Admins)] 
-        public async Task<IActionResult> AddGenre(Genre genre)
+        public async Task<IActionResult> AddGenre(Genre genre, CancellationToken token = default)
         {
-            await _contentRepo.AddGenreAsync(genre);
+            await _contentRepo.AddGenreAsync(genre, token);
 
             return Created(Request.Path, new { genre });
         }
 
         [HttpGet("genres"), AllowAnonymous] 
-        public async Task<IActionResult> Genres()
+        public async Task<IActionResult> Genres(CancellationToken token = default)
         {
-            var genres = await _contentRepo.GetGenresAsync();
+            var genres = await _contentRepo.GetGenresAsync(token);
 
             if (genres == null)
                 throw new NotFoundException("No genres were added", (int)HttpStatusCode.NotFound);
@@ -200,9 +200,9 @@ namespace BexchangeAPI.Controllers
         }
 
         [HttpGet("genre/{genre}")] 
-        public async Task<IActionResult> GetByGenre(string genre)
+        public async Task<IActionResult> GetByGenre(string genre, CancellationToken token = default)
         {
-            var books = await _contentRepo.GetByGenreAsync(genre);
+            var books = await _contentRepo.GetByGenreAsync(genre, token);
 
             if (books == null)
                 throw new NotFoundException("Books not found", (int)HttpStatusCode.NotFound);
@@ -211,9 +211,9 @@ namespace BexchangeAPI.Controllers
         }
 
         [HttpGet("authors/verified"), AllowAnonymous] 
-        public async Task<IActionResult> Authors()
+        public async Task<IActionResult> Authors(CancellationToken token = default)
         {
-            var authors = await _contentRepo.GetAuthorsAsync();
+            var authors = await _contentRepo.GetAuthorsAsync(token);
 
             if (authors == null)
                 throw new NotFoundException("No authors were added", (int)HttpStatusCode.NotFound);
@@ -222,9 +222,9 @@ namespace BexchangeAPI.Controllers
         }
 
         [HttpGet("authors"), Authorize(Policy = PoliciesConstants.Admins)] 
-        public async Task<IActionResult> AllAuthors()
+        public async Task<IActionResult> AllAuthors(CancellationToken token = default)
         {
-            var authors = await _contentRepo.GetAllAuthorsAsync();
+            var authors = await _contentRepo.GetAllAuthorsAsync(token);
 
             if (authors == null)
                 throw new NotFoundException("No authors were added", (int)HttpStatusCode.NotFound);
@@ -233,9 +233,9 @@ namespace BexchangeAPI.Controllers
         }
 
         [HttpGet("author/{author}")] 
-        public async Task<IActionResult> GetByAuthor(string author)
+        public async Task<IActionResult> GetByAuthor(string author, CancellationToken token = default)
         {
-            var books = await _contentRepo.GetByAuthorAsync(author);
+            var books = await _contentRepo.GetByAuthorAsync(author, token);
 
             if (books == null)
                 throw new NotFoundException("Books not found", (int)HttpStatusCode.NotFound);
@@ -244,9 +244,9 @@ namespace BexchangeAPI.Controllers
         }
 
         [HttpDelete("genre/delete/{id}")] 
-        public async Task<IActionResult> DeleteGenre(int id)
+        public async Task<IActionResult> DeleteGenre(int id, CancellationToken token = default)
         {
-            await _contentRepo.DeleteGenreAsync(id);
+            await _contentRepo.DeleteGenreAsync(id, token);
 
             return NoContent();
         }

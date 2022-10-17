@@ -22,7 +22,7 @@ namespace BexchangeAPI.Infrastructure.Repositories
             _context = context;
         }
 
-        public async Task ChangeRoleAsync(Roles role, int id)
+        public async Task ChangeRoleAsync(Roles role, int id, CancellationToken token = default)
         {
             var user = await _context.Users.FirstOrDefaultAsync(x => x.Id == id);
 
@@ -30,7 +30,7 @@ namespace BexchangeAPI.Infrastructure.Repositories
             _context.SaveChanges();
         }
 
-        public async Task BanUserAsync(int id)
+        public async Task BanUserAsync(int id, CancellationToken token = default)
         {
             var user = await _context.Users.FirstOrDefaultAsync(x => x.Id == id);
             if(user.Role == Roles.User)
@@ -43,7 +43,7 @@ namespace BexchangeAPI.Infrastructure.Repositories
             }
         }
 
-        public async Task UnbanUserAsync(int id)
+        public async Task UnbanUserAsync(int id, CancellationToken token = default)
         {
             var user = await _context.Users.FirstOrDefaultAsync(x => x.Id == id);
 
@@ -51,12 +51,12 @@ namespace BexchangeAPI.Infrastructure.Repositories
             await _context.SaveChangesAsync();
         }
 
-        public async Task<IEnumerable<User>> GetAdminsOnlyAsync()
+        public async Task<IEnumerable<User>> GetAdminsOnlyAsync(CancellationToken token = default)
         {
             return await _context.Users.Where(u => u.Role == Roles.Admin).ToListAsync();
         }
 
-        public async Task<IEnumerable<User>> GetAllUsersAsync()
+        public async Task<IEnumerable<User>> GetAllUsersAsync(CancellationToken token = default)
         {
             return await _context.Users
                 .Include(u => u.Address)
@@ -65,7 +65,7 @@ namespace BexchangeAPI.Infrastructure.Repositories
                 .ToListAsync();
         }
 
-        public async Task<User> GetUserAsync(int id)
+        public async Task<User> GetUserAsync(int id, CancellationToken token = default)
         {
             return await _context.Users
                 .Where(u => u.Id == id)
@@ -75,7 +75,7 @@ namespace BexchangeAPI.Infrastructure.Repositories
                 .FirstOrDefaultAsync();
         }
 
-        public async Task<User> GetUserByEmailAsync(string email)
+        public async Task<User> GetUserByEmailAsync(string email, CancellationToken token = default)
         {
             return await _context.Users.Where(u => u.Email == email)
                 .Include(u => u.Address)
@@ -84,7 +84,7 @@ namespace BexchangeAPI.Infrastructure.Repositories
                 .FirstOrDefaultAsync();
         }
 
-        public async Task<User> GetUserByNameAsync(string name)
+        public async Task<User> GetUserByNameAsync(string name, CancellationToken token = default)
         {
             return await _context.Users.Where(u => u.UserName == name)
                 .Include(u => u.Address)
@@ -93,7 +93,7 @@ namespace BexchangeAPI.Infrastructure.Repositories
                 .FirstOrDefaultAsync(); ;
         }
 
-        public async Task ModifyUserAsync(ChangeUserInfoRequest user)
+        public async Task ModifyUserAsync(ChangeUserInfoRequest user, CancellationToken token = default)
         {
             var _user = await GetUserAsync(user.Id);
 
@@ -111,12 +111,12 @@ namespace BexchangeAPI.Infrastructure.Repositories
             await _context.SaveChangesAsync();
         }
 
-        public async Task SaveUser()
+        public async Task SaveUser(CancellationToken token = default)
         {
             await _context.SaveChangesAsync();
         }
 
-        public async Task<object> GetLastUsersAsync()
+        public async Task<object> GetLastUsersAsync(CancellationToken token = default)
         {
             var users = await GetAllUsersAsync();
             var last7DaysUsers = users.Where(u => u.RegisteredDate > DateTime.UtcNow.AddDays(-7));

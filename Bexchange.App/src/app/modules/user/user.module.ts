@@ -1,7 +1,9 @@
 import { CommonModule } from "@angular/common";
 import { NgModule } from "@angular/core";
-import { AppComponent } from "src/app/app.component";
+import { UserRoutingModule } from "./user-routing.module";
 import { SharedModule } from "src/app/shared/shared.module";
+
+import { AppComponent } from "src/app/app.component";
 import { AboutUsPageComponent } from "./components/about-us-page/about-us-page.component";
 import { AddBookComponent } from "./components/add-book/add-book.component";
 import { AuthorsContentComponent } from "./components/authors-content/authors-content.component";
@@ -24,7 +26,7 @@ import { CommentsModalItemComponent } from "./modals/comments-modal/comments-mod
 import { CommentsModalComponent } from "./modals/comments-modal/comments-modal.component";
 import { LoginModalComponent } from "./modals/login-modal/login-modal.component";
 import { RegisterModalComponent } from "./modals/register-modal/register-modal.component";
-import { UserRoutingModule } from "./user-routing.module";
+
 
 @NgModule({
   declarations: [

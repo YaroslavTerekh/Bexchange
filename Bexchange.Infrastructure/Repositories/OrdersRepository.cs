@@ -30,13 +30,13 @@ namespace BexchangeAPI.Infrastructure.Repositories
                 .ToListAsync(token);
         }
 
-        public async Task AddComponentAsync(ExchangeOrder order)
+        public async Task AddComponentAsync(ExchangeOrder order, CancellationToken token = default)
         {
             await _context.Orders.AddAsync(order);
             await _context.SaveChangesAsync();
         }
 
-        public async Task<ExchangeOrder?> GetComponentAsync(int id)
+        public async Task<ExchangeOrder?> GetComponentAsync(int id, CancellationToken token = default)
         {
             return await _context.Orders
                 .Where(o => o.Id == id)
@@ -45,20 +45,20 @@ namespace BexchangeAPI.Infrastructure.Repositories
                 .FirstOrDefaultAsync();
         }
 
-        public async Task DeleteComponentAsync(int id)
+        public async Task DeleteComponentAsync(int id, CancellationToken token = default)
         {
             _context.Orders.Remove(await GetComponentAsync(id));
             await _context.SaveChangesAsync();
         }
 
-        public async Task ModifyComponentStateAsync(int id, State state)
+        public async Task ModifyComponentStateAsync(int id, State state, CancellationToken token = default)
         {
             ExchangeOrder order = await GetComponentAsync(id);
             order.State = state;
             await _context.SaveChangesAsync();
         }
 
-        public async Task<IEnumerable<ExchangeOrder>> GetUserComponentsAsync(int id)
+        public async Task<IEnumerable<ExchangeOrder>> GetUserComponentsAsync(int id, CancellationToken token = default)
         {
             return await _context.Orders
                 .Where(o => o.FirstBook.UserId == id || o.SecondBook.UserId == id)
@@ -67,14 +67,14 @@ namespace BexchangeAPI.Infrastructure.Repositories
                 .ToListAsync();
         }
 
-        public async Task AcceptOrderAsync(int id)
+        public async Task AcceptOrderAsync(int id, CancellationToken token = default)
         {
             var order = await GetComponentAsync(id);
             order.State = State.Verified;
             await _context.SaveChangesAsync();
         }
 
-        public async Task SuccessOrderAsync(int id, IUserService userService, HttpContext context)
+        public async Task SuccessOrderAsync(int id, IUserService userService, HttpContext context, CancellationToken token = default)
         {
             ExchangeOrder order = await GetComponentAsync(id);
             int userId = userService.GetUserId(context);
@@ -88,14 +88,14 @@ namespace BexchangeAPI.Infrastructure.Repositories
             await _context.SaveChangesAsync();
         }
 
-        public async Task DeclineOrderAsync(int id)
+        public async Task DeclineOrderAsync(int id, CancellationToken token = default)
         {
             var order = await GetComponentAsync(id);
             order.State = State.Cancelled;
             await _context.SaveChangesAsync();
         }
 
-        public async Task<IEnumerable<ExchangeOrder>> GetUserOutgoingOrdersAsync(IUserService userService, HttpContext context)
+        public async Task<IEnumerable<ExchangeOrder>> GetUserOutgoingOrdersAsync(IUserService userService, HttpContext context, CancellationToken token = default)
         {
             return await _context.Orders
                 .Where(o => o.SecondBook.UserId == userService.GetUserId(context) && o.State == State.Verified)
@@ -104,7 +104,7 @@ namespace BexchangeAPI.Infrastructure.Repositories
                 .ToListAsync();
         }
 
-        public async Task<IEnumerable<ExchangeOrder>> GetUserIncomingOrdersAsync(IUserService userService, HttpContext context)
+        public async Task<IEnumerable<ExchangeOrder>> GetUserIncomingOrdersAsync(IUserService userService, HttpContext context, CancellationToken token = default)
         {
             return await _context.Orders
                 .Where(o => o.FirstBook.UserId == userService.GetUserId(context))
@@ -113,7 +113,7 @@ namespace BexchangeAPI.Infrastructure.Repositories
                 .ToListAsync();
         }
 
-        public async Task<IEnumerable<ExchangeOrder>> GetUserSuceededOrdersAsync(IUserService userService, HttpContext context)
+        public async Task<IEnumerable<ExchangeOrder>> GetUserSuceededOrdersAsync(IUserService userService, HttpContext context, CancellationToken token = default)
         {
             int userId = userService.GetUserId(context);
 
