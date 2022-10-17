@@ -17,9 +17,11 @@ namespace BexchangeAPI.Infrastructure.Configurations
                 .IsRequired();
 
             builder.Property(b => b.Title)
+                .HasMaxLength(50)
                 .IsRequired();
 
             builder.Property(b => b.Description)
+                .HasMaxLength(1900)
                 .IsRequired();
 
             builder.Property(b => b.ImageId)
