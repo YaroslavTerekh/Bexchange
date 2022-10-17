@@ -1,0 +1,7 @@
+<div class="content">
+    <app-admin-genres-create></app-admin-genres-create>
+    <div *ngFor="let genre of genres">
+        <app-admin-genres-item [genre]="genre"></app-admin-genres-item>
+    </div>
+</div>
+<p *ngIf="genres.length < 1">Спочатку треба додати жанр!</p>

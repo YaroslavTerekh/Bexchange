@@ -1,0 +1,12 @@
+<div class="content">
+    <h1 class="content-title">Жанри</h1>
+    <div class="content__items">
+        <a [routerLink]="['/library/genre', genre.title]" *ngFor="let genre of genres">
+            <p>{{genre.title}}</p> 
+            <div class="item" style="background-image: url('{{genre.imgPath}}');">
+                <div class="item-bg"></div>                
+            </div>
+            <p class="descr">{{genre.description}}</p>
+        </a>
+    </div>
+</div>

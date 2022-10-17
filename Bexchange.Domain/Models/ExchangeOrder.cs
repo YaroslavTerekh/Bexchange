@@ -18,6 +18,8 @@ namespace BexchangeAPI.Domain.Models
         public int FirstBookId { get; set; }
         [ForeignKey(nameof(SecondBook))]
         public int SecondBookId { get; set; }
+        public bool FirstUserAccepted { get; set; }
+        public bool SecondUserAccepted { get; set; }
 
         public State State { get; set; }
     }

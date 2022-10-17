@@ -1,4 +1,6 @@
 ﻿using Bexchange.Domain;
+using Bexchange.Domain.Models;
+using Bexchange.Domain.RequestModels;
 using Bexchange.Infrastructure.Repositories.Interfaces;
 using Bexchange.Infrastructure.Services.Repositories;
 using BexchangeAPI.Domain.CustomExceptions;
@@ -10,97 +12,81 @@ using Microsoft.AspNetCore.Mvc;
 
 namespace Bexchange.API.Controllers
 {
-    [Authorize(Policy = PoliciesConstants.Admins)]
-    [Route("api/[controller]/[action]")]
+    [Authorize(Policy = "Admins")]
+    [Route("api/[controller]")]
     [ApiController]
     public class AdminController : ControllerBase
     {
         private readonly IUsersRepository<User> _usersRepository;
-        private readonly IContentRepository<Book> _contentRepository;
+        private readonly IBookContentRepository<Book> _contentRepository;
         private readonly IUserService _userService;
 
-        public AdminController(IUsersRepository<User> usersRepository, IContentRepository<Book> contentRepository, IUserService userService)
+        public AdminController(IUsersRepository<User> usersRepository, IBookContentRepository<Book> contentRepository, IUserService userService)
         {
             _usersRepository = usersRepository;
             _contentRepository = contentRepository;
             _userService = userService;
         }
 
-        [HttpGet("users")]
-        public async Task<IActionResult> GetAllUsers()
+        [HttpGet("users")] 
+        public async Task<IActionResult> GetAllUsers(CancellationToken token = default)
         {
-            return Ok(await _usersRepository.GetAllUsersAsync());
+            return Ok(await _usersRepository.GetAllUsersAsync(token));
         }
 
-        [HttpGet("id/{id}")]
-        public async Task<IActionResult> GetUser(int id)
+        [HttpGet("users/last")] 
+        public async Task<IActionResult> GetLastDaysUsers(CancellationToken token = default)
         {
-            var user = await _usersRepository.GetUserAsync(id);
-            return Ok(user);
+            return Ok(await _usersRepository.GetLastUsersAsync(token));
         }
 
-        [HttpGet("users/{name}")]
-        public async Task<IActionResult> GetUserByName(string name)
-        {
-            var user = await _usersRepository.GetUserByNameAsync(name);
-
-            if (user == null)
-                throw new NotFoundException("user not found", StatusCodes.Status404NotFound);
-            return Ok(user);
-        }
-
-        [HttpGet("users/{email}")]
-        public async Task<IActionResult> GetUserByEmail(string email)
-        {
-            var user = await _usersRepository.GetUserByEmailAsync(email);
-
-            if (user == null)
-                throw new NotFoundException("user not found", StatusCodes.Status404NotFound);
-            return Ok(user);
-        }
-
-        [HttpPatch("ban/{id}")]
-        public async Task<IActionResult> BanUser(int id)
+        [HttpPatch("ban/{id}")] 
+        public async Task<IActionResult> BanUser(int id, CancellationToken token = default)
         {
             if (id != _userService.GetUserId(HttpContext)) {
-                await _usersRepository.BanUserAsync(id);
+                await _usersRepository.BanUserAsync(id, token);
 
-                return Ok($"User with id {id} has been banned");
+                return Ok();
             }
 
             return BadRequest("You can't ban yourself");
         }
 
+        [HttpPatch("unban/{id}")] 
+        public async Task<IActionResult> UnbanUser(int id, CancellationToken token = default)
+        {
+            await _usersRepository.UnbanUserAsync(id, token);
+            return Ok();
+        }
+
         [HttpPatch("book/state/{id}/{state}")]
-        public async Task<IActionResult> AcceptBook(int id, State state)
+        public async Task<IActionResult> ModifyStateBook(int id, State state, CancellationToken token = default)
         {
-            await _contentRepository.ModifyComponentStateAsync(id, state);
+            await _contentRepository.ModifyComponentStateAsync(id, state, token);
 
-            return Ok("Successfully modified state");
+            return NoContent();
         }
 
-        //SuperAdmin part
-
-        [HttpGet("admins"), Authorize(Policy = PoliciesConstants.SuperAdmins)]
-        public async Task<IActionResult> GetAdmins()
+        [HttpPatch("role/{id}/{role}")] 
+        public async Task<IActionResult> ChangeUserRole(Roles role, int id, CancellationToken token = default)
         {
-            return Ok(await _usersRepository.GetAdminsOnlyAsync());
+            await _usersRepository.ChangeRoleAsync(role, id, token);
+
+            return Ok();
         }
 
-        [HttpPut("role/{id}/{role}"), Authorize(Policy = PoliciesConstants.SuperAdmins)]
-        public async Task<IActionResult> ChangeUserRole(Roles role, int id)
+        [HttpPost("authors/modify")] 
+        public async Task<IActionResult> ModifyAuthor(Author author, CancellationToken token = default)
         {
-            await _usersRepository.ChangeRoleAsync(role, id);
-
-            return Ok("Successfully changed the role");
+            await _contentRepository.ModifyAuthorAsync(author, token);
+            return Ok();
         }
 
-        [HttpPut("modify/{id}"), Authorize(Policy = PoliciesConstants.SuperAdmins)]
-        public async Task<IActionResult> ModifyUser(User user)
+        [HttpGet("admins"), Authorize(Policy = PoliciesConstants.SuperAdmins)] 
+        public async Task<IActionResult> GetAdmins(CancellationToken token = default)
         {
-            await _usersRepository.ModifyUserAsync(user);
-            return Ok("Modified successfully");
-        }
+            return Ok(await _usersRepository.GetAdminsOnlyAsync(token));
+        }        
 
     }
 }

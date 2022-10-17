@@ -1,0 +1,28 @@
+.order-item {
+    width: 100%;
+    padding: 20px;
+    background-color: rgba(255,255,255,.5);
+    backdrop-filter: blur(10px);
+    margin-top: 20px;
+    display: flex;
+    justify-content: space-between;
+    cursor: pointer;
+    border-bottom: 1px solid #000;
+
+    .order-state {
+        display: flex;
+        font-size: 18px;
+
+        p {
+            margin-left: 10px;     
+            font-weight: 800;       
+        }
+    }
+}
+
+.additional {
+    background-color: rgba(255,255,255,.5);
+    width: 100%;
+    
+}
+

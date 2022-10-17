@@ -25,10 +25,18 @@ namespace BexchangeAPI.Infrastructure.Configurations
             builder.Property(b => b.ImageId)
                 .IsRequired();
 
+            builder.HasOne(b => b.Image)
+                .WithOne()
+                .OnDelete(DeleteBehavior.Cascade);
+
             builder.HasOne(b => b.User)
                 .WithMany(u => u.Books)
                 .HasForeignKey(b => b.UserId)
                 .OnDelete(DeleteBehavior.Restrict);
+
+            builder.HasMany(b => b.Comments)
+                .WithOne()                
+                .OnDelete(DeleteBehavior.Cascade);
         }
     }
 }

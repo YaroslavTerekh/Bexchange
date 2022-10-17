@@ -1,0 +1,9 @@
+<div class="content">
+    <form [formGroup]="form">
+        <input type="text" placeholder="Назва" formControlName="title">
+        <input type="text" placeholder="Короткий опис (до 50 символів)" formControlName="description">
+        <input type="text" placeholder="URL картинки" formControlName="imagePath">
+    </form>
+
+    <button (click)="addGenre()">Додати жанр</button>
+</div>

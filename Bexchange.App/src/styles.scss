@@ -1,0 +1,46 @@
+@import '~normalize.css';
+
+/* You can add global styles to this file, and also import other style files */
+* {
+    padding: 0px;
+	margin: 0px;
+	border: none;
+    font-family: 'Comfortaa', sans-serif;
+    color: #fff;
+}
+
+input:focus, textarea:focus, select:focus {
+    outline: none;
+    ::placeholder {
+        color: #fff;
+        opacity: 1;
+    }
+}
+
+ul {
+    list-style-type: none;
+}
+
+a {
+    text-decoration: none;
+}
+
+body {
+    background: linear-gradient( rgba(0, 0, 0, 0.5), rgba(0, 0, 0, 0.5) ), url('../src/assets/background.png');
+    -webkit-background-size: cover;
+    -moz-background-size:  cover;
+    -o-background-size: cover;
+    background-size: cover;
+    background-attachment: fixed;
+}
+
+::-webkit-scrollbar {
+    width: 10px;
+    overflow-y: scroll;
+    background: rgb(0, 0, 0);
+    box-shadow: inset 0 0 4px #707070;
+}
+
+::-webkit-scrollbar-thumb {
+    background: rgba(255, 217, 0, 0.425);
+}

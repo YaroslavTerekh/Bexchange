@@ -1,5 +1,8 @@
 ﻿using AutoMapper;
+using Bexchange.Infrastructure.Repositories.Interfaces;
+using Bexchange.Infrastructure.Services.Repositories;
 using BexchangeAPI.Domain.CustomExceptions;
+using BexchangeAPI.Domain.Enum;
 using BexchangeAPI.Domain.Models;
 using BexchangeAPI.DTOs;
 using BexchangeAPI.Infrastructure.Repositories.Interfaces;
@@ -16,102 +19,142 @@ namespace BexchangeAPI.Controllers
     [ApiController]
     public class OrderController : ControllerBase
     {
-        private readonly IContentRepository<ExchangeOrder> _orderRepo;
-        private readonly IContentRepository<Book> _bookRepo;
+        private readonly IOrderContentRepository<ExchangeOrder> _orderRepo;
+        private readonly IBookContentRepository<Book> _bookRepo;
         private readonly IMapper _mapper;
+        private readonly IUserService _userService;
 
-        public OrderController(IContentRepository<ExchangeOrder> contentRepo, IMapper mapper, IContentRepository<Book> bookRepo)
+        public OrderController(IOrderContentRepository<ExchangeOrder> contentRepo, IMapper mapper, 
+            IBookContentRepository<Book> bookRepo, IUserService userService)
         {
             _orderRepo = contentRepo;
             _mapper = mapper;
             _bookRepo = bookRepo;
+            _userService = userService;
         }
 
-        [HttpGet]
-        public async Task<IActionResult> Orders()
+        [HttpGet] 
+        public async Task<IActionResult> Orders(CancellationToken token = default)
         {
-            var orders = await _orderRepo.GetAllComponentsAsync();
+            var orders = await _orderRepo.GetAllComponentsAsync(token);
 
-            if (orders == null) 
+            if (orders == null)
                 throw new NotFoundException("Orders not found", (int)HttpStatusCode.NotFound);
 
-            return Ok(_mapper.Map<IEnumerable<ExchangeOrderDto>>(orders));
+            return Ok(orders);
         }
 
-        [HttpGet("{id}")]
-        public async Task<IActionResult> GetOrder(int id)
+        [HttpGet("user/{id}")] 
+        public async Task<IActionResult> GetUserOrders(int id, CancellationToken token = default)
         {
-            var order = await _orderRepo.GetComponentAsync(id);
+            var order = await _orderRepo.GetUserComponentsAsync(id, token);
 
             if (order == null)
                 throw new NotFoundException("Orders not found", (int)HttpStatusCode.NotFound);
 
-            return Ok(_mapper.Map<ExchangeOrderDto>(order));
+            return Ok(order);
         }
 
-        [HttpGet("user/{id}")]
-        public async Task<IActionResult> GetUserOrders(int id)
+        [HttpGet("user/outgoing")] 
+        public async Task<IActionResult> GetUserOutgoingOrders(CancellationToken token = default)
         {
-            var order = await _orderRepo.GetUserComponentsAsync(id);
+            var order = await _orderRepo.GetUserOutgoingOrdersAsync(_userService, HttpContext, token);
 
             if (order == null)
                 throw new NotFoundException("Orders not found", (int)HttpStatusCode.NotFound);
 
-            return Ok(_mapper.Map<IEnumerable<ExchangeOrderDto>>(order));
+            return Ok(order);
         }
 
-        [HttpPost("add")]
-        public async Task<IActionResult> AddOrder(ExchangeOrderDto order)
+        [HttpGet("user/incoming")] 
+        public async Task<IActionResult> GetUserImcomingOrders(CancellationToken token = default)
         {
-            if (ModelState.IsValid)
-            {
-                var newOrder = _mapper.Map<ExchangeOrder>(order);
+            var order = await _orderRepo.GetUserIncomingOrdersAsync(_userService, HttpContext, token);
 
-                var firstBook = await _bookRepo.GetComponentAsync(order.FirstBookId);
-                var secondBook = await _bookRepo.GetComponentAsync(order.SecondBookId);
+            if (order == null)
+                throw new NotFoundException("Orders not found", (int)HttpStatusCode.NotFound);
 
-                if(firstBook == null || secondBook == null) 
-                    throw new NotFoundException("Books not found", (int)HttpStatusCode.NotFound);
-
-                newOrder.FirstBook = firstBook;
-                newOrder.SecondBook = secondBook;
-
-                await _orderRepo.AddComponentAsync(newOrder);
-
-                return Created(Request.Path, new { newOrder.Id });
-            }
-
-            return BadRequest(ModelState.Values.First().Errors.First().ErrorMessage);
+            return Ok(order);
         }
 
-        [HttpPut("modify")]
-        public async Task<IActionResult> ModifyOrder(ExchangeOrderDto order)
+        [HttpGet("user/succeded")]
+        public async Task<IActionResult> GetUserSuccededOrders(CancellationToken token = default)
         {
-            if (ModelState.IsValid)
+            var orders = await _orderRepo.GetUserSuceededOrdersAsync(_userService, HttpContext, token);
+            
+            if (orders == null)
+                throw new NotFoundException("Orders not found", (int)HttpStatusCode.NotFound);
+
+            return Ok(orders);
+        }
+
+        [HttpPost("add")] 
+        public async Task<IActionResult> AddOrder(ExchangeOrderDto order, CancellationToken token = default)
+        {
+            var newOrder = _mapper.Map<ExchangeOrder>(order);
+
+            var firstBook = await _bookRepo.GetComponentAsync(order.FirstBookId, token);
+            var secondBook = await _bookRepo.GetComponentAsync(order.SecondBookId, token);
+
+            if (firstBook == null || secondBook == null)
+                throw new NotFoundException("Books not found", (int)HttpStatusCode.NotFound);
+
+            if (firstBook.State != State.Verified || secondBook.State != State.Verified)
+                return BadRequest();
+
+            newOrder.FirstBook = firstBook;
+            newOrder.SecondBook = secondBook;
+
+            await _orderRepo.AddComponentAsync(newOrder, token);
+
+            return Created(Request.Path, new { newOrder.Id });
+        }
+
+        [HttpPatch("state/accept/{id}")] 
+        public async Task<IActionResult> AcceptOrder(int id, CancellationToken token = default)
+        {
+            try
             {
-                if (await _orderRepo.GetComponentAsync(order.Id) == null) 
-                    throw new NotFoundException("Order not found", (int)HttpStatusCode.NotFound);
-
-                var mappedOrder = _mapper.Map<ExchangeOrder>(order);
-
-                mappedOrder.FirstBook = await _bookRepo.GetComponentAsync(order.FirstBookId);
-                mappedOrder.SecondBook = await _bookRepo.GetComponentAsync(order.SecondBookId);
-
-                await _orderRepo.ModifyComponentAsync(mappedOrder);
-
+                await _orderRepo.AcceptOrderAsync(id, token);
                 return Ok();
             }
+            catch (Exception e)
+            {
+                return BadRequest(e);
+            }
 
-            return BadRequest(ModelState.Values.First().Errors.First().ErrorMessage);
         }
 
-        [HttpDelete("delete/{id}")]
-        public async Task<IActionResult> DeleteOrder(int id)
+        [HttpPatch("success/{id}")] 
+        public async Task<IActionResult> SuccessOrder(int id, CancellationToken token = default) 
         {
-            if (await _orderRepo.GetComponentAsync(id) == null) 
+            await _orderRepo.SuccessOrderAsync(id, _userService, HttpContext, token);
+
+            return Ok();
+        }
+
+        [HttpPatch("state/decline/{id}")]   
+        public async Task<IActionResult> DeclineOrder(int id, CancellationToken token = default)
+        {
+            try
+            {
+                await _orderRepo.DeclineOrderAsync(id, token);
+                return Ok();
+            }
+            catch (Exception e)
+            {
+                return BadRequest(e);
+            }
+
+        }
+
+        [HttpDelete("delete/{id}")] 
+        public async Task<IActionResult> DeleteOrder(int id, CancellationToken token = default)
+        {
+            if (await _orderRepo.GetComponentAsync(id, token) == null)
                 throw new NotFoundException("Order not found", (int)HttpStatusCode.NotFound);
 
-            await _orderRepo.DeleteComponentAsync(id);
+            await _orderRepo.DeleteComponentAsync(id, token);
 
             return NoContent();
         }

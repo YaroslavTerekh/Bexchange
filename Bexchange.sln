@@ -9,6 +9,8 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Bexchange.Domain", "Bexchan
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Bexchange.Infrastructure", "Bexchange.Infrastructure\Bexchange.Infrastructure.csproj", "{6444FF27-201E-436B-8A3B-E47B566FEE27}"
 EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Bexchange.Front", "Bexchange.Front", "{967F6CFD-3C4B-4814-8472-161296041395}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU

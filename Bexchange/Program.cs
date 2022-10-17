@@ -1,11 +1,7 @@
 using BexchangeAPI.Infrastructure;
 using BexchangeAPI.Infrastructure.DtbContext;
 using BexchangeAPI.Infrastructure.Repositories;
-using BexchangeAPI.Infrastructure.Repositories.Interfaces;
-using Microsoft.EntityFrameworkCore;
-using AutoMapper;
 using BexchangeAPI.Domain.Models;
-using BexchangeAPI.Middleware;
 using System.Text.Json.Serialization;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.IdentityModel.Tokens;
@@ -18,6 +14,7 @@ using Bexchange.Infrastructure.Services;
 using Bexchange.Domain;
 using Microsoft.AspNetCore.Identity;
 using Bexchange.Infrastructure.Services.Repositories;
+using BexchangeAPI.Middleware;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -56,6 +53,7 @@ builder.Services.AddSwaggerGen(options =>
 
     options.OperationFilter<SecurityRequirementsOperationFilter>();
 });
+
 builder.Services.AddAuthentication(options => {
     options.DefaultAuthenticateScheme = JwtBearerDefaults.AuthenticationScheme;
     options.DefaultChallengeScheme = JwtBearerDefaults.AuthenticationScheme;
@@ -65,11 +63,13 @@ builder.Services.AddAuthentication(options => {
     {
         options.TokenValidationParameters = new TokenValidationParameters
         {
+            ClockSkew = TimeSpan.Zero,
             ValidateIssuerSigningKey = true,
             IssuerSigningKey = new SymmetricSecurityKey(Encoding.UTF8
                 .GetBytes(builder.Configuration.GetSection("AppSettings:Token").Value)),
             ValidateIssuer = false,
             ValidateAudience = false,
+            ValidateLifetime = true
         };
     });
 
@@ -90,16 +90,19 @@ builder.Services.AddAuthorization(options =>
 builder.Services.Configure<CookiePolicyOptions>(options =>
 {
     options.CheckConsentNeeded = context => true;
-    options.MinimumSameSitePolicy = SameSiteMode.None;
+    options.MinimumSameSitePolicy = SameSiteMode.Strict;
 });
+
 
 // Add SQL Server
 builder.Services.AddDbContextsCustom(builder.Configuration);
 //Depency Injection
-builder.Services.AddTransient<IContentRepository<Book>, BooksRepository>();
-builder.Services.AddTransient<IContentRepository<ExchangeOrder>, OrdersRepository>();
+//builder.Services.AddTransient<IContentRepository<Book>, BooksRepository>();
+//builder.Services.AddTransient<IContentRepository<ExchangeOrder>, OrdersRepository>();
 builder.Services.AddTransient<IUsersRepository<User>, UsersRepository>();
 builder.Services.AddTransient<IUserService, UserService>();
+builder.Services.AddTransient<IBookContentRepository<Book>, BooksRepository>();
+builder.Services.AddTransient<IOrderContentRepository<ExchangeOrder>, OrdersRepository>();
 
 builder.Services.AddHttpClient();
 
@@ -111,6 +114,13 @@ if (app.Environment.IsDevelopment())
     app.UseSwagger();
     app.UseSwaggerUI();
 }
+
+app.UseCors(x => x
+           .AllowAnyOrigin()
+           .AllowAnyMethod()
+           .AllowAnyHeader());
+
+app.UseHttpsRedirection();
 
 //app.UseCustomExceptionHandler();
 app.UseHttpsRedirection();

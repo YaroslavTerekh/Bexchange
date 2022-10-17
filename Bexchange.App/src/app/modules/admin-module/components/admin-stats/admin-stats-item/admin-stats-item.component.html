@@ -1,0 +1,22 @@
+<div class="user-item" [ngClass]="{'admin' : userRole == 2 || userRole == 4, 'banned' : user.isBanned}" >
+    <div>
+        <p><label>id:</label> {{user.id}}, <label>username:</label> {{user.userName}}</p>
+    </div>
+    <div *ngIf="user.id != userId" class="buttons">
+        <button [routerLink]="['/library/user/' + user.id]" class="check">Переглянути</button>
+        <button class="ban" (click)="banUser(user.id)" *ngIf="userRole != 2 && userRole != 4 && !user.isBanned">Забанити</button>
+        <button class="ban" (click)="unbanUser(user.id)" *ngIf="user.isBanned">Розблокувати</button>
+        <div class="change-role" *ngIf="userRole != 4 && loggedUserRole == 'SuperAdmin'">
+            <button (click)="toggleButton()">
+                Змінити роль
+            </button>
+            <div *ngIf="changeRole">
+                <button (click)="changeUserRole(2, user.id)">адміністратор</button>
+                <button (click)="changeUserRole(1, user.id)">користувач</button>
+            </div>
+        </div>
+    </div>
+    <div *ngIf="user.id == userId">
+        Це ваш акаунт
+    </div>
+</div>

@@ -61,7 +61,12 @@ namespace BexchangeAPI.Middleware
                        response = badHttpRequestException.Message
                    },
 
-                _ => throw new NotImplementedException(),
+                _ => 
+                    error = new
+                    {
+                        code = (int)HttpStatusCode.BadRequest,
+                        response = "Something went wrong"
+                    },
             };
 
             context.Response.ContentType = "application/json";

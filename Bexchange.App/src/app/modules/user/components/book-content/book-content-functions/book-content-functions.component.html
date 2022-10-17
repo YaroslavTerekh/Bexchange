@@ -1,0 +1,17 @@
+<div class="functions-bg">
+    <div class="func-content">
+        <div class="functions">
+            <h3>Функції</h3>
+            <br>
+            <button [routerLink]="['/create-order', book.id]">Обмінятися</button>
+            <button (click)="comments.emit()">Переглянути коментарі</button>
+            <button [routerLink]="['/library/user', book.userId]">Переглянути книги власника</button>
+        </div>
+        <div class="quick-access">
+            <h3>Швидкий доступ</h3>
+            <br>
+            <button [routerLink]="['/library/genre', book.genre?.title]">Книги з жанром {{book.genre?.title}}</button>
+            <button [routerLink]="['/library/author', book.author?.name]">Книги від автора {{book.author?.name}}</button>
+        </div>    
+    </div>
+</div>

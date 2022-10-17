@@ -1,0 +1,22 @@
+.genre{
+    width: 100%;
+    padding: 20px;
+    display: block;
+    border: 2px solid rgb(0, 106, 148);
+    margin-top: 20px;
+    margin-left: 20px;
+
+    button {
+        width: fit-content;
+        height: fit-content;
+        margin-top: 10px;
+        padding: 20px;
+        border: 2px solid rgb(143, 42, 42);
+        background-color: transparent;
+        cursor: pointer;
+    }
+
+    button:hover {
+        background-color: rgba(143, 42, 42, 0.288);
+    }
+}

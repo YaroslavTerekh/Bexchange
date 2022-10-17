@@ -1,0 +1,25 @@
+<header>
+    <div class="logo">
+        <img [src]="isAdmin ? 'assets/logo-admin.png' : 'assets/logo.png'" alt="logo">
+    </div>
+    <nav class="nav-header">
+        <ul>
+            <li><a routerLink="" *ngIf="checkAuthorized">Головна</a></li>
+            <li [ngClass]="{ 'disp-none': checkAuthorized }"><a routerLink="" *ngIf="!checkAuthorized">Про нас</a></li>
+            <li><a routerLink="/library" routerLinkActive="active" style="cursor: pointer;">Бібліотека</a></li>
+            <li><a routerLink="/genres" routerLinkActive="active" style="cursor: pointer;">Жанри</a></li>
+            <li><a routerLink="/authors" routerLinkActive="active" style="cursor: pointer;">Автори</a></li>
+            <li tabindex="1" class="nav-header_account" (click)="modal = true" *ngIf="!checkAuthorized">Увійти в акаунт
+            </li>
+            <li tabindex="1" class="nav-header_account" (click)="accountModal = true" *ngIf="checkAuthorized">Мій акаунт
+            </li>
+        </ul>
+    </nav>
+</header>
+<app-spinner></app-spinner>
+<app-login-modal *ngIf="modal" (close)="modal = false" (openRegister)="registerModal = true"></app-login-modal>
+<app-register-modal *ngIf="registerModal" (close)="registerModal = false"></app-register-modal>
+<app-account-modal *ngIf="accountModal" (logout)="checkAuthorized = false" (modifyAccount)="accountModifyModal = true"
+    (close)="accountModal = false"></app-account-modal>
+<app-account-modify *ngIf="accountModifyModal" (close)="accountModifyModal = false"></app-account-modify>
+<router-outlet></router-outlet>
