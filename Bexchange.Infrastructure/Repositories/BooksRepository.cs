@@ -16,7 +16,7 @@ namespace BexchangeAPI.Infrastructure.Repositories
             _context = context;
         }
 
-        public async Task<IEnumerable<Book>> GetFirstBooksAsync(int amount)
+        public async Task<IEnumerable<Book>> GetFirstBooksAsync(int amount, CancellationToken token = default)
         {
             return await _context.Books
                 .Where(b => b.State == State.Verified)
@@ -41,7 +41,7 @@ namespace BexchangeAPI.Infrastructure.Repositories
                 .ToListAsync(token);
         }
 
-        public async Task<IEnumerable<Book>> GetAllVerifiedBooksAsync(int userId)
+        public async Task<IEnumerable<Book>> GetAllVerifiedBooksAsync(int userId, CancellationToken token = default)
         {
             return await _context.Books.Where(b => b.State == State.Verified && b.UserId != userId)
                 .Include(b => b.Image)
@@ -56,14 +56,14 @@ namespace BexchangeAPI.Infrastructure.Repositories
                 .ToListAsync();
         }
 
-        public async Task<IEnumerable<Book>> SearchBooksAsync(string? title)
+        public async Task<IEnumerable<Book>> SearchBooksAsync(string? title, CancellationToken token = default)
         {
             return await _context.Books.Where(b => b.Title.Contains(title) && b.State == State.Verified)
                 .Include(b => b.Image)
                 .ToListAsync();
         }
 
-        public async Task AddComponentAsync(Book book)
+        public async Task AddComponentAsync(Book book, CancellationToken token = default)
         {
             book.Image = await GetImageAsync(book.ImageId);
             var author = await GetAuthorByNameAsync(book.Author.Name);
@@ -87,7 +87,7 @@ namespace BexchangeAPI.Infrastructure.Repositories
             await _context.SaveChangesAsync();
         }
 
-        public async Task<Book?> GetComponentAsync(int id)
+        public async Task<Book?> GetComponentAsync(int id, CancellationToken token = default)
         {
             return await _context.Books.Where(b => b.Id == id)
                 .Include(b => b.Image)
@@ -102,7 +102,7 @@ namespace BexchangeAPI.Infrastructure.Repositories
                 .FirstOrDefaultAsync();
         }
 
-        public async Task DeleteComponentAsync(int id)
+        public async Task DeleteComponentAsync(int id, CancellationToken token = default)
         {
             var book = await GetComponentAsync(id);                       
 
@@ -121,7 +121,7 @@ namespace BexchangeAPI.Infrastructure.Repositories
             }
         }
 
-        public async Task ModifyComponentStateAsync(int id, State state)
+        public async Task ModifyComponentStateAsync(int id, State state, CancellationToken token = default)
         {
             Book book = await _context.Books.Where(b => b.Id == id).Include(b => b.Author).FirstOrDefaultAsync();
 
@@ -135,7 +135,7 @@ namespace BexchangeAPI.Infrastructure.Repositories
             }
         }
 
-        public async Task<IEnumerable<Book>> GetUserComponentsAsync(int userId)
+        public async Task<IEnumerable<Book>> GetUserComponentsAsync(int userId, CancellationToken token = default)
         {
             return await _context.Books
                 .Where(b => b.UserId == userId)
@@ -148,7 +148,7 @@ namespace BexchangeAPI.Infrastructure.Repositories
                 .ToListAsync();
         }
 
-        public async Task AddCommentAsync(Comment comment, int id, User user)
+        public async Task AddCommentAsync(Comment comment, int id, User user, CancellationToken token = default)
         {
             Book book = await GetComponentAsync(id);
             comment.Author = user;
@@ -157,37 +157,37 @@ namespace BexchangeAPI.Infrastructure.Repositories
             await _context.SaveChangesAsync();
         }
 
-        public async Task<Genre> GetGenreAsync(int id)
+        public async Task<Genre> GetGenreAsync(int id, CancellationToken token = default)
         {
             return await _context.Genres.Where(g => g.Id == id).FirstOrDefaultAsync();
         }
 
-        public async Task<IEnumerable<Genre>> GetGenresAsync()
+        public async Task<IEnumerable<Genre>> GetGenresAsync(CancellationToken token = default)
         {
             return await _context.Genres.ToListAsync();
         }
 
-        public async Task<IEnumerable<Author>> GetAuthorsAsync()
+        public async Task<IEnumerable<Author>> GetAuthorsAsync(CancellationToken token = default)
         {
             return await _context.Authors.Where(a => a.WikiLink != "" && a.Name != "" && a.ImgPath != "").ToListAsync();
         }
 
-        public async Task<Author> GetAuthorAsync(int id)
+        public async Task<Author> GetAuthorAsync(int id, CancellationToken token = default)
         {
             return await _context.Authors.Where(a => a.Id == id).FirstOrDefaultAsync();
         }
 
-        public async Task<Author> GetAuthorByNameAsync(string name)
+        public async Task<Author> GetAuthorByNameAsync(string name, CancellationToken token = default)
         {
             return await _context.Authors.Where(a => a.Name == name).FirstOrDefaultAsync();
         }
 
-        public async Task<IEnumerable<Author>> GetAllAuthorsAsync()
+        public async Task<IEnumerable<Author>> GetAllAuthorsAsync(CancellationToken token = default)
         {
             return await _context.Authors.ToListAsync();
         }
 
-        public async Task<IEnumerable<Book>> IgnoreUserBooksAsync(int userId)
+        public async Task<IEnumerable<Book>> IgnoreUserBooksAsync(int userId, CancellationToken token = default)
         {
             return await _context.Books
                 .Where(b => b.UserId != userId)
@@ -200,13 +200,13 @@ namespace BexchangeAPI.Infrastructure.Repositories
                 .ToListAsync();
         }
 
-        public async Task AddGenreAsync(Genre genre)
+        public async Task AddGenreAsync(Genre genre, CancellationToken token = default)
         {
             await _context.Genres.AddAsync(genre);
             await _context.SaveChangesAsync();
         }
 
-        public async Task<IEnumerable<Book>> GetByGenreAsync(string genre)
+        public async Task<IEnumerable<Book>> GetByGenreAsync(string genre, CancellationToken token = default)
         {
             return await _context.Books
                 .Where(b => b.Genre.Title == genre && b.State == State.Verified)
@@ -219,7 +219,7 @@ namespace BexchangeAPI.Infrastructure.Repositories
                 .ToListAsync();
         }
 
-        public async Task<IEnumerable<Book>> GetByAuthorAsync(string author)
+        public async Task<IEnumerable<Book>> GetByAuthorAsync(string author, CancellationToken token = default)
         {
             return await _context.Books
                 .Where(b => b.Author.Name == author && b.State == State.Verified)
@@ -232,7 +232,7 @@ namespace BexchangeAPI.Infrastructure.Repositories
                 .ToListAsync();
         }
 
-        public async Task ModifyAuthorAsync(Author author)
+        public async Task ModifyAuthorAsync(Author author, CancellationToken token = default)
         {
             Author entity = await _context.Authors.Where(a => a.Id == author.Id).FirstOrDefaultAsync();
 
@@ -243,7 +243,7 @@ namespace BexchangeAPI.Infrastructure.Repositories
             await _context.SaveChangesAsync();
         }
 
-        public async Task<int> AddImageAsync(HttpContext context, string path, IUserService service, string rootPath)
+        public async Task<int> AddImageAsync(HttpContext context, string path, IUserService service, string rootPath, CancellationToken token = default)
         {
             var file = context.Request.Form.Files[0];
 
@@ -275,12 +275,12 @@ namespace BexchangeAPI.Infrastructure.Repositories
             return 0;
         }
 
-        public async Task<Image> GetImageAsync(int id)
+        public async Task<Image> GetImageAsync(int id, CancellationToken token = default)
         {
             return await _context.Images.Where(i => i.Id == id).FirstOrDefaultAsync();
         }
 
-        public async Task DeleteImageAsync(int id)
+        public async Task DeleteImageAsync(int id, CancellationToken token = default)
         {
             var image = await GetImageAsync(id);
             //_context.Images.Remove(image);
@@ -289,7 +289,7 @@ namespace BexchangeAPI.Infrastructure.Repositories
             File.Delete(image.Path);
         }
 
-        public async Task DeleteGenreAsync(int id)
+        public async Task DeleteGenreAsync(int id, CancellationToken token = default)
         {
             var genre = await GetGenreAsync(id);
 

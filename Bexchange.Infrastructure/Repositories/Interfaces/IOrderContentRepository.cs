@@ -12,11 +12,11 @@ namespace Bexchange.Infrastructure.Repositories.Interfaces
 {
     public interface IOrderContentRepository<T> : IContentRepository<T>
     {
-        public Task AcceptOrderAsync(int id);
-        public Task SuccessOrderAsync(int id, IUserService userService, HttpContext context);
-        public Task DeclineOrderAsync(int id);
-        public Task<IEnumerable<ExchangeOrder>> GetUserOutgoingOrdersAsync(IUserService userService, HttpContext context);
-        public Task<IEnumerable<ExchangeOrder>> GetUserIncomingOrdersAsync(IUserService userService, HttpContext context);
-        public Task<IEnumerable<ExchangeOrder>> GetUserSuceededOrdersAsync(IUserService userService, HttpContext context);
+        public Task AcceptOrderAsync(int id, CancellationToken token);
+        public Task SuccessOrderAsync(int id, IUserService userService, HttpContext context, CancellationToken token);
+        public Task DeclineOrderAsync(int id, CancellationToken token);
+        public Task<IEnumerable<ExchangeOrder>> GetUserOutgoingOrdersAsync(IUserService userService, HttpContext context, CancellationToken token);
+        public Task<IEnumerable<ExchangeOrder>> GetUserIncomingOrdersAsync(IUserService userService, HttpContext context, CancellationToken token);
+        public Task<IEnumerable<ExchangeOrder>> GetUserSuceededOrdersAsync(IUserService userService, HttpContext context, CancellationToken token);
     }
 }

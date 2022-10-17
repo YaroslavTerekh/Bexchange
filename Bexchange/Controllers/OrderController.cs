@@ -34,7 +34,7 @@ namespace BexchangeAPI.Controllers
         }
 
         [HttpGet] 
-        public async Task<IActionResult> Orders(CancellationToken token)
+        public async Task<IActionResult> Orders(CancellationToken token = default)
         {
             var orders = await _orderRepo.GetAllComponentsAsync(token);
 
@@ -45,9 +45,9 @@ namespace BexchangeAPI.Controllers
         }
 
         [HttpGet("user/{id}")] 
-        public async Task<IActionResult> GetUserOrders(int id)
+        public async Task<IActionResult> GetUserOrders(int id, CancellationToken token = default)
         {
-            var order = await _orderRepo.GetUserComponentsAsync(id);
+            var order = await _orderRepo.GetUserComponentsAsync(id, token);
 
             if (order == null)
                 throw new NotFoundException("Orders not found", (int)HttpStatusCode.NotFound);
@@ -56,9 +56,9 @@ namespace BexchangeAPI.Controllers
         }
 
         [HttpGet("user/outgoing")] 
-        public async Task<IActionResult> GetUserOutgoingOrders()
+        public async Task<IActionResult> GetUserOutgoingOrders(CancellationToken token = default)
         {
-            var order = await _orderRepo.GetUserOutgoingOrdersAsync(_userService, HttpContext);
+            var order = await _orderRepo.GetUserOutgoingOrdersAsync(_userService, HttpContext, token);
 
             if (order == null)
                 throw new NotFoundException("Orders not found", (int)HttpStatusCode.NotFound);
@@ -67,9 +67,9 @@ namespace BexchangeAPI.Controllers
         }
 
         [HttpGet("user/incoming")] 
-        public async Task<IActionResult> GetUserImcomingOrders()
+        public async Task<IActionResult> GetUserImcomingOrders(CancellationToken token = default)
         {
-            var order = await _orderRepo.GetUserIncomingOrdersAsync(_userService, HttpContext);
+            var order = await _orderRepo.GetUserIncomingOrdersAsync(_userService, HttpContext, token);
 
             if (order == null)
                 throw new NotFoundException("Orders not found", (int)HttpStatusCode.NotFound);
@@ -78,9 +78,9 @@ namespace BexchangeAPI.Controllers
         }
 
         [HttpGet("user/succeded")]
-        public async Task<IActionResult> GetUserSuccededOrders()
+        public async Task<IActionResult> GetUserSuccededOrders(CancellationToken token = default)
         {
-            var orders = await _orderRepo.GetUserSuceededOrdersAsync(_userService, HttpContext);
+            var orders = await _orderRepo.GetUserSuceededOrdersAsync(_userService, HttpContext, token);
             
             if (orders == null)
                 throw new NotFoundException("Orders not found", (int)HttpStatusCode.NotFound);
@@ -89,12 +89,12 @@ namespace BexchangeAPI.Controllers
         }
 
         [HttpPost("add")] 
-        public async Task<IActionResult> AddOrder(ExchangeOrderDto order)
+        public async Task<IActionResult> AddOrder(ExchangeOrderDto order, CancellationToken token = default)
         {
             var newOrder = _mapper.Map<ExchangeOrder>(order);
 
-            var firstBook = await _bookRepo.GetComponentAsync(order.FirstBookId);
-            var secondBook = await _bookRepo.GetComponentAsync(order.SecondBookId);
+            var firstBook = await _bookRepo.GetComponentAsync(order.FirstBookId, token);
+            var secondBook = await _bookRepo.GetComponentAsync(order.SecondBookId, token);
 
             if (firstBook == null || secondBook == null)
                 throw new NotFoundException("Books not found", (int)HttpStatusCode.NotFound);
@@ -105,17 +105,17 @@ namespace BexchangeAPI.Controllers
             newOrder.FirstBook = firstBook;
             newOrder.SecondBook = secondBook;
 
-            await _orderRepo.AddComponentAsync(newOrder);
+            await _orderRepo.AddComponentAsync(newOrder, token);
 
             return Created(Request.Path, new { newOrder.Id });
         }
 
         [HttpPatch("state/accept/{id}")] 
-        public async Task<IActionResult> AcceptOrder(int id)
+        public async Task<IActionResult> AcceptOrder(int id, CancellationToken token = default)
         {
             try
             {
-                await _orderRepo.AcceptOrderAsync(id);
+                await _orderRepo.AcceptOrderAsync(id, token);
                 return Ok();
             }
             catch (Exception e)
@@ -126,19 +126,19 @@ namespace BexchangeAPI.Controllers
         }
 
         [HttpPatch("success/{id}")] 
-        public async Task<IActionResult> SuccessOrder(int id) 
+        public async Task<IActionResult> SuccessOrder(int id, CancellationToken token = default) 
         {
-            await _orderRepo.SuccessOrderAsync(id, _userService, HttpContext);
+            await _orderRepo.SuccessOrderAsync(id, _userService, HttpContext, token);
 
             return Ok();
         }
 
         [HttpPatch("state/decline/{id}")]   
-        public async Task<IActionResult> DeclineOrder(int id)
+        public async Task<IActionResult> DeclineOrder(int id, CancellationToken token = default)
         {
             try
             {
-                await _orderRepo.DeclineOrderAsync(id);
+                await _orderRepo.DeclineOrderAsync(id, token);
                 return Ok();
             }
             catch (Exception e)
@@ -149,12 +149,12 @@ namespace BexchangeAPI.Controllers
         }
 
         [HttpDelete("delete/{id}")] 
-        public async Task<IActionResult> DeleteOrder(int id)
+        public async Task<IActionResult> DeleteOrder(int id, CancellationToken token = default)
         {
-            if (await _orderRepo.GetComponentAsync(id) == null)
+            if (await _orderRepo.GetComponentAsync(id, token) == null)
                 throw new NotFoundException("Order not found", (int)HttpStatusCode.NotFound);
 
-            await _orderRepo.DeleteComponentAsync(id);
+            await _orderRepo.DeleteComponentAsync(id, token);
 
             return NoContent();
         }

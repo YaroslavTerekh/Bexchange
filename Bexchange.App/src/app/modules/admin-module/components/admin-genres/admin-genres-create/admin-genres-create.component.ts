@@ -1,9 +1,11 @@
 import { Component } from "@angular/core";
 import { FormGroup, Validators, FormBuilder } from "@angular/forms";
 import { Router } from "@angular/router";
+import { UntilDestroy, untilDestroyed } from "@ngneat/until-destroy";
 import { BookService } from "src/app/core/services/book.service";
 import { Genre } from "src/app/shared/models/Genre";
 
+@UntilDestroy()
 @Component({
   selector: 'app-admin-genres-create',
   templateUrl: './admin-genres-create.component.html',
@@ -31,6 +33,7 @@ export class AdminGenresCreateComponent {
     }
     
     this.bookService.addGenre(newGenre)
+      .pipe(untilDestroyed(this))
       .subscribe({next: res => {
         this.router.navigate(['/admin/stats']);
       }});

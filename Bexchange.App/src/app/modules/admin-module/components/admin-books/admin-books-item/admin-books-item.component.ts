@@ -1,8 +1,10 @@
 import { Component, Output, EventEmitter, Input } from "@angular/core";
 import { Router } from "@angular/router";
+import { UntilDestroy, untilDestroyed } from "@ngneat/until-destroy";
 import { BookService } from "src/app/core/services/book.service";
 import { Book } from "src/app/shared/models/Book";
 
+@UntilDestroy()
 @Component({
   selector: 'app-admin-books-item',
   templateUrl: './admin-books-item.component.html',
@@ -21,6 +23,7 @@ export class AdminBooksItemComponent {
 
   deleteBook(id: number) {
     this.bookService.deleteBook(id)
+      .pipe(untilDestroyed(this))
       .subscribe({
         next: res => { 
           this.router.navigate(['/admin/stats']);

@@ -41,11 +41,11 @@ namespace BexchangeAPI.Controllers
 
         [Authorize]
         [HttpGet("id/{id}")] 
-        public async Task<IActionResult> GetUser(int id)
+        public async Task<IActionResult> GetUser(int id, CancellationToken token = default)
         {
             if(_userService.GetUserId(HttpContext) == id || _userService.IsAdmin(HttpContext))
             {
-                var user = await _usersRepository.GetUserAsync(id);
+                var user = await _usersRepository.GetUserAsync(id, token);
                 return Ok(user);
             }
 
@@ -54,16 +54,16 @@ namespace BexchangeAPI.Controllers
 
         [Authorize]
         [HttpPost("modify")] 
-        public async Task<IActionResult> ModifyUser(ChangeUserInfoRequest user)
+        public async Task<IActionResult> ModifyUser(ChangeUserInfoRequest user, CancellationToken token = default)
         {
-            await _usersRepository.ModifyUserAsync(user);
+            await _usersRepository.ModifyUserAsync(user, token);
             return Ok();
         }
 
         [HttpPost("register")] 
-        public async Task<IActionResult> Register(UserRequest user)
+        public async Task<IActionResult> Register(UserRequest user, CancellationToken token = default)
         {
-            if (await _userService.TestUserSearchAsync(user, _usersRepository))
+            if (await _userService.TestUserSearchAsync(user, _usersRepository, token))
             {
                 return BadRequest("User already exists");
             }
@@ -95,9 +95,9 @@ namespace BexchangeAPI.Controllers
         }
 
         [HttpPost("login/email")] 
-        public async Task<ActionResult<string>> LoginWithEmail(LoginRequest loginUser)
+        public async Task<ActionResult<string>> LoginWithEmail(LoginRequest loginUser, CancellationToken cToken = default)
         {
-            User user = await _usersRepository.GetUserByEmailAsync(loginUser.UserName);
+            User user = await _usersRepository.GetUserByEmailAsync(loginUser.UserName, cToken);
 
             if (user == null)
                 return BadRequest("Wrong e-mail");
@@ -110,15 +110,15 @@ namespace BexchangeAPI.Controllers
             var token = await _userService.CreateTokenAsync(user, _configuration);
 
             var refreshToken = _userService.GenerateRefreshToken();
-            _userService.SetRefreshToken(refreshToken, user, HttpContext, _usersRepository);
+            _userService.SetRefreshToken(refreshToken, user, HttpContext, _usersRepository, cToken);
 
             return Ok(new { token, refreshToken, user.Id });
         }
 
         [HttpPost("login/name")] 
-        public async Task<ActionResult<string>> LoginWithName(LoginRequest loginUser)
+        public async Task<ActionResult<string>> LoginWithName(LoginRequest loginUser, CancellationToken cToken = default)
         {
-            User user = await _usersRepository.GetUserByNameAsync(loginUser.UserName);
+            User user = await _usersRepository.GetUserByNameAsync(loginUser.UserName, cToken);
 
             if (user == null)
                 return BadRequest("Wrong name");
@@ -131,15 +131,15 @@ namespace BexchangeAPI.Controllers
             var token = await _userService.CreateTokenAsync(user, _configuration);
 
             var refreshToken = _userService.GenerateRefreshToken();
-            _userService.SetRefreshToken(refreshToken, user, HttpContext, _usersRepository);
+            _userService.SetRefreshToken(refreshToken, user, HttpContext, _usersRepository, cToken);
 
             return Ok(new {token, refreshToken, user.Id });
         }
 
         [HttpPost("refresh-token")] 
-        public async Task<ActionResult<string>> RefreshToken(RefreshTokenRequest tokenRequest)
+        public async Task<ActionResult<string>> RefreshToken(RefreshTokenRequest tokenRequest, CancellationToken cToken = default)
         {
-            var user = await _usersRepository.GetUserAsync(tokenRequest.UserId);
+            var user = await _usersRepository.GetUserAsync(tokenRequest.UserId, cToken);
 
             if(user == null)
             {
@@ -156,7 +156,7 @@ namespace BexchangeAPI.Controllers
 
             string token = await _userService.CreateTokenAsync(user, _configuration);
             var refreshToken = _userService.GenerateRefreshToken();
-            _userService.SetRefreshToken(refreshToken, user, HttpContext, _usersRepository);
+            _userService.SetRefreshToken(refreshToken, user, HttpContext, _usersRepository, cToken);
 
             return Ok(new { token, refreshToken, user.Role });
         }

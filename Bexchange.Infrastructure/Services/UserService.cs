@@ -39,34 +39,34 @@ namespace Bexchange.Infrastructure.Services
 
             return refreshToken;
         }
-        public void SetRefreshToken(RefreshToken token, User user, HttpContext context, IUsersRepository<User> _usersRepository)
+        public void SetRefreshToken(RefreshToken refreshToken, User user, HttpContext context, IUsersRepository<User> _usersRepository, CancellationToken token = default)
         {
             var cookieOpts = new CookieOptions
             {
                 HttpOnly = true,
-                Expires = token.Expires,
+                Expires = refreshToken.Expires,
                 IsEssential = true,
                 Secure = true,
             };
 
-            context.Response.Cookies.Append("refreshToken", token.Token, cookieOpts);
+            context.Response.Cookies.Append("refreshToken", refreshToken.Token, cookieOpts);
 
-            context.Response.Headers.Add("token", token.Token);
-            context.Response.Headers.Add("tokenExp", token.Expires.ToString());
+            context.Response.Headers.Add("token", refreshToken.Token);
+            context.Response.Headers.Add("tokenExp", refreshToken.Expires.ToString());
 
-            user.RefreshToken = token.Token;
-            user.TokenCreated = token.CreateTime;
-            user.TokenExpires = token.Expires;
+            user.RefreshToken = refreshToken.Token;
+            user.TokenCreated = refreshToken.CreateTime;
+            user.TokenExpires = refreshToken.Expires;
 
-            _usersRepository.SaveUser();
+            _usersRepository.SaveUser(token);
         }
-        public async Task<bool> TestUserSearchAsync(UserRequest user, IUsersRepository<User> _usersRepository)
+        public async Task<bool> TestUserSearchAsync(UserRequest user, IUsersRepository<User> _usersRepository, CancellationToken token = default)
         {
-            var testSearchUser = await _usersRepository.GetUserByNameAsync(user.UserName);
+            var testSearchUser = await _usersRepository.GetUserByNameAsync(user.UserName, token);
             if (testSearchUser != null)
                 return true;
 
-            testSearchUser = await _usersRepository.GetUserByEmailAsync(user.Email);
+            testSearchUser = await _usersRepository.GetUserByEmailAsync(user.Email, token);
             if (testSearchUser != null)
                 return true;
 

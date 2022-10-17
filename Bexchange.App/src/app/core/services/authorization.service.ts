@@ -16,10 +16,10 @@ import { environment } from "src/environments/environment";
   providedIn: 'root'
 })
 export class AuthorizationService implements OnInit {  
+  helper = new JwtHelperService();
   authorizationSubject$: BehaviorSubject<boolean> = new BehaviorSubject<boolean>(this.checkAuthorized());
   isAdminSubject$: BehaviorSubject<boolean> = new BehaviorSubject<boolean>(this.checkAdmin());
-  isAuthorized!: boolean;
-  helper = new JwtHelperService();
+  isAuthorized!: boolean;  
   private _user: User | null = null;
 
   constructor(
