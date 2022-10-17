@@ -254,6 +254,11 @@ namespace BexchangeAPI.Infrastructure.Repositories
                 var uploadPath = Path.Combine("",path + @"\uploads\images\" + filePathName);
                 var filePath = Path.Combine("", path + @"\uploads\images\" + filePathName);
 
+                if(!Directory.Exists(path + @"\uploads\images\"))
+                {
+                    Directory.CreateDirectory(path + @"\uploads\images\");
+                }
+
                 using (FileStream stream = new FileStream(uploadPath, FileMode.CreateNew))
                 {
                     await file.CopyToAsync(stream);
